@@ -1,4 +1,5 @@
 const { AI_MODELS, getModelConfig } = require('./config');
+const chunkProcessor = require('./chunkProcessor');
 
 // API配置
 const API_URLS = {
@@ -93,11 +94,37 @@ const makeApiRequest = (modelKey, params, requestBuilder, responseHandler) => {
     // 构建请求参数
     const requestParams = requestBuilder(config, params);
     
+    const requestId = Date.now().toString();
+    
     wx.request({
       ...requestParams,
       timeout: 180000, // 3分钟超时
       success: (res) => {
         const duration = Date.now() - startTime;
+        
+        // 检查响应数据是否完整
+        if (typeof res.data === 'string' && !chunkProcessor.isValidJSON(res.data)) {
+          // 数据不完整，尝试分块处理
+          const chunks = chunkProcessor.splitIntoChunks(res.data);
+          let processedData = null;
+          
+          // 处理每个数据块
+          for (const chunk of chunks) {
+            processedData = chunkProcessor.processChunk(requestId, chunk);
+            if (processedData) {
+              // 找到完整数据，更新响应
+              res.data = processedData;
+              break;
+            }
+          }
+          
+          // 如果仍然没有完整数据，记录错误
+          if (!processedData) {
+            logApiCall(modelKey, 'error', { error: '响应数据不完整' });
+            reject(new Error('响应数据不完整'));
+            return;
+          }
+        }
         
         // 隐藏加载动画
         loading.hide();
