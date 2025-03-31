@@ -198,6 +198,7 @@
     </block>
     <block wx:else>
       <view class="action-buttons">
+        <button class="btn-preview" bindtap="showPreview">预览计划</button>
         <button class="btn-adjust" bindtap="adjustPlan">调整计划</button>
         <button class="btn-save" bindtap="savePlan" loading="{{saving}}">保存计划</button>
         <button class="btn-feedback" bindtap="showFeedback">反馈</button>

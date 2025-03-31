@@ -335,7 +335,9 @@ Page({
   },
   onShow() {
     // 每次显示页面时重新加载数据
-    this.loadWeeklyPlans();
+    if (!this.data.isPreviewMode) {
+      this.loadWeeklyPlans();
+    }
   },
   // 创建计划后的回调
   onPlanCreated() {
@@ -399,9 +401,12 @@ Page({
   // 加载预览数据
   loadPreviewData() {
     try {
+      this.setData({ loading: true });
+      
       // 从临时存储中获取预览数据
       const previewData = wx.getStorageSync('temp_preview_plan');
-      if (!previewData || !previewData.weeklyPlan) {
+      
+      if (!previewData) {
         wx.showToast({
           title: '预览数据不存在',
           icon: 'none'
@@ -419,13 +424,67 @@ Page({
         title: '计划预览'
       });
       
-      // 设置周计划数据
-      this.setData({
-        weeklyPlan: previewData.weeklyPlan,
-        weekDays: previewData.weeklyPlan.days,
-        isPreviewMode: true,
-        loading: false
-      });
+      if (previewData && previewData.days) {
+        // 1. 初始化周信息
+        const now = new Date();
+        const weekday = ['一', '二', '三', '四', '五', '六', '日'];
+        const weekDays = [];
+        
+        // 2. 生成本周的日期信息并关联训练计划
+        for (let i = 0; i < 7; i++) {
+          const date = new Date(now);
+          const mondayOffset = now.getDay() === 0 ? -6 : 1 - now.getDay();
+          date.setDate(now.getDate() + mondayOffset + i);
+          
+          // 3. 找到对应的计划
+          const dayOfWeek = `周${weekday[i]}`;
+          const dayPlan = previewData.days.find(d => d.day === dayOfWeek);
+          
+          // 4. 获取当天的训练计划
+          const dayExercises = [];
+          if (dayPlan && dayPlan.plans) {
+            dayPlan.plans.forEach(timePlan => {
+              if (timePlan.exercises && timePlan.exercises.length > 0) {
+                timePlan.exercises.forEach(exercise => {
+                  dayExercises.push({
+                    ...exercise,
+                    timeSlot: this.formatTimeSlot(timePlan.timeSlot),
+                    completed: exercise.completed || false
+                  });
+                });
+              }
+            });
+          }
+          
+          weekDays.push({
+            date: date.getDate(),
+            day: dayOfWeek,
+            weekday: weekday[i],
+            isToday: date.toDateString() === now.toDateString(),
+            exercises: dayExercises,
+            diet: dayPlan ? dayPlan.diet : {
+              breakfast: { content: '暂无安排' },
+              lunch: { content: '暂无安排' },
+              dinner: { content: '暂无安排' }
+            }
+          });
+        }
+
+        this.setData({
+          weekDays,
+          weeklyPlan: previewData,
+          currentWeek: Math.ceil((now.getDate() + new Date(now.getFullYear(), now.getMonth(), 1).getDay()) / 7),
+          isPreviewMode: true,
+          loading: false
+        });
+
+        console.log('处理后的预览计划数据:', weekDays);
+      } else {
+        this.setData({
+          weekDays: [],
+          loading: false
+        });
+      }
       
     } catch (error) {
       console.error('加载预览数据失败:', error);

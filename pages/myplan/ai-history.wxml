@@ -69,6 +69,13 @@
         </view>
         
         <view 
+          class="preview-btn" 
+          catchtap="previewPlan" 
+          data-index="{{index}}"
+        >
+          <van-icon name="eye-o" size="28rpx" color="#1296db" />
+        </view>
+        <view 
           class="delete-btn" 
           catchtap="deleteRecord" 
           data-index="{{index}}"
@@ -78,4 +85,4 @@
       </view>
     </view>
   </scroll-view>
-</view> 
+</view>

@@ -55,26 +55,30 @@ const logApiCall = (modelName, action, data) => {
 };
 
 /**
- * 调用DeepSeek API
+ * 通用API请求方法
+ * @param {string} modelKey - 模型key
  * @param {Object} params - API参数
- * @param {Array} params.messages - 消息数组
- * @param {number} params.temperature - 温度参数
- * @param {number} params.max_tokens - 最大token数
+ * @param {function} requestBuilder - 请求构建函数
+ * @param {function} responseHandler - 响应处理函数
  * @returns {Promise} API响应
  */
-const deepseek = (params) => {
+const makeApiRequest = (modelKey, params, requestBuilder, responseHandler) => {
   return new Promise((resolve, reject) => {
-    const config = getApiConfig('deepseek');
+    const config = getApiConfig(modelKey);
+    const loading = require('./loading');
     
     if (!config.apiKey) {
-      const error = new Error('DeepSeek API密钥未配置，请在设置中配置API-KEY');
-      logApiCall('deepseek', 'error', { error: error.message });
+      const error = new Error(`${modelKey} API密钥未配置，请在设置中配置API-KEY`);
+      logApiCall(modelKey, 'error', { error: error.message });
       reject(error);
       return;
     }
+    
+    // 显示加载动画
+    loading.show();
 
     // 记录请求开始
-    logApiCall('deepseek', 'request', {
+    logApiCall(modelKey, 'request', {
       messages: params.messages.map(m => ({
         role: m.role,
         content_length: m.content.length,
@@ -86,47 +90,50 @@ const deepseek = (params) => {
     
     const startTime = Date.now();
     
+    // 构建请求参数
+    const requestParams = requestBuilder(config, params);
+    
     wx.request({
-      url: config.url,
-      method: 'POST',
-      header: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${config.apiKey}`
-      },
-      data: {
-        model: 'deepseek-chat',
-        messages: params.messages,
-        temperature: params.temperature || config.config.temperature,
-        max_tokens: params.max_tokens || config.config.max_tokens
-      },
+      ...requestParams,
+      timeout: 180000, // 3分钟超时
       success: (res) => {
         const duration = Date.now() - startTime;
         
+        // 隐藏加载动画
+        loading.hide();
+        
         if (res.statusCode === 200) {
           // 记录成功响应
-          logApiCall('deepseek', 'success', {
+          logApiCall(modelKey, 'success', {
             statusCode: res.statusCode,
             duration: duration,
             response_preview: res.data.choices?.[0]?.message?.content?.substring(0, 100) + '...',
             tokens: res.data.usage
           });
+          
+          // 处理响应
+          const response = responseHandler ? responseHandler(res) : res.data;
+          resolve(response);
         } else {
           // 记录错误响应
-          logApiCall('deepseek', 'error', {
+          logApiCall(modelKey, 'error', {
             statusCode: res.statusCode,
             duration: duration,
             error: res.data.error || res.errMsg,
             details: res.data
           });
+          
+          handleApiResponse(res, resolve, reject);
         }
-        
-        handleApiResponse(res, resolve, reject);
       },
       fail: (error) => {
         const duration = Date.now() - startTime;
         
+        // 隐藏加载动画
+        loading.hide();
+        
         // 记录请求失败
-        logApiCall('deepseek', 'fail', {
+        logApiCall(modelKey, 'fail', {
           duration: duration,
           error: error.errMsg
         });
@@ -138,6 +145,33 @@ const deepseek = (params) => {
 };
 
 /**
+ * 调用DeepSeek API
+ * @param {Object} params - API参数
+ * @param {Array} params.messages - 消息数组
+ * @param {number} params.temperature - 温度参数
+ * @param {number} params.max_tokens - 最大token数
+ * @returns {Promise} API响应
+ */
+const deepseek = (params) => {
+  const requestBuilder = (config, params) => ({
+    url: config.url,
+    method: 'POST',
+    header: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${config.apiKey}`
+    },
+    data: {
+      model: 'deepseek-chat',
+      messages: params.messages,
+      temperature: params.temperature || config.config.temperature,
+      max_tokens: params.max_tokens || config.config.max_tokens
+    }
+  });
+  
+  return makeApiRequest('deepseek', params, requestBuilder);
+};
+
+/**
  * 调用Gemini API
  * @param {Object} params - API参数
  * @param {Array} params.messages - 消息数组
@@ -146,16 +180,7 @@ const deepseek = (params) => {
  * @returns {Promise} API响应
  */
 const gemini = (params) => {
-  return new Promise((resolve, reject) => {
-    const config = getApiConfig('gemini');
-    
-    if (!config.apiKey) {
-      const error = new Error('Gemini API密钥未配置，请在设置中配置API-KEY');
-      logApiCall('gemini', 'error', { error: error.message });
-      reject(error);
-      return;
-    }
-
+  const requestBuilder = (config, params) => {
     const content = {
       contents: params.messages.map(msg => ({
         role: msg.role === 'user' ? 'user' : 'model',
@@ -163,20 +188,7 @@ const gemini = (params) => {
       }))
     };
     
-    // 记录请求开始
-    logApiCall('gemini', 'request', {
-      messages: params.messages.map(m => ({
-        role: m.role,
-        content_length: m.content.length,
-        content_preview: m.content.substring(0, 100) + '...'
-      })),
-      temperature: params.temperature || config.config.temperature,
-      max_tokens: params.max_tokens || config.config.max_tokens
-    });
-    
-    const startTime = Date.now();
-
-    wx.request({
+    return {
       url: `${config.url}?key=${config.apiKey}`,
       method: 'POST',
       header: {
@@ -208,132 +220,46 @@ const gemini = (params) => {
             threshold: "BLOCK_MEDIUM_AND_ABOVE"
           }
         ]
-      },
-      success: (res) => {
-        const duration = Date.now() - startTime;
-        
-        if (res.statusCode === 200) {
-          // 构造响应
-          const response = {
-            choices: [{
-              message: {
-                content: res.data.candidates?.[0]?.content?.parts?.[0]?.text || '无内容'
-              }
-            }]
-          };
-          
-          // 记录成功响应
-          logApiCall('gemini', 'success', {
-            statusCode: res.statusCode,
-            duration: duration,
-            response_preview: response.choices[0].message.content.substring(0, 100) + '...',
-            tokens: res.data.usage
-          });
-          
-          resolve(response);
-        } else {
-          // 记录错误响应
-          logApiCall('gemini', 'error', {
-            statusCode: res.statusCode,
-            duration: duration,
-            error: res.data.error || res.errMsg,
-            details: res.data
-          });
-          
-          handleApiResponse(res, resolve, reject);
-        }
-      },
-      fail: (error) => {
-        const duration = Date.now() - startTime;
-        
-        // 记录请求失败
-        logApiCall('gemini', 'fail', {
-          duration: duration,
-          error: error.errMsg
-        });
-        
-        handleApiError(error, reject);
       }
-    });
+    };
+  };
+  
+  const responseHandler = (res) => ({
+    choices: [{
+      message: {
+        content: res.data.candidates?.[0]?.content?.parts?.[0]?.text || '无内容'
+      }
+    }]
   });
+  
+  return makeApiRequest('gemini', params, requestBuilder, responseHandler);
 };
 
 /**
  * 调用火山引擎 API
+ * @param {Object} params - API参数
+ * @param {Array} params.messages - 消息数组
+ * @param {number} params.temperature - 温度参数
+ * @param {number} params.max_tokens - 最大token数
+ * @returns {Promise} API响应
  */
 const volcengine = (params) => {
-  return new Promise((resolve, reject) => {
-    const config = getApiConfig('volcengine');
-    
-    if (!config.apiKey) {
-      const error = new Error('火山引擎API密钥未配置，请在设置中配置API-KEY');
-      logApiCall('volcengine', 'error', { error: error.message });
-      reject(error);
-      return;
-    }
-    
-    // 记录请求开始
-    logApiCall('volcengine', 'request', {
-      messages: params.messages.map(m => ({
-        role: m.role,
-        content_length: m.content.length,
-        content_preview: m.content.substring(0, 100) + '...'
-      })),
+  const requestBuilder = (config, params) => ({
+    url: config.url,
+    method: 'POST',
+    header: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${config.apiKey}`
+    },
+    data: {
+      model: 'deepseek-r1-250120',
+      messages: params.messages,
       temperature: params.temperature || config.config.temperature,
       max_tokens: params.max_tokens || config.config.max_tokens
-    });
-    
-    const startTime = Date.now();
-
-    wx.request({
-      url: config.url,
-      method: 'POST',
-      header: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${config.apiKey}`
-      },
-      data: {
-        model: 'deepseek-r1-250120',
-        messages: params.messages,
-        temperature: params.temperature || config.config.temperature,
-        max_tokens: params.max_tokens || config.config.max_tokens
-      },
-      success: (res) => {
-        const duration = Date.now() - startTime;
-        
-        if (res.statusCode === 200) {
-          // 记录成功响应
-          logApiCall('volcengine', 'success', {
-            statusCode: res.statusCode,
-            duration: duration,
-            response_preview: res.data.choices?.[0]?.message?.content?.substring(0, 100) + '...',
-            tokens: res.data.usage
-          });
-        } else {
-          // 记录错误响应
-          logApiCall('volcengine', 'error', {
-            statusCode: res.statusCode,
-            duration: duration,
-            error: res.data.error || res.errMsg,
-            details: res.data
-          });
-        }
-        
-        handleApiResponse(res, resolve, reject);
-      },
-      fail: (error) => {
-        const duration = Date.now() - startTime;
-        
-        // 记录请求失败
-        logApiCall('volcengine', 'fail', {
-          duration: duration,
-          error: error.errMsg
-        });
-        
-        handleApiError(error, reject);
-      }
-    });
+    }
   });
+  
+  return makeApiRequest('volcengine', params, requestBuilder);
 };
 
 // 统一处理API响应

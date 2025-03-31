@@ -198,6 +198,56 @@ Page({
       }
     });
   },
+  
+  // 预览训练计划
+  previewPlan(e) {
+    const { index } = e.currentTarget.dataset;
+    if (typeof index !== 'number' || index < 0 || index >= this.data.historyRecords.length) {
+      wx.showToast({
+        title: '记录索引无效',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    const record = this.data.historyRecords[index];
+    if (!record || !record.response) {
+      wx.showToast({
+        title: '无有效训练计划数据',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    try {
+      let responseData = record.response;
+      
+      // 检查是否是markdown格式
+      if (responseData.trim().startsWith('```')) {
+        // 提取markdown中的JSON内容
+        const jsonStart = responseData.indexOf('{');
+        const jsonEnd = responseData.lastIndexOf('}') + 1;
+        if (jsonStart !== -1 && jsonEnd !== -1) {
+          responseData = responseData.substring(jsonStart, jsonEnd);
+        }
+      }
+      
+      // 解析JSON格式的训练计划
+      const planData = JSON.parse(responseData);
+      // 将数据保存到临时存储
+      wx.setStorageSync('temp_preview_plan', planData);
+      // 跳转到预览页面
+      wx.navigateTo({
+        url: '/pages/myplan/index?mode=preview'
+      });
+    } catch (error) {
+      console.error('解析训练计划失败:', error);
+      wx.showToast({
+        title: '解析训练计划失败: 数据格式不正确',
+        icon: 'none'
+      });
+    }
+  },
 
   // 返回生成页面
   goToGenerate() {
@@ -205,4 +255,4 @@ Page({
       url: './ai-generate'
     });
   }
-}); 
+});
