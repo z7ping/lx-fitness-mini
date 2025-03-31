@@ -1,0 +1,123 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading">
+    <van-loading type="spinner" color="#1989fa" />
+  </view>
+  
+  <block wx:elif="{{plan}}">
+    <!-- 计划头部信息 -->
+    <view class="plan-header">
+      <view class="plan-title">
+        <text class="name">{{plan.name}}</text>
+        <view class="tag {{plan.completed ? 'completed' : 'ongoing'}}">
+          {{plan.completed ? '已完成' : '进行中'}}
+        </view>
+      </view>
+      <view class="plan-meta">
+        <view class="meta-item">
+          <van-icon name="clock-o" />
+          <text>{{plan.duration || '不限时'}}</text>
+        </view>
+        <view class="meta-item">
+          <van-icon name="fire-o" />
+          <text>{{plan.type || '混合训练'}}</text>
+        </view>
+        <view class="meta-item">
+          <van-icon name="chart-trending-o" />
+          <text>{{plan.level || '初级'}}</text>
+        </view>
+      </view>
+      
+      <!-- 进度条 -->
+      <view class="progress-section">
+        <view class="progress-header">
+          <text>完成进度</text>
+          <text class="progress-text">{{plan.progress || 0}}%</text>
+        </view>
+        <view class="progress-bar">
+          <view class="progress-inner" style="width: {{plan.progress || 0}}%"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 计划描述 -->
+    <view class="plan-description" wx:if="{{plan.description}}">
+      <view class="section-title">计划说明</view>
+      <text>{{plan.description}}</text>
+    </view>
+
+    <!-- 训练项目列表 -->
+    <view class="exercises-section">
+      <view class="section-title">
+        <text>训练项目</text>
+        <text class="subtitle">共{{plan.exercises.length}}个项目</text>
+      </view>
+      
+      <view class="exercises-list">
+        <view wx:for="{{plan.exercises}}" 
+              wx:key="id" 
+              class="exercise-item {{item.completed ? 'completed' : ''}}">
+          <view class="exercise-header">
+            <view class="exercise-info">
+              <view class="exercise-name">
+                <text class="name">{{item.name}}</text>
+                <text class="type">{{item.type}}</text>
+              </view>
+              <view class="exercise-time" wx:if="{{item.scheduledTime}}">
+                <van-icon name="calendar-o" />
+                <text>{{item.scheduledTime}}</text>
+              </view>
+            </view>
+            <view class="exercise-status">
+              <van-icon name="{{item.completed ? 'success' : 'clock'}}" 
+                       color="{{item.completed ? '#07c160' : '#ff976a'}}" />
+            </view>
+          </view>
+          
+          <view class="exercise-details">
+            <view class="detail-item" wx:if="{{item.sets && item.reps}}">
+              <van-icon name="replay" />
+              <text>{{item.sets}}组 × {{item.reps}}次</text>
+            </view>
+            <view class="detail-item" wx:if="{{item.duration}}">
+              <van-icon name="clock-o" />
+              <text>{{item.duration}}分钟</text>
+            </view>
+            <view class="detail-item" wx:if="{{item.weight}}">
+              <van-icon name="balance-o" />
+              <text>{{item.weight}}kg</text>
+            </view>
+            <view class="detail-item" wx:if="{{item.distance}}">
+              <van-icon name="location-o" />
+              <text>{{item.distance}}km</text>
+            </view>
+          </view>
+          
+          <view class="exercise-notes" wx:if="{{item.description}}">
+            <text>{{item.description}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部操作按钮 -->
+    <view class="bottom-actions">
+      <van-button wx:if="{{!plan.completed}}" 
+                 type="primary" 
+                 block 
+                 bindtap="startTraining">
+        开始训练
+      </van-button>
+      <van-button wx:else 
+                 type="default" 
+                 block 
+                 bindtap="viewTrainingRecords">
+        查看训练记录
+      </van-button>
+    </view>
+  </block>
+
+  <view wx:else class="empty-state">
+    <van-icon name="info-o" size="48px" color="#999"/>
+    <text>计划不存在或已被删除</text>
+  </view>
+</view> 

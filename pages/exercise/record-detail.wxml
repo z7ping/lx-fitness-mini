@@ -1,0 +1,264 @@
+<view class="container">
+  <!-- 顶部卡片 -->
+  <view class="top-card">
+    <view class="record-header">
+      <text class="record-title">{{record.title || '运动记录'}}</text>
+      <text class="record-date">{{record.formattedDate}} {{record.formattedTime}}</text>
+    </view>
+    
+    <view class="main-stats">
+      <view class="main-stat-item">
+        <text class="main-stat-value">{{record.displayDistance}}</text>
+        <text class="main-stat-unit">{{record.displayDistanceUnit}}</text>
+        <text class="main-stat-label">总距离</text>
+      </view>
+      <view class="divider"></view>
+      <view class="main-stat-item">
+        <text class="main-stat-value">{{record.durationFormatted}}</text>
+        <text class="main-stat-unit">时:分</text>
+        <text class="main-stat-label">运动时长</text>
+      </view>
+      <view class="divider"></view>
+      <view class="main-stat-item">
+        <text class="main-stat-value">{{record.calories}}</text>
+        <text class="main-stat-unit">千卡</text>
+        <text class="main-stat-label">消耗热量</text>
+      </view>
+    </view>
+
+    <!-- 天气信息 -->
+    <view class="weather-info" wx:if="{{record.weather}}">
+      <text class="weather-temp">{{record.weather.temperature}}°C</text>
+      <text class="weather-condition">{{record.weather.condition}}</text>
+      <text class="weather-humidity">湿度 {{record.weather.humidity}}%</text>
+    </view>
+  </view>
+
+  <!-- 地图容器 -->
+  <view class="map-container">
+    <map class="record-map" 
+         latitude="{{latitude}}" 
+         longitude="{{longitude}}"
+         polyline="{{polyline}}"
+         markers="{{markers}}"
+         include-points="{{record.points}}"
+         scale="16"
+         show-location
+         show-compass
+         enable-rotate>
+    </map>
+    <view class="no-track-tip" wx:if="{{!hasTrackData}}">
+      <text>暂无运动轨迹数据</text>
+    </view>
+  </view>
+
+  <!-- 详细数据卡片 -->
+  <view class="detail-cards">
+    <!-- 配速数据卡片 -->
+    <view class="detail-card">
+      <view class="card-header">
+        <text class="card-title">配速数据</text>
+        <text class="card-subtitle">平均配速 {{record.avgPaceFormatted}}/公里</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-row">
+          <view class="stat-col">
+            <text class="stat-value accent">{{record.paceStats.best || '--\--'}}</text>
+            <text class="stat-label">最佳配速/公里</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value">{{record.totalSteps || '--'}}</text>
+            <text class="stat-label">总步数</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value">{{record.avgCadence || '--'}}</text>
+            <text class="stat-label">平均步频(步/分)</text>
+          </view>
+        </view>
+        <!-- 配速趋势图 -->
+        <view class="chart-container" wx:if="{{record.paceStats.chart && record.paceStats.chart.length}}">
+          <ec-canvas id="paceChart" canvas-id="paceChart" ec="{{ paceChart }}"></ec-canvas>
+        </view>
+      </view>
+    </view>
+
+    <!-- 步频数据卡片 -->
+    <view class="detail-card">
+      <view class="card-header">
+        <text class="card-title">步频数据</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-row">
+          <view class="stat-col">
+            <text class="stat-value">{{record.cadenceStats.avg || '--'}}</text>
+            <text class="stat-label">平均步频(步/分)</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value accent">{{record.cadenceStats.max || '--'}}</text>
+            <text class="stat-label">最高步频</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value">{{record.cadenceStats.min || '--'}}</text>
+            <text class="stat-label">最低步频</text>
+          </view>
+        </view>
+        <!-- 步频趋势图 -->
+        <view class="chart-container" wx:if="{{record.cadenceStats.chart && record.cadenceStats.chart.length}}">
+          <ec-canvas id="cadenceChart" canvas-id="cadenceChart" ec="{{ cadenceChart }}"></ec-canvas>
+        </view>
+      </view>
+    </view>
+
+    <!-- 心率数据卡片 -->
+    <view class="detail-card" wx:if="{{record.heartRate}}">
+      <view class="card-header">
+        <text class="card-title">心率数据</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-row">
+          <view class="stat-col">
+            <text class="stat-value">{{record.heartRate.avg || '--'}}</text>
+            <text class="stat-label">平均心率(bpm)</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value accent">{{record.heartRate.max || '--'}}</text>
+            <text class="stat-label">最高心率(bpm)</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value">{{record.heartRate.min || '--'}}</text>
+            <text class="stat-label">最低心率(bpm)</text>
+          </view>
+        </view>
+        <!-- 心率区间分布 -->
+        <view class="heart-rate-zones" wx:if="{{record.heartRateZones}}">
+          <view class="zone-item" wx:for="{{record.heartRateZones}}" wx:key="name">
+            <view class="zone-header">
+              <text class="zone-name">{{item.name}}</text>
+              <text class="zone-range">{{item.range}}bpm</text>
+            </view>
+            <view class="zone-bar-container">
+              <view class="zone-bar" style="width: {{item.percentage}}%"></view>
+              <text class="zone-time">{{item.time}}分钟</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 步态数据卡片 -->
+    <view class="detail-card" wx:if="{{record.strideData}}">
+      <view class="card-header">
+        <text class="card-title">步态数据</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-row">
+          <view class="stat-col">
+            <text class="stat-value">{{record.strideData.avgLength || '--'}}</text>
+            <text class="stat-label">平均步幅(m)</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value">{{record.strideData.groundContact.avg || '--'}}</text>
+            <text class="stat-label">触地时间(ms)</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value">{{record.strideData.verticalOscillation.avg || '--'}}</text>
+            <text class="stat-label">垂直振幅(cm)</text>
+          </view>
+        </view>
+        <!-- 左右平衡 -->
+        <view class="balance-container" wx:if="{{record.balance}}">
+          <text class="balance-title">左右平衡</text>
+          <text class="balance-value">{{record.balance.leftRight}}</text>
+          <view class="balance-bar-container">
+            <view class="balance-bar-left" style="width: {{record.balance.chart[0].left}}%"></view>
+            <view class="balance-bar-right" style="width: {{record.balance.chart[0].right}}%"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 配速分段数据 -->
+    <view class="detail-card" wx:if="{{record.splits && record.splits.length}}">
+      <view class="card-header">
+        <text class="card-title">分段配速</text>
+      </view>
+      <view class="pace-list">
+        <view class="pace-item" wx:for="{{record.splits}}" wx:key="index">
+          <view class="pace-info">
+            <text class="km-mark">第{{index + 1}}公里</text>
+            <text class="km-pace">{{item.pace}}</text>
+          </view>
+          <view class="pace-bar-container">
+            <view class="pace-bar" style="width: {{(item.time / record.duration) * 100}}%"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 训练效果卡片 -->
+    <view class="detail-card" wx:if="{{record.trainingEffect}}">
+      <view class="card-header">
+        <text class="card-title">训练效果</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-row">
+          <view class="stat-col">
+            <text class="stat-value">{{record.trainingEffect.aerobic || '--'}}</text>
+            <text class="stat-label">有氧训练效果</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value">{{record.trainingEffect.anaerobic || '--'}}</text>
+            <text class="stat-label">无氧训练效果</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value">{{record.trainingEffect.load || '--'}}</text>
+            <text class="stat-label">训练负荷</text>
+          </view>
+        </view>
+        <view class="stat-row" style="margin-top: 20rpx;">
+          <view class="stat-col">
+            <text class="stat-value">{{record.trainingEffect.recovery || '--'}}h</text>
+            <text class="stat-label">建议恢复时间</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value">{{record.trainingEffect.vo2max || '--'}}</text>
+            <text class="stat-label">预估VO2Max</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- GPS数据卡片 -->
+    <view class="detail-card">
+      <view class="card-header">
+        <text class="card-title">GPS数据</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-row">
+          <view class="stat-col">
+            <text class="stat-value">{{record.elevationData.gain || '--'}}</text>
+            <text class="stat-label">累计爬升(m)</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value">{{record.elevationData.maxAltitude || '--'}}</text>
+            <text class="stat-label">最高海拔(m)</text>
+          </view>
+          <view class="stat-col">
+            <text class="stat-value">{{record.elevationData.minAltitude || '--'}}</text>
+            <text class="stat-label">最低海拔(m)</text>
+          </view>
+        </view>
+        <!-- 海拔趋势图 -->
+        <view class="chart-container" wx:if="{{record.elevationData.chart && record.elevationData.chart.length}}">
+          <ec-canvas id="elevationChart" canvas-id="elevationChart" ec="{{ elevationChart }}"></ec-canvas>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-buttons">
+    <button class="secondary-btn" bindtap="goBack">返回</button>
+    <button class="primary-btn" open-type="share">分享</button>
+  </view>
+</view> 

@@ -1,0 +1,161 @@
+.container {
+  padding: 20rpx;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+.header {
+  padding: 20rpx 0;
+  margin-bottom: 20rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200rpx;
+}
+
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 400rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+  margin: 20rpx 0 40rpx;
+}
+
+.start-btn {
+  background-color: #1296db;
+  color: #fff;
+  padding: 20rpx 60rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+}
+
+.records-list {
+  margin-top: 20rpx;
+}
+
+.record-item {
+  display: flex;
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.record-left {
+  display: flex;
+  align-items: center;
+  margin-right: 20rpx;
+}
+
+.record-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background-color: rgba(18, 150, 219, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.record-content {
+  flex: 1;
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.record-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.record-date {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.record-stats {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 120rpx;
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 4rpx;
+}
+
+.stat-label {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.record-right {
+  display: flex;
+  align-items: center;
+  margin-left: 20rpx;
+}
+
+.delete-btn {
+  padding: 20rpx;
+  margin: -20rpx -20rpx -20rpx 0;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 6rpx;
+}
+
+.record-right {
+  display: flex;
+  align-items: center;
+  margin-left: 20rpx;
+}
+
+.delete-btn {
+  padding: 10rpx;
+}

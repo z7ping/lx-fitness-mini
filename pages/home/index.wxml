@@ -1,0 +1,143 @@
+<!-- pages/home/index.wxml -->
+<view class="container">
+  <!-- 用户信息概览 -->
+  <view class="user-overview">
+    <view class="user-info">
+      <image class="avatar" src="{{userInfo.avatarUrl || '/assets/images/default-avatar.png'}}" />
+      <view class="greeting">
+        <text class="hello">{{greeting}}</text>
+        <text class="name">{{userInfo.nickName || '健身达人'}}</text>
+      </view>
+    </view>
+    <view class="today-date">
+      <text>{{todayInfo.date}}</text>
+      <text class="weekday">周{{todayInfo.weekday}}</text>
+    </view>
+  </view>
+
+  <!-- 添加可滚动的内容区域 -->
+  <view class="content-area">
+    <!-- 健康数据卡片 -->
+    <view class="health-card">
+      <view class="card-header">
+        <text class="title">今日数据</text>
+        <text class="subtitle">健康生活，从现在开始</text>
+      </view>
+      <view class="stats-grid">
+        <view class="stats-item">
+          <view class="stats-icon calories-icon">
+            <van-icon name="fire" color="#ff9800" size="24px" />
+          </view>
+          <view class="stats-info">
+            <text class="stats-value">{{healthStats.calories || 0}}</text>
+            <text class="stats-label">消耗热量(千卡)</text>
+          </view>
+        </view>
+        <view class="stats-item">
+          <view class="stats-icon steps-icon">
+            <van-icon name="upgrade" color="#4caf50" size="24px" />
+          </view>
+          <view class="stats-info">
+            <text class="stats-value">{{healthStats.steps || 0}}</text>
+            <text class="stats-label">今日步数</text>
+          </view>
+        </view>
+        <view class="stats-item">
+          <view class="stats-icon duration-icon">
+            <van-icon name="clock" color="#2196f3" size="24px" />
+          </view>
+          <view class="stats-info">
+            <text class="stats-value">{{healthStats.duration || 0}}</text>
+            <text class="stats-label">运动时长(分钟)</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 今日计划卡片 -->
+    <view class="plan-card">
+      <view class="card-header">
+        <text class="title">今日计划</text>
+        <text class="more" bindtap="viewMorePlans">查看更多</text>
+      </view>
+      <view class="plan-content" wx:if="{{hasPlans}}">
+        <block wx:for="{{todayExercises}}" wx:key="id">
+          <view class="exercise-item">
+            <view class="exercise-info">
+              <view class="exercise-name">
+                <text>{{item.name}}</text>
+                <text class="exercise-type">{{item.type}}</text>
+              </view>
+              <view class="exercise-detail">
+                <text class="exercise-params">
+                  <block wx:if="{{item.sets && item.reps}}">{{item.sets}}组{{item.reps}}次</block>
+                  <block wx:elif="{{item.duration}}">{{item.duration}}分钟</block>
+                  <block wx:elif="{{item.distance}}">{{item.distance}}公里</block>
+                </text>
+                <text wx:if="{{item.planName}}" class="plan-name">{{item.planName}}</text>
+              </view>
+            </view>
+            <van-button 
+              type="primary" 
+              size="small" 
+              data-exercise="{{item}}"
+              bindtap="startTraining"
+              disabled="{{item.completed}}"
+            >{{item.completed ? '已完成' : '开始训练'}}</van-button>
+          </view>
+        </block>
+      </view>
+      <view class="empty-plan" wx:else>
+        <view class="empty-icon">
+          <van-icon name="notes-o" size="48px" color="#999" />
+        </view>
+        <text>还没有训练计划</text>
+        <view class="create-options">
+          <van-button 
+            type="primary" 
+            size="small" 
+            bindtap="createPlanManually"
+            custom-class="create-btn"
+          >手动创建</van-button>
+          <van-button 
+            type="info" 
+            size="small" 
+            bindtap="createPlanWithAI"
+            custom-class="create-btn"
+          >AI智能创建</van-button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 优化快捷功能入口 -->
+    <view class="quick-actions">
+      <view class="action-item" bindtap="navigateToCheckin">
+        <view class="action-icon action-checkin">
+          <van-icon name="medal-o" size="32px" color="#1296db" />
+        </view>
+        <text>打卡记录</text>
+      </view>
+      <view class="action-item" bindtap="navigateToWeight">
+        <view class="action-icon action-weight">
+          <van-icon name="balance-o" size="32px" color="#4caf50" />
+        </view>
+        <text>体重记录</text>
+      </view>
+      <view class="action-item" bindtap="navigateToAI">
+        <view class="action-icon action-ai">
+          <van-icon name="bulb-o" size="32px" color="#ff9800" />
+        </view>
+        <text>AI教练</text>
+      </view>
+      <!-- <view class="action-item" bindtap="navigateToData">
+        <view class="action-icon action-stats">
+          <van-icon name="chart-trending-o" size="32px" color="#9c27b0" />
+        </view>
+        <text>数据统计</text>
+      </view> -->
+    </view>
+  </view>
+
+  <!-- 添加登录组件 -->
+  <auth-login id="authLogin" bind:success="onLoginSuccess" bind:close="onLoginClose" />
+</view>

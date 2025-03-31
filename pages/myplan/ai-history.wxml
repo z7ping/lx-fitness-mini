@@ -1,0 +1,81 @@
+<view class="container">
+  <view class="header">
+    <view class="title">AI生成历史</view>
+    <view class="actions">
+      <view class="action-btn" bindtap="clearAllRecords" wx:if="{{!isEmpty}}">
+        <van-icon name="delete" size="36rpx" />
+        <text>清空</text>
+      </view>
+      <view class="action-btn primary" bindtap="goToGenerate">
+        <van-icon name="plus" size="36rpx" />
+        <text>新建</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <van-loading type="spinner" color="#ff9800" />
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && isEmpty}}">
+    <van-icon name="description" class="empty-icon" />
+    <text class="empty-text">暂无生成记录</text>
+    <button class="create-btn" bindtap="goToGenerate">
+      <van-icon name="plus" size="28rpx" />
+      开始生成计划
+    </button>
+  </view>
+
+  <!-- 历史记录列表 -->
+  <scroll-view class="history-list" scroll-y wx:if="{{!loading && !isEmpty}}">
+    <view 
+      class="history-item" 
+      wx:for="{{historyRecords}}" 
+      wx:key="id"
+      bindtap="viewRecordDetail"
+      data-id="{{item.id}}"
+    >
+      <view class="item-header">
+        <view class="item-type">
+          <van-icon name="robot" size="32rpx" color="#ff9800" />
+          <text class="type-text">{{item.modelName || '默认模型'}}</text>
+        </view>
+        <view class="item-time">{{item.formattedDate}}</view>
+      </view>
+      
+      <view class="item-content">
+        <view class="prompt-preview">
+          <text class="label">提示词：</text>
+          <text class="preview-text">{{item.promptPreview}}</text>
+        </view>
+        <view class="response-preview">
+          <text class="label">回复：</text>
+          <text class="preview-text">{{item.responsePreview}}</text>
+        </view>
+      </view>
+      
+      <view class="item-footer">
+        <view class="user-info-tag" wx:if="{{item.userInfo}}">
+          <van-icon name="user-o" size="24rpx" />
+          <text wx:if="{{item.userInfo.goalText}}">目标: {{item.userInfo.goalText}}</text>
+        </view>
+        
+        <view class="feedback-tag" wx:if="{{item.feedback}}">
+          <van-icon name="star" size="24rpx" color="#ffd21e" />
+          <text>评分: {{item.feedback.rating}}</text>
+        </view>
+        
+        <view 
+          class="delete-btn" 
+          catchtap="deleteRecord" 
+          data-index="{{index}}"
+        >
+          <van-icon name="delete-o" size="28rpx" color="#ff4d4f" />
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view> 

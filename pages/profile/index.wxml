@@ -1,0 +1,118 @@
+<!-- pages/profile/index.wxml -->
+<view class="container">
+  <!-- 未登录状态显示登录按钮 -->
+  <view class="profile-header" wx:if="{{!userInfo}}">
+    <image class="avatar" src="/assets/images/default-avatar.png" />
+    <view class="user-info">
+      <text class="nickname">未登录</text>
+      <button class="login-btn" bindtap="showLogin">点击登录</button>
+    </view>
+  </view>
+
+  <!-- 已登录状态显示用户信息和健康数据 -->
+  <view class="profile-header" wx:else>
+    <view class="header-main">
+      <image class="avatar" src="{{userInfo.avatarUrl || '/assets/images/default-avatar.png'}}" />
+      <view class="user-info">
+        <text class="nickname">{{userInfo.nickName}}</text>
+        <text class="user-id">ID: {{userInfo.userId || '----'}}</text>
+        <!-- 健康数据放在用户名下方 -->
+        <view class="health-brief" bindtap="editHealthInfo">
+          <text class="health-item">身高 {{healthInfo.height}}cm</text>
+          <text class="health-item">体重 {{healthInfo.weight}}kg</text>
+        </view>
+      </view>
+    </view>
+    <view class="edit-btn" bindtap="editUserInfo">
+      <van-icon name="edit" size="18px" />
+    </view>
+  </view>
+
+  <!-- 用户数据统计 -->
+  <view class="user-stats">
+    <view class="stat-item">
+      <text class="stat-num">{{userInfo.exerciseDays || 0}}</text>
+      <text class="stat-label">运动天数</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num">{{userInfo.continuousDays || 0}}</text>
+      <text class="stat-label">连续打卡</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num">{{userInfo.totalCalories || 0}}</text>
+      <text class="stat-label">总消耗(千卡)</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <van-loading class="loading" size="24px" vertical wx:if="{{loading}}">加载中...</van-loading>
+
+  <!-- 主要功能区域 -->
+  <view class="section-title">训练管理</view>
+  <view class="features-grid main-features">
+    <!-- 我的计划 -->
+    <view class="feature-block" bindtap="goToPlans">
+      <view class="feature-icon orange">
+        <van-icon name="calendar-o" size="24px" color="#ff9800" />
+      </view>
+      <text class="feature-title">我的计划</text>
+      <text class="feature-desc">{{planInfo.completedCount || 0}}/{{planInfo.totalCount || 0}}</text>
+    </view>
+
+    <!-- 运动记录 -->
+    <view class="feature-block" bindtap="goToRecords">
+      <view class="feature-icon green">
+        <van-icon name="chart-trending-o" size="24px" color="#7bed9f" />
+      </view>
+      <text class="feature-title">运动记录</text>
+      <text class="feature-desc">{{recordInfo.weeklyDuration || 0}}分钟</text>
+    </view>
+  </view>
+
+  <!-- 辅助功能区域 -->
+  <view class="section-title">快捷功能</view>
+  <view class="quick-grid">
+    <!-- 数据分析 -->
+    <view class="quick-item" bindtap="goToDataAnalysis">
+      <view class="quick-icon blue">
+        <van-icon name="chart-trending-o" size="22px" color="#70a1ff" />
+      </view>
+      <text>数据分析</text>
+    </view>
+
+    <!-- 设置 -->
+    <view class="quick-item" bindtap="goToSettings">
+      <view class="quick-icon green">
+        <van-icon name="setting-o" size="22px" color="#7bed9f" />
+      </view>
+      <text>设置</text>
+    </view>
+
+    <!-- 关于我们 -->
+    <view class="quick-item" bindtap="goToAboutUs">
+      <view class="quick-icon purple">
+        <van-icon name="info-o" size="22px" color="#9c88ff" />
+      </view>
+      <text>关于我们</text>
+    </view>
+
+    <!-- 特别鸣谢 -->
+    <view class="quick-item" bindtap="goToAcknowledgements">
+      <view class="quick-icon blue">
+        <van-icon name="like-o" size="22px" color="#70a1ff" />
+      </view>
+      <text>特别鸣谢</text>
+    </view>
+  </view>
+
+  <!-- 退出登录按钮 -->
+  <view class="logout-section" wx:if="{{userInfo}}">
+    <button class="logout-btn" bindtap="handleLogout">
+      <van-icon name="close" color="#ff4d4f" size="14px" />
+      <text>退出登录</text>
+    </button>
+  </view>
+
+  <!-- 添加登录组件 -->
+  <auth-login id="authLogin" bind:success="onLoginSuccess" bind:close="onLoginClose" />
+</view>

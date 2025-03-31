@@ -1,0 +1,66 @@
+<!-- pages/about/index.wxml -->
+<view class="container">
+  <view class="header">
+    <image class="logo" src="/assets/images/logo.png" mode="aspectFit" />
+    <text class="app-name">LX Fitness</text>
+    <text class="version">Version 1.0.0</text>
+  </view>
+
+  <view class="content">
+    <view class="section">
+      <view class="section-title">关于我们</view>
+      <view class="section-content">
+        <text>LX Fitness 是一款专注于健康生活的智能健身应用。我们致力于为用户提供专业、科学的健身指导和训练计划，帮助用户实现健康生活目标。</text>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">我们的使命</view>
+      <view class="section-content">
+        <text>让每个人都能享受科学健身的乐趣，实现健康生活方式。</text>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">联系我们</view>
+      <view class="section-content contact-list">
+        <view class="contact-item">
+          <van-icon name="envelop-o" size="20px" color="#ff9800" />
+          <text>z7ping@outlook.com</text>
+        </view>
+        <view class="contact-item">
+          <van-icon name="phone-o" size="20px" color="#ff9800" />
+          <text>暂无电话</text>
+        </view>
+        <view class="contact-item">
+          <van-icon name="location-o" size="20px" color="#ff9800" />
+          <text>西安市雁塔区软件园</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 添加开发者工具区域 -->
+    <view class="section">
+      <view class="section-title">开发者工具</view>
+      <view class="section-content">
+        <view class="tool-list">
+          <view class="tool-item" bindtap="navigateToLogs">
+            <van-icon name="records" size="24px" color="#ff9800" />
+            <text>日志查看</text>
+            <van-icon name="arrow" size="16px" color="#999" />
+          </view>
+          <view class="tool-item" bindtap="navigateToAcknowledgements">
+            <van-icon name="certificate" size="24px" color="#ff9800" />
+            <text>开源声明</text>
+            <van-icon name="arrow" size="16px" color="#999" />
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer">
+    <text>Copyright © 2024 LX Fitness</text>
+    <text>All Rights Reserved</text>
+  </view>
+</view> 

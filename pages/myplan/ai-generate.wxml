@@ -1,0 +1,264 @@
+<!-- AI生成计划页面 -->
+<view class="container">
+  <!-- 顶部用户信息展示区 -->
+  <view class="user-info-section" wx:if="{{userData}}">
+    <view class="section-header">
+      <view class="section-title">您的健身目标</view>
+      <view class="history-btn" bindtap="viewHistory">
+        <van-icon name="clock-o" size="32rpx" />
+        <text>历史记录</text>
+      </view>
+    </view>
+    <view class="info-grid">
+      <view class="info-item">
+        <text class="label">性别</text>
+        <text class="value">{{userData.genderText}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">年龄</text>
+        <text class="value">{{userData.age}}岁</text>
+      </view>
+      <view class="info-item">
+        <text class="label">身高</text>
+        <text class="value">{{userData.height}}cm</text>
+      </view>
+      <view class="info-item">
+        <text class="label">体重</text>
+        <text class="value">{{userData.weight}}kg</text>
+      </view>
+      <view class="info-item">
+        <text class="label">目标</text>
+        <text class="value">{{userData.goalText}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">训练水平</text>
+        <text class="value">{{userData.levelText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 中间对话展示区 -->
+  <scroll-view class="chat-section" scroll-y scroll-into-view="{{scrollToMessage}}">
+    <view class="message-list">
+      <block wx:for="{{messages}}" wx:key="id">
+        <!-- AI思考过程 -->
+        <view class="message ai-thinking" wx:if="{{item.type === 'thinking'}}">
+          <view class="avatar ai-avatar">AI</view>
+          <view class="content">
+            <view class="thinking-dots">
+              <view class="dot"></view>
+              <view class="dot"></view>
+              <view class="dot"></view>
+            </view>
+            <text class="text">{{item.content}}</text>
+          </view>
+        </view>
+
+        <!-- AI回复 -->
+        <view class="message ai-message" wx:if="{{item.type === 'ai'}}" id="msg-{{item.id}}">
+          <view class="avatar ai-avatar">AI</view>
+          <view class="content">
+            <!-- 使用Towxml渲染Markdown，添加DeepSeek风格 -->
+            <block wx:if="{{item.towxml}}">
+              <towxml nodes="{{item.towxml}}" />
+            </block>
+            <!-- 兼容旧版本，如果没有towxml则使用rich-text -->
+            <rich-text wx:else nodes="{{item.content}}" space="nbsp" decode user-select></rich-text>
+            <view class="message-actions">
+              <view class="action-item" bindtap="copyMessage" data-index="{{index}}">
+                <van-icon name="description" size="24rpx" />
+              </view>
+              <view class="action-item" bindtap="retryStep" data-step="{{item.step}}" data-index="{{index}}" wx:if="{{item.retryable}}">
+                <van-icon name="replay" size="24rpx" />
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 用户输入 -->
+        <view class="message user-message" wx:if="{{item.type === 'user'}}" id="msg-{{item.id}}">
+          <view class="avatar user-avatar">
+            <van-icon name="user-o" size="32rpx" color="#fff" />
+          </view>
+          <view class="content">
+            <text class="text">{{item.content}}</text>
+          </view>
+        </view>
+      </block>
+      
+      <!-- 加载动画 -->
+      <view class="loading-container" wx:if="{{isGenerating && messages.length === 0}}">
+        <view class="loading-animation">
+          <view class="loading-circle"></view>
+          <view class="loading-circle"></view>
+          <view class="loading-circle"></view>
+        </view>
+        <text class="loading-text">AI正在为您生成个性化计划...</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- AI模型选择器弹窗 -->
+  <van-popup
+    show="{{ showModelPicker }}"
+    position="bottom"
+    bind:close="closeModelPicker"
+    round
+    custom-style="max-height: 70%"
+  >
+    <view class="model-picker-header">
+      <text class="title">选择AI模型</text>
+      <van-icon name="cross" bind:tap="closeModelPicker" />
+    </view>
+    <view class="model-picker-content">
+      <view 
+        class="model-item {{ selectedModel === item.value ? 'active' : '' }}"
+        wx:for="{{ modelOptions }}"
+        wx:key="value"
+        bind:tap="onModelSelect"
+        data-index="{{ index }}"
+      >
+        <view class="model-item-header">
+          <text class="model-name">{{ item.text }}</text>
+          <van-icon name="success" wx:if="{{ selectedModel === item.value }}" color="#ff6b35" />
+        </view>
+        <text class="model-desc">{{ item.description }}</text>
+      </view>
+    </view>
+  </van-popup>
+
+  <!-- 计划预览弹窗 -->
+  <van-popup
+    show="{{showPreview}}"
+    position="bottom"
+    custom-style="height: 80%"
+    bind:close="closePreview"
+  >
+    <view class="preview-container">
+      <view class="preview-header">
+        <text class="title">计划预览</text>
+        <van-icon name="cross" size="32rpx" bind:tap="closePreview" />
+      </view>
+      
+      <scroll-view class="preview-content" scroll-y>
+        <!-- 训练计划预览 -->
+        <view class="preview-section">
+          <view class="section-header">
+            <van-icon name="chart-trending-o" size="32rpx" color="#1296db" />
+            <text class="section-title">训练计划</text>
+          </view>
+          <view class="section-content">
+            <text class="preview-text" user-select>{{currentPlan.plan}}</text>
+          </view>
+        </view>
+
+        <!-- 饮食建议预览 -->
+        <view class="preview-section">
+          <view class="section-header">
+            <van-icon name="food-o" size="32rpx" color="#ff6b00" />
+            <text class="section-title">饮食建议</text>
+          </view>
+          <view class="section-content">
+            <text class="preview-text" user-select>{{currentPlan.diet}}</text>
+          </view>
+        </view>
+
+        <!-- 分析报告预览 -->
+        <view class="preview-section">
+          <view class="section-header">
+            <van-icon name="analysis" size="32rpx" color="#52c41a" />
+            <text class="section-title">分析报告</text>
+          </view>
+          <view class="section-content">
+            <text class="preview-text" user-select>{{currentPlan.analysis}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </van-popup>
+
+  <!-- 底部按钮区域 -->
+  <view class="bottom-actions" wx:if="{{!isFromHistory}}">
+    <block wx:if="{{!hasGeneratedPlan}}">
+      <view class="action-row">
+        <view class="model-select" bind:tap="showModelPicker">
+          <text class="model-label">当前模型</text>
+          <view class="model-value">
+            <text>{{ modelOptions[modelIndex].text }}</text>
+            <van-icon name="arrow-down" />
+          </view>
+        </view>
+        <button class="btn-cancel" bindtap="cancelGeneration" wx:if="{{isGenerating}}">取消生成</button>
+        <button class="btn-continue" bindtap="continuePaused" wx:if="{{showContinueButton}}">继续生成</button>
+        <button class="btn-start" bindtap="startGeneration" wx:if="{{!isGenerating && !showContinueButton}}">
+          <van-icon name="magic" />
+          生成计划
+        </button>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="action-buttons">
+        <button class="btn-adjust" bindtap="adjustPlan">调整计划</button>
+        <button class="btn-save" bindtap="savePlan" loading="{{saving}}">保存计划</button>
+        <button class="btn-feedback" bindtap="showFeedback">反馈</button>
+      </view>
+    </block>
+  </view>
+
+  <!-- 添加反馈弹窗 -->
+  <van-popup
+    show="{{showFeedback}}"
+    position="bottom"
+    custom-style="height: 60%"
+    bind:close="closeFeedback"
+  >
+    <view class="feedback-container">
+      <view class="feedback-header">
+        <text class="title">计划反馈</text>
+        <van-icon name="cross" size="32rpx" bind:tap="closeFeedback" />
+      </view>
+      
+      <view class="feedback-content">
+        <view class="feedback-item">
+          <text class="label">计划满意度</text>
+          <van-rate
+            value="{{feedback.rating}}"
+            size="{{24}}"
+            color="#ffd21e"
+            void-icon="star"
+            void-color="#eee"
+            bind:change="onRatingChange"
+          />
+        </view>
+        
+        <view class="feedback-item">
+          <text class="label">计划难度</text>
+          <van-rate
+            value="{{feedback.difficulty}}"
+            size="{{24}}"
+            color="#ffd21e"
+            void-icon="star"
+            void-color="#eee"
+            bind:change="onDifficultyChange"
+          />
+        </view>
+        
+        <view class="feedback-item">
+          <text class="label">建议改进</text>
+          <textarea
+            class="feedback-textarea"
+            placeholder="请输入您的建议（选填）"
+            value="{{feedback.suggestion}}"
+            bindinput="onSuggestionInput"
+            user-select
+          />
+        </view>
+      </view>
+      
+      <view class="feedback-footer">
+        <button class="cancel-btn" bindtap="closeFeedback">取消</button>
+        <button class="submit-btn" bindtap="submitFeedback" loading="{{saving}}">提交</button>
+      </view>
+    </view>
+  </van-popup>
+</view>

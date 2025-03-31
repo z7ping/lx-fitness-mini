@@ -1,0 +1,42 @@
+<!-- pages/device/bind.wxml -->
+<view class="container">
+  <!-- 扫描状态 -->
+  <view class="scan-status">
+    <text>{{scanning ? '正在扫描设备...' : '点击下方按钮开始扫描'}}</text>
+  </view>
+
+  <!-- 设备列表 -->
+  <view class="device-list">
+    <block wx:for="{{devices}}" wx:key="deviceId">
+      <view class="device-item {{selectedDevice.deviceId === item.deviceId ? 'selected' : ''}}" 
+            bindtap="selectDevice" 
+            data-device="{{item}}">
+        <view class="device-info">
+          <text class="device-name">{{item.name}}</text>
+          <view class="device-status">
+            <text class="status-text {{item.connected ? 'connected' : ''}}">{{item.connected ? '已连接' : '未连接'}}</text>
+            <text wx:if="{{item.bound}}" class="bound-text">已绑定</text>
+          </view>
+        </view>
+        <view class="device-debug-info">
+          <text class="debug-item">MAC: {{item.deviceId}}</text>
+          <text class="debug-item">信号强度: {{item.RSSI}}dBm</text>
+          <!-- <text class="debug-item" wx:if="{{item.advertisData}}">广播数据: {{item.advertisData}}</text> -->
+          <text class="debug-item" wx:if="{{item.localName}}">本地名称: {{item.localName}}</text>
+          <!-- <text class="debug-item" wx:if="{{item.serviceData}}">服务数据: {{item.serviceData}}</text> -->
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-buttons">
+    <button class="scan-btn" type="primary" bindtap="startScan" loading="{{scanning}}">
+      {{scanning ? '停止扫描' : '开始扫描'}}
+    </button>
+    <button class="bind-btn" type="primary" bindtap="bindDevice" 
+            disabled="{{!selectedDevice || selectedDevice.bound}}">
+      {{selectedDevice && selectedDevice.bound ? '设备已绑定' : '绑定设备'}}
+    </button>
+  </view>
+</view>

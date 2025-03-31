@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "AI生成历史",
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index",
+    "van-loading": "@vant/weapp/loading/index"
+  }
+} 

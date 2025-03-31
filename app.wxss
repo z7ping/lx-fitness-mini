@@ -1,0 +1,123 @@
+/* 全局主题变量 */
+:root {
+  /* 主题色 */
+  --primary-color: #4CAF50;
+  --primary-light: #81C784;
+  --primary-dark: #388E3C;
+  
+  /* 辅助色 */
+  --secondary-color: #2196F3;
+  --secondary-light: #64B5F6;
+  --secondary-dark: #1976D2;
+  
+  /* 文字颜色 */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-hint: #999999;
+  
+  /* 背景色 */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F5F5F5;
+  --bg-card: #FFFFFF;
+  
+  /* 边框和阴影 */
+  --border-color: #E0E0E0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  
+  /* 圆角 */
+  --border-radius-sm: 4rpx;
+  --border-radius-md: 8rpx;
+  --border-radius-lg: 16rpx;
+  
+  /* 间距 */
+  --spacing-xs: 8rpx;
+  --spacing-sm: 16rpx;
+  --spacing-md: 24rpx;
+  --spacing-lg: 32rpx;
+}
+
+/* 暗色主题 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #81C784;
+    --primary-light: #A5D6A7;
+    --primary-dark: #66BB6A;
+    
+    --text-primary: #FFFFFF;
+    --text-secondary: #E0E0E0;
+    --text-hint: #BDBDBD;
+    
+    --bg-primary: #121212;
+    --bg-secondary: #1E1E1E;
+    --bg-card: #242424;
+    
+    --border-color: #424242;
+    --shadow-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* 基础样式 */
+page {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+/* 卡片样式 */
+.card {
+  background-color: var(--bg-card);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 2rpx 8rpx var(--shadow-color);
+  margin: var(--spacing-md);
+  padding: var(--spacing-md);
+  transition: all 0.3s ease;
+}
+
+/* 按钮样式 */
+.btn {
+  background-color: var(--primary-color);
+  border-radius: var(--border-radius-md);
+  color: #FFFFFF;
+  font-size: 28rpx;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  transition: all 0.3s ease;
+}
+
+.btn:active {
+  background-color: var(--primary-dark);
+}
+
+/* 文本样式 */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-hint {
+  color: var(--text-hint);
+}
+
+/* 动画类 */
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20rpx); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@import "./styles/markdown-deepseek.wxss";

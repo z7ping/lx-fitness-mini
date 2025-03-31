@@ -1,0 +1,237 @@
+.container {
+  padding: 20rpx;
+  min-height: 100vh;
+  background: #f7f8fa;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* 计划头部样式 */
+.plan-header {
+  background: #fff;
+  padding: 30rpx;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+
+.plan-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.plan-title .name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.tag {
+  font-size: 24rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.tag.ongoing {
+  background: #e8f3ff;
+  color: #1989fa;
+}
+
+.tag.completed {
+  background: #e8f7ed;
+  color: #07c160;
+}
+
+.plan-meta {
+  display: flex;
+  margin-bottom: 30rpx;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  margin-right: 30rpx;
+  color: #666;
+  font-size: 26rpx;
+}
+
+.meta-item van-icon {
+  margin-right: 8rpx;
+}
+
+/* 进度条样式 */
+.progress-section {
+  margin-top: 20rpx;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.progress-bar {
+  height: 8rpx;
+  background: #ebedf0;
+  border-radius: 4rpx;
+}
+
+.progress-inner {
+  height: 100%;
+  background: #1989fa;
+  border-radius: 4rpx;
+  transition: width 0.3s ease;
+}
+
+/* 计划描述样式 */
+.plan-description {
+  background: #fff;
+  padding: 30rpx;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 训练项目列表样式 */
+.exercises-section {
+  background: #fff;
+  padding: 30rpx;
+  border-radius: 12rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subtitle {
+  font-size: 26rpx;
+  color: #999;
+  font-weight: normal;
+}
+
+.exercise-item {
+  padding: 20rpx;
+  border-radius: 8rpx;
+  background: #f8f9fa;
+  margin-bottom: 20rpx;
+}
+
+.exercise-item.completed {
+  background: #f0f9eb;
+}
+
+.exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16rpx;
+}
+
+.exercise-info {
+  flex: 1;
+}
+
+.exercise-time {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 8rpx;
+}
+
+.exercise-time van-icon {
+  margin-right: 4rpx;
+  font-size: 24rpx;
+}
+
+.exercise-status {
+  margin-left: 16rpx;
+  padding-top: 4rpx;
+}
+
+.exercise-name {
+  display: flex;
+  align-items: center;
+}
+
+.exercise-name .name {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+  margin-right: 12rpx;
+}
+
+.exercise-name .type {
+  font-size: 24rpx;
+  color: #999;
+  background: #f2f3f5;
+  padding: 2rpx 12rpx;
+  border-radius: 20rpx;
+}
+
+.exercise-details {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 12rpx;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  margin-right: 24rpx;
+  margin-bottom: 8rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.detail-item van-icon {
+  margin-right: 6rpx;
+}
+
+.exercise-notes {
+  font-size: 26rpx;
+  color: #999;
+  line-height: 1.5;
+}
+
+/* 底部按钮样式 */
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx;
+  background: #fff;
+  box-shadow: 0 -2rpx 8rpx rgba(0,0,0,0.04);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+  color: #999;
+}
+
+.empty-state text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+} 

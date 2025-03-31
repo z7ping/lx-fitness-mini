@@ -1,0 +1,52 @@
+<!-- pages/checkin/records.wxml -->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="header">
+    <text class="title">运动记录打卡</text>
+  </view>
+
+  <!-- 统计卡片 -->
+  <view class="stats-card">
+    <view class="stats-item">
+      <text class="stats-value">{{weeklyCount || 0}}</text>
+      <text class="stats-label">本周运动次数</text>
+    </view>
+    <view class="stats-item">
+      <text class="stats-value">{{weeklyDuration || 0}}</text>
+      <text class="stats-label">本周运动时长(分钟)</text>
+    </view>
+    <view class="stats-item">
+      <text class="stats-value">{{monthlyCount || 0}}</text>
+      <text class="stats-label">本月运动次数</text>
+    </view>
+  </view>
+
+  <!-- 记录列表 -->
+  <view class="records-list">
+    <block wx:if="{{records.length > 0}}">
+      <view class="record-item" 
+            wx:for="{{records}}" 
+            wx:key="id"
+            bindtap="viewRecordDetail"
+            data-id="{{item.id}}">
+        <view class="record-header">
+          <text class="record-date">{{item.date}}</text>
+          <text class="record-duration">{{item.durationText}}</text>
+        </view>
+        <view class="record-content">
+          <text class="record-type">{{item.type}}</text>
+          <text class="record-calories">消耗{{item.calories}}千卡</text>
+        </view>
+        <view class="record-footer">
+          <text class="record-status {{item.status === 'completed' ? 'completed' : ''}}">{{item.statusText}}</text>
+        </view>
+      </view>
+    </block>
+    <view class="empty-state" wx:else>
+      <van-empty description="暂无运动记录" />
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <van-loading class="loading" size="24px" vertical wx:if="{{loading}}">加载中...</van-loading>
+</view>

@@ -1,0 +1,293 @@
+<!-- 训练计划创建页面 -->
+<view class="container">
+  <!-- 训练建议卡片 -->
+  <view class="tips-card" wx:if="{{planInfo.type}}">
+    <view class="tips-header">
+      <van-icon name="fire-o" size="40rpx" color="#FF8C00" />
+      <text>训练建议</text>
+    </view>
+    <view class="tips-content">
+      <text class="tip-text">{{trainingTips.description}}</text>
+      <view class="tip-items">
+        <view class="tip-item" wx:for="{{trainingTips.items}}" wx:key="index">
+          <van-icon name="checked" color="#FF8C00" />
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 基本信息表单 -->
+  <view class="card">
+    <view class="card-title">
+      <van-icon name="edit" />
+      <text>基本信息</text>
+    </view>
+    <van-field
+      value="{{ planInfo.name }}"
+      label="计划名称"
+      placeholder="请输入计划名称"
+      data-field="name"
+      bind:change="onInputChange"
+      required
+      input-class="field-text"
+    />
+    <!-- 单独使用picker，不需要嵌套在van-field里 -->
+    <picker 
+      range="{{types}}" 
+      bindchange="onPickerChange" 
+      data-field="type"
+      value="{{types.indexOf(planInfo.type)}}"
+    >
+      <van-field
+        value="{{planInfo.type}}"
+        label="训练类型"
+        placeholder="请选择训练类型"
+        readonly
+        required
+        input-class="field-text"
+        is-link
+        clickable
+      />
+    </picker>
+  </view>
+
+  <!-- 训练时间设置 -->
+  <view class="card">
+    <view class="card-title">
+      <van-icon name="clock-o" />
+      <text>训练时间</text>
+    </view>
+    
+    <!-- 使用原生view替代van-cell -->
+    <view class="date-selector" bindtap="showDaySelector">
+      <view class="date-label">
+        <text class="required">*</text>
+        <text>训练日期</text>
+      </view>
+      <view class="date-value">
+        <text>{{planInfo.days.length ? '已选'+planInfo.days.length+'天' : '请选择'}}</text>
+        <van-icon name="arrow" />
+      </view>
+    </view>
+    
+    <view class="selected-days" wx:if="{{planInfo.days.length > 0}}">
+      <view class="day-tag" wx:for="{{planInfo.days}}" wx:key="*this">
+        <text>{{item}}</text>
+        <van-icon name="cross" class="remove-day" data-day="{{item}}" catchtap="removeDay" />
+      </view>
+    </view>
+
+    <!-- 训练时段 -->
+    <picker 
+      range="{{timeSlots}}" 
+      range-key="text" 
+      bindchange="onPickerChange" 
+      data-field="timeSlot"
+      value="{{timeSlotIndex}}"
+    >
+      <van-field
+        value="{{timeSlotText}}"
+        label="训练时段"
+        placeholder="请选择训练时段"
+        readonly
+        required
+        input-class="field-text"
+        is-link
+      />
+    </picker>
+
+    <!-- 训练时长 -->
+    <van-field
+      value="{{planInfo.duration}}"
+      label="训练时长"
+      type="number"
+      placeholder="请输入时长(分钟)"
+      data-field="duration"
+      bind:change="onInputChange"
+      required
+      input-class="field-text"
+      right-icon="question-o"
+      bind:click-icon="showDurationTip"
+    />
+  </view>
+
+  <!-- 训练动作列表 -->
+  <view class="card">
+    <view class="card-title">
+      <van-icon name="fire-o" />
+      <text>训练动作</text>
+    </view>
+    <view class="exercise-list">
+      <view class="exercise-item" wx:for="{{planInfo.exercises}}" wx:key="index">
+        <view class="exercise-info">
+          <view class="exercise-header">
+            <text class="exercise-name">{{item.name}}</text>
+            <text class="exercise-type">{{item.type}}</text>
+          </view>
+          <view class="exercise-details">
+            <text class="detail-item">
+              <van-icon name="replay" />
+              {{item.sets}}组
+            </text>
+            <text class="detail-item">
+              <van-icon name="arrow" />
+              {{item.reps}}次
+            </text>
+            <block wx:if="{{item.weight > 0}}">
+              <text class="detail-item">
+                <van-icon name="balance-o" />
+                {{item.weight}}kg
+              </text>
+            </block>
+          </view>
+        </view>
+        <view class="exercise-actions">
+          <van-icon 
+            name="edit"
+            size="40rpx"
+            color="#FF8C00"
+            class="action-icon"
+            data-index="{{index}}"
+            bind:tap="editExercise"
+          />
+          <van-icon 
+            name="delete-o"
+            size="40rpx"
+            color="#ee0a24"
+            class="action-icon"
+            data-index="{{index}}"
+            bind:tap="removeExercise"
+          />
+        </view>
+      </view>
+      
+      <view class="add-exercise {{!planInfo.type ? 'disabled' : ''}}" bind:tap="addExercise">
+        <van-icon name="plus" />
+        <text>{{planInfo.type ? '添加训练动作' : '请先选择训练类型'}}</text>
+      </view>
+
+      <view class="exercise-tips" wx:if="{{planInfo.exercises.length === 0}}">
+        <van-icon name="info-o" color="#FF8C00" />
+        <text>请至少添加一个训练动作</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部保存按钮 -->
+  <view class="bottom-button fixed-bottom">
+    <button 
+      class="save-btn orange-btn" 
+      disabled="{{!canSave}}"
+      bind:tap="savePlan"
+    >保存计划</button>
+  </view>
+
+  <!-- 训练动作编辑弹窗 -->
+  <van-popup
+    show="{{ showExerciseEditor }}"
+    position="bottom"
+    round
+    bind:close="onExerciseEditorClose"
+  >
+    <view class="exercise-editor">
+      <view class="editor-header">
+        <text class="editor-title">编辑训练动作</text>
+        <van-icon name="cross" bind:click="onExerciseEditorClose" />
+      </view>
+      <view class="editor-content">
+        <view class="editor-item">
+          <text class="item-label">组数</text>
+          <van-stepper
+            value="{{ editingExercise.sets }}"
+            min="1"
+            max="10"
+            bind:change="onSetsChange"
+          />
+        </view>
+        <view class="editor-item">
+          <text class="item-label">{{editingExercise.duration ? '时长(分钟)' : '每组次数'}}</text>
+          <van-stepper
+            value="{{ editingExercise.duration || editingExercise.reps }}"
+            min="1"
+            max="{{ editingExercise.duration ? 120 : 50 }}"
+            bind:change="onRepsOrDurationChange"
+          />
+        </view>
+        <block wx:if="{{!editingExercise.duration}}">
+          <view class="editor-item">
+            <text class="item-label">重量(KG)</text>
+            <van-stepper
+              value="{{ editingExercise.weight }}"
+              min="0"
+              max="200"
+              step="0.5"
+              decimal-length="{{ 1 }}"
+              bind:change="onWeightChange"
+            />
+          </view>
+        </block>
+      </view>
+      <view class="editor-footer">
+        <button class="orange-btn" bind:tap="confirmExerciseEdit">确认</button>
+      </view>
+    </view>
+  </van-popup>
+
+  <!-- 使用原生弹窗但优化样式 -->
+  <view class="custom-modal" wx:if="{{showDayPicker}}">
+    <view class="modal-mask" bindtap="onDayClose"></view>
+    <view class="modal-content">
+      <view class="day-picker-header">
+        <text>选择训练日期</text>
+        <text class="day-picker-tip">建议每周训练2-5天</text>
+      </view>
+      <view class="day-picker-content">
+        <view 
+          class="day-option {{selectedDaysMap[item] ? 'selected' : ''}}"
+          wx:for="{{weekDays}}"
+          wx:key="*this"
+          data-day="{{item}}"
+          bindtap="toggleDay"
+        >{{item}}</view>
+      </view>
+      <view class="day-picker-footer">
+        <button class="cancel-btn" bindtap="onDayClose">取消</button>
+        <button class="orange-btn confirm-btn" bindtap="confirmDays">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 时长说明弹窗 -->
+  <view class="custom-modal" wx:if="{{showDurationDialog}}">
+    <view class="modal-mask" bindtap="closeDurationTip"></view>
+    <view class="modal-content">
+      <view class="duration-tips">
+        <view class="duration-tip-item">
+          <view class="tip-title">
+            <van-icon name="info-o" color="#FF8C00" />
+            <text>初学者建议</text>
+          </view>
+          <text class="tip-content">建议从15-30分钟开始，循序渐进增加训练时长</text>
+        </view>
+        <view class="duration-tip-item">
+          <view class="tip-title">
+            <van-icon name="info-o" color="#FF8C00" />
+            <text>进阶训练</text>
+          </view>
+          <text class="tip-content">可以根据体能状况增加到45-60分钟</text>
+        </view>
+        <view class="duration-tip-item">
+          <view class="tip-title">
+            <van-icon name="warning-o" color="#FF8C00" />
+            <text>注意事项</text>
+          </view>
+          <text class="tip-content">单次训练建议不超过120分钟，注意适度，避免过度训练</text>
+        </view>
+      </view>
+      <view class="day-picker-footer">
+        <button class="orange-btn" bindtap="closeDurationTip">我知道了</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,24 @@
+<view class="container">
+  <!-- 预览图片 -->
+  <view class="preview-image">
+    <image src="{{imagePath}}" mode="aspectFit"></image>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="action-btn" open-type="share">
+      <image src="/assets/images/share_friend.png" mode="aspectFit"></image>
+      <text>转发给朋友</text>
+    </button>
+    
+    <button class="action-btn" bindtap="onShareToMoments">
+      <image src="/assets/images/share_moments.png" mode="aspectFit"></image>
+      <text>分享到朋友圈</text>
+    </button>
+    
+    <button class="action-btn" bindtap="onSaveToAlbum">
+      <image src="/assets/images/save_album.png" mode="aspectFit"></image>
+      <text>保存到相册</text>
+    </button>
+  </view>
+</view> 

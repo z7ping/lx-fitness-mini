@@ -1,0 +1,42 @@
+.common-btn {
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 30rpx;
+  border-radius: 44rpx;
+  border: none;
+  background: linear-gradient(135deg, #1296db 0%, #0f85c2 100%);
+  color: #fff;
+  box-shadow: 0 4rpx 12rpx rgba(18, 150, 219, 0.2);
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.common-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(18, 150, 219, 0.15);
+}
+
+.common-btn.block {
+  display: block;
+  width: 100%;
+}
+
+.common-btn.inline {
+  display: inline-block;
+  padding: 0 32rpx;
+}
+
+.common-btn.small {
+  height: 64rpx;
+  line-height: 64rpx;
+  font-size: 26rpx;
+  border-radius: 32rpx;
+}
+
+.common-btn.large {
+  height: 96rpx;
+  line-height: 96rpx;
+  font-size: 32rpx;
+  border-radius: 48rpx;
+}

@@ -1,0 +1,48 @@
+<!-- pages/checkin/create.wxml -->
+<view class="container">
+  <van-cell-group>
+    <!-- 打卡时间选择 -->
+    <van-cell title="打卡时间" is-link value="{{checkinTime}}" bind:click="showTimePicker" />
+    
+    <!-- 打卡地点 -->
+    <van-cell title="打卡地点" is-link value="{{location.name || '选择位置'}}" bind:click="chooseLocation" />
+  </van-cell-group>
+
+  <!-- 地图组件 -->
+  <map
+    class="location-map"
+    latitude="{{location.latitude}}"
+    longitude="{{location.longitude}}"
+    markers="{{markers}}"
+    show-location
+    wx:if="{{location.latitude && location.longitude}}"
+  ></map>
+
+  <!-- 训练心得 -->
+  <van-field
+    model:value="{{thoughts}}"
+    type="textarea"
+    placeholder="记录一下今天的训练心得吧~"
+    autosize="{{ { maxHeight: 150, minHeight: 100 } }}"
+    rows="4"
+    border="{{false}}"
+    custom-style="background: #fff; margin: 20rpx 0; padding: 20rpx;"
+  />
+
+  <!-- 提交按钮 -->
+  <view class="submit-btn">
+    <van-button type="primary" block bind:click="submitCheckin" loading="{{submitting}}">提交打卡</van-button>
+  </view>
+
+  <!-- 时间选择弹窗 -->
+  <van-popup show="{{showTimePicker}}" position="bottom" bind:close="onCloseTimePicker">
+    <van-datetime-picker
+      type="datetime"
+      value="{{currentDate}}"
+      min-date="{{minDate}}"
+      max-date="{{maxDate}}"
+      bind:confirm="onConfirmTime"
+      bind:cancel="onCloseTimePicker"
+    />
+  </van-popup>
+</view>

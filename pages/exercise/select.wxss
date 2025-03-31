@@ -1,0 +1,98 @@
+.container {
+  min-height: 100vh;
+  background: #f7f8fa;
+}
+
+.search-results,
+.exercise-list {
+  padding: 0 32rpx;
+}
+
+.exercise-item {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 24rpx;
+  margin-bottom: 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.exercise-item:active {
+  transform: scale(0.98);
+  background: #fafafa;
+}
+
+.exercise-icon {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 152, 0, 0.1);
+  border-radius: 50%;
+  margin-right: 24rpx;
+  transition: all 0.3s ease;
+}
+
+.exercise-item:active .exercise-icon {
+  transform: scale(1.1);
+}
+
+.exercise-info {
+  flex: 1;
+}
+
+.exercise-name {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.exercise-target {
+  font-size: 24rpx;
+  color: #999;
+  background: rgba(255, 152, 0, 0.1);
+  padding: 4rpx 12rpx;
+  border-radius: 24rpx;
+  display: inline-block;
+}
+
+/* 自定义 Tab 样式 */
+.van-tabs__line {
+  background: #FF9800 !important;
+}
+
+.van-tab--active {
+  color: #FF9800 !important;
+  font-weight: bold !important;
+}
+
+/* 自定义搜索框样式 */
+.van-search__content {
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* 添加列表滚动效果 */
+.exercise-list {
+  padding: 24rpx 32rpx;
+  max-height: calc(100vh - 180rpx);
+  overflow-y: auto;
+}
+
+/* 优化搜索结果样式 */
+.search-results {
+  padding: 24rpx 32rpx;
+  min-height: calc(100vh - 108rpx);
+}
+
+/* 添加空状态提示 */
+.empty-result {
+  text-align: center;
+  padding: 48rpx 0;
+  color: #999;
+  font-size: 28rpx;
+} 

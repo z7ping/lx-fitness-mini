@@ -1,0 +1,55 @@
+<van-popup
+  show="{{ show }}"
+  position="bottom"
+  round
+  custom-style="min-height: 60vh; z-index: 999999;"
+  overlay-style="z-index: 999998;"
+  bind:close="onClose"
+>
+  <view class="auth-container">
+    <view class="header">
+      <image class="logo" src="/assets/images/default-avatar.png" mode="aspectFit" />
+      <view class="title">七平的健身助手</view>
+      <view class="subtitle">让每一次运动都更有意义</view>
+    </view>
+
+    <view class="auth-content">
+      <view class="auth-title">授权登录</view>
+      <view class="auth-desc">请授权以下信息完善您的个人资料</view>
+      
+      <view class="auth-items">
+        <view class="auth-item">
+          <van-icon name="photograph" size="24px" color="#ff6b35" />
+          <text class="auth-item-text">头像</text>
+        </view>
+        <view class="auth-item">
+          <van-icon name="contact" size="24px" color="#ff6b35" />
+          <text class="auth-item-text">昵称</text>
+        </view>
+        <view class="auth-item">
+          <van-icon name="friends" size="24px" color="#ff6b35" />
+          <text class="auth-item-text">性别</text>
+        </view>
+        <view class="auth-item">
+          <van-icon name="location" size="24px" color="#ff6b35" />
+          <text class="auth-item-text">地区</text>
+        </view>
+      </view>
+
+      <view class="auth-tips">
+        <text class="tip-text">· 仅用于完善会员资料</text>
+        <text class="tip-text">· 请放心授权，我们会保护您的隐私安全</text>
+      </view>
+
+      <view class="btn-area">
+        <button class="auth-btn" bindtap="handleAuth" hover-class="auth-btn-active">立即授权</button>
+        <button class="cancel-btn" bindtap="onClose" hover-class="cancel-btn-active">暂不授权</button>
+      </view>
+    </view>
+
+    <view class="privacy-policy">
+      <text>登录即代表您已同意</text>
+      <text class="link" bindtap="showPrivacyPolicy">《用户协议和隐私政策》</text>
+    </view>
+  </view>
+</van-popup> 

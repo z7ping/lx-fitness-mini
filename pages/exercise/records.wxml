@@ -1,0 +1,63 @@
+<view class="container">
+  <view class="header">
+    <text class="title">运动记录</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <van-loading size="24px" color="#1296db">加载中...</van-loading>
+  </view>
+
+  <!-- 空记录提示 -->
+  <view class="empty-container" wx:elif="{{records.length === 0}}">
+    <van-icon name="todo-list-o" size="80rpx" color="#cccccc" />
+    <text class="empty-text">暂无运动记录</text>
+    <navigator url="/pages/exercise/index" open-type="switchTab" class="start-btn">
+      开始运动
+    </navigator>
+  </view>
+
+  <!-- 记录列表 -->
+  <view class="records-list" wx:else>
+    <view class="record-item" 
+          wx:for="{{records}}" 
+          wx:key="id"
+          bindtap="handleRecordClick"
+          data-id="{{item.id}}">
+      <view class="record-left">
+        <view class="record-icon">
+          <van-icon name="{{item.type === 'running' ? 'wap-nav' : 'fire-o'}}" size="40rpx" color="#1296db" />
+        </view>
+      </view>
+      <view class="record-content">
+        <view class="record-header">
+          <text class="record-name">{{item.name}}</text>
+          <text class="record-date">{{item.formattedDate}} {{item.formattedTime}}</text>
+        </view>
+        <view class="record-stats">
+          <view class="stat-item">
+            <text class="stat-value">{{item.distanceKm || '0.00'}}km</text>
+            <text class="stat-label">距离</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-value">{{item.durationFormatted || '00:00'}}</text>
+            <text class="stat-label">时长</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-value">{{item.avgPaceFormatted || '--:--'}}</text>
+            <text class="stat-label">配速</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-value">{{item.calories || 0}}</text>
+            <text class="stat-label">卡路里</text>
+          </view>
+        </view>
+      </view>
+      <view class="record-right">
+        <view class="delete-btn" catchtap="deleteRecord" data-id="{{item.id}}" data-index="{{index}}">
+          <van-icon name="delete-o" size="40rpx" color="#ff5722" />
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

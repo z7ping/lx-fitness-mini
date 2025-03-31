@@ -1,0 +1,41 @@
+<view class="container">
+  <van-cell-group title="AI模型设置">
+    <van-radio-group value="{{ selectedModel }}" bind:change="onModelChange">
+      <van-cell
+        wx:for="{{ modelOptions }}"
+        wx:key="key"
+        title="{{ item.name }}"
+        label="{{ item.description }}"
+        clickable
+        data-name="{{ item.key }}"
+        bind:click="onClickRadio"
+      >
+        <van-radio slot="right-icon" name="{{ item.key }}" />
+      </van-cell>
+    </van-radio-group>
+  </van-cell-group>
+
+  <van-cell-group title="API密钥设置">
+    <van-field
+      value="{{ apiKeys[selectedModel] }}"
+      type="text"
+      label="API-KEY"
+      placeholder="请输入当前选中模型的API-KEY"
+      border
+      bind:input="onApiKeyChange"
+    />
+  </van-cell-group>
+
+  <view class="tips">
+    <text>提示：请确保输入正确的API-KEY，以保证AI功能正常使用</text>
+  </view>
+
+  <view class="button-group">
+    <van-button
+      type="primary"
+      block
+      disabled="{{ !hasUnsavedChanges }}"
+      bind:click="saveSettings"
+    >保存设置</van-button>
+  </view>
+</view>

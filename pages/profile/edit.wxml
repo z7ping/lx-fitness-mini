@@ -1,0 +1,129 @@
+<!-- pages/profile/edit.wxml -->
+<view class="container">
+  <!-- 顶部橙色背景 -->
+  <view class="header">
+    <view class="avatar-wrapper" bindtap="chooseAvatar">
+      <image class="avatar" src="{{formData.avatarUrl || '/assets/images/default-avatar.png'}}" mode="aspectFill" />
+      <view class="avatar-mask">
+        <van-icon name="photograph" size="24px" color="#fff" />
+      </view>
+    </view>
+  </view>
+
+  <view class="form-section">
+    <!-- 基本信息 -->
+    <view class="form-group">
+      <view class="group-title">基本信息</view>
+      
+      <view class="form-row">
+        <view class="form-item">
+          <text class="label"><text class="required">*</text>昵称</text>
+          <input class="input" 
+            value="{{formData.nickName}}" 
+            placeholder="请输入昵称"
+            bindinput="onInputChange"
+            data-field="nickName"
+          />
+        </view>
+        
+        <view class="form-item">
+          <text class="label"><text class="required">*</text>性别</text>
+          <radio-group class="radio-group" bindchange="onGenderChange">
+            <label class="radio-label">
+              <radio value="1" checked="{{formData.gender === 1}}" color="#ff9800" />
+              <text>男</text>
+            </label>
+            <label class="radio-label">
+              <radio value="2" checked="{{formData.gender === 2}}" color="#ff9800" />
+              <text>女</text>
+            </label>
+          </radio-group>
+        </view>
+      </view>
+      
+      <view class="form-row">
+        <view class="form-item">
+          <text class="label"><text class="required">*</text>生日</text>
+          <picker mode="date" 
+            value="{{formData.birthday}}" 
+            start="1900-01-01" 
+            end="{{maxDate}}"
+            bindchange="onBirthdayChange"
+          >
+            <view class="picker-value">{{formData.birthday || '请选择'}}</view>
+          </picker>
+        </view>
+        
+        <view class="form-item">
+          <text class="label"><text class="required">*</text>身高(cm)</text>
+          <input class="input" 
+            type="digit"
+            value="{{formData.height}}" 
+            placeholder="cm"
+            bindinput="onInputChange"
+            data-field="height"
+          />
+        </view>
+      </view>
+      
+      <view class="form-row">
+        <view class="form-item">
+          <text class="label"><text class="required">*</text>体重(kg)</text>
+          <input class="input" 
+            type="digit"
+            value="{{formData.weight}}" 
+            placeholder="kg"
+            bindinput="onInputChange"
+            data-field="weight"
+          />
+        </view>
+        
+        <view class="form-item">
+          <text class="label"><text class="required">*</text>目标体重(kg)</text>
+          <input class="input" 
+            type="digit"
+            value="{{formData.targetWeight}}" 
+            placeholder="kg"
+            bindinput="onInputChange"
+            data-field="targetWeight"
+          />
+        </view>
+      </view>
+    </view>
+
+    <!-- 运动目标 -->
+    <view class="form-group">
+      <view class="group-title">运动目标</view>
+      
+      <view class="form-row">
+        <view class="form-item">
+          <text class="label"><text class="required">*</text>训练目标</text>
+          <picker bindchange="onGoalChange" value="{{goalIndex}}" range="{{goalOptions}}">
+            <view class="picker-value">{{goalOptions[goalIndex] || '请选择'}}</view>
+          </picker>
+        </view>
+        
+        <view class="form-item">
+          <text class="label"><text class="required">*</text>训练频率</text>
+          <picker bindchange="onFrequencyChange" value="{{frequencyIndex}}" range="{{frequencyOptions}}">
+            <view class="picker-value">{{frequencyOptions[frequencyIndex] || '请选择'}}</view>
+          </picker>
+        </view>
+      </view>
+      
+      <view class="form-row">
+        <view class="form-item">
+          <text class="label"><text class="required">*</text>训练时长</text>
+          <picker bindchange="onDurationChange" value="{{durationIndex}}" range="{{durationOptions}}">
+            <view class="picker-value">{{durationOptions[durationIndex] || '请选择'}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部保存按钮 -->
+  <view class="footer">
+    <button class="save-button" bindtap="handleSave">保存</button>
+  </view>
+</view>

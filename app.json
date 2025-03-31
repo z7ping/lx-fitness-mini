@@ -1,0 +1,95 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/exercise/index",
+    "pages/profile/index",
+    "pages/profile/edit",
+    "pages/dashboard/index",
+    "pages/checkin/index",
+    "pages/checkin/create",
+    "pages/checkin/records",
+    "pages/plan/index",
+    "pages/device/index",
+    "pages/device/bind",
+    "pages/myplan/index",
+    "pages/myplan/detail",
+    "pages/myplan/create",
+    "pages/myplan/ai-generate",
+    "pages/myplan/ai-history",
+    "pages/training/start",
+    "pages/exercise/select",
+    "pages/exercise/records",
+    "pages/exercise/record-detail",
+    "pages/diet/food-select",
+    "pages/diet/create",
+    "pages/training/cardio",
+    "pages/training/strength",
+    "pages/training/stretch",
+    "pages/training/custom",
+    "pages/share/preview",
+    "pages/auth/login",
+    "pages/settings/index",
+    "pages/weight/index",
+    "pages/about/index",
+    "pages/about/acknowledgements",
+    "pages/logs/logs"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "七平的健身助手",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#999999",
+    "selectedColor": "#ff9800",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/exercise/index",
+        "text": "运动"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {
+    "van-button": "@vant/weapp/button/index",
+    "van-field": "@vant/weapp/field/index",
+    "van-cell": "@vant/weapp/cell/index",
+    "van-cell-group": "@vant/weapp/cell-group/index",
+    "van-picker": "@vant/weapp/picker/index",
+    "van-search": "@vant/weapp/search/index",
+    "van-tab": "@vant/weapp/tab/index",
+    "van-tabs": "@vant/weapp/tabs/index",
+    "van-icon": "@vant/weapp/icon/index",
+    "van-tabbar": "@vant/weapp/tabbar/index",
+    "van-tabbar-item": "@vant/weapp/tabbar-item/index",
+    "van-popup": "@vant/weapp/popup/index",
+    "van-stepper": "@vant/weapp/stepper/index",
+    "van-rate": "@vant/weapp/rate/index"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于记录运动轨迹和计算运动距离"
+    }
+  },
+  "requiredBackgroundModes": [
+    "location"
+  ],
+  "requiredPrivateInfos": [
+    "getLocation",
+    "onLocationChange",
+    "startLocationUpdate"
+  ],
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

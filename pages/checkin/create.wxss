@@ -1,0 +1,31 @@
+.container {
+  padding: 20rpx;
+  background: #f8f8f8;
+  min-height: 100vh;
+}
+
+.location-map {
+  width: 100%;
+  height: 300rpx;
+  margin: 20rpx 0;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.submit-btn {
+  position: fixed;
+  bottom: 40rpx;
+  left: 20rpx;
+  right: 20rpx;
+  padding: 0 20rpx;
+}
+
+.van-cell-group {
+  margin-bottom: 20rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.van-field {
+  border-radius: 12rpx;
+}

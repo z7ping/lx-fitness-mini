@@ -1,0 +1,50 @@
+<!-- pages/dashboard/index.wxml -->
+<view class="container">
+  <!-- 时间范围选择 -->
+  <van-tabs active="{{ currentTab }}" bind:change="onTabChange" sticky>
+    <van-tab title="周" name="week" />
+    <van-tab title="月" name="month" />
+  </van-tabs>
+
+  <!-- 数据概览 -->
+  <view class="stats-overview">
+    <view class="stat-card">
+      <text class="stat-label">本周消耗</text>
+      <text class="stat-value">{{ healthData.calories[0].value }}千卡</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-label">平均步数</text>
+      <text class="stat-value">{{ healthData.steps[0].value }}步</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-label">运动时长</text>
+      <text class="stat-value">{{ healthData.duration[0].value }}分钟</text>
+    </view>
+  </view>
+
+  <!-- 图表区域 -->
+  <view class="charts-container">
+    <!-- 卡路里消耗图表 -->
+    <view class="chart-wrapper">
+      <ec-canvas id="caloriesChart" canvas-id="caloriesChart" />
+    </view>
+
+    <!-- 步数图表 -->
+    <view class="chart-wrapper">
+      <ec-canvas id="stepsChart" canvas-id="stepsChart" />
+    </view>
+
+    <!-- 运动时长图表 -->
+    <view class="chart-wrapper">
+      <ec-canvas id="durationChart" canvas-id="durationChart" />
+    </view>
+
+    <!-- 体重记录图表 -->
+    <view class="chart-wrapper">
+      <ec-canvas id="weightChart" canvas-id="weightChart" />
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <van-loading class="loading" size="24px" vertical wx:if="{{loading}}">加载中...</van-loading>
+</view>

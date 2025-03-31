@@ -1,0 +1,399 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f5f6fa;
+}
+
+/* 头部样式 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 20rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.action-btn text {
+  margin-left: 8rpx;
+}
+
+.export-btn {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.clear-btn {
+  background: #fff2e8;
+  color: #ff4d4f;
+}
+
+/* 分类标签页 */
+.category-tabs {
+  display: flex;
+  background: #fff;
+  padding: 0 24rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.category-tab {
+  padding: 20rpx 32rpx;
+  font-size: 28rpx;
+  color: #666;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.category-tab.active {
+  color: #ff6b00;
+  font-weight: 500;
+}
+
+.category-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 4rpx;
+  background: #ff6b00;
+  border-radius: 4rpx;
+}
+
+/* 标签页样式 */
+.tab-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  background: #fff;
+  padding: 0 24rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.tab {
+  padding: 16rpx 24rpx;
+  font-size: 26rpx;
+  color: #666;
+  position: relative;
+}
+
+.tab.active {
+  color: #ff6b00;
+  font-weight: 500;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 4rpx;
+  background: #ff6b00;
+  border-radius: 4rpx;
+}
+
+/* 日志列表 */
+.log-list {
+  flex: 1;
+  padding: 20rpx;
+  overflow-y: auto;
+}
+
+.log-item {
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.log-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10rpx;
+  font-size: 24rpx;
+}
+
+.log-level {
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  margin-right: 12rpx;
+  font-size: 20rpx;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* 应用日志级别样式 */
+.log-level.log, 
+.log-level.info {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.log-level.warn {
+  background: #fff7e6;
+  color: #fa8c16;
+}
+
+.log-level.error {
+  background: #fff1f0;
+  color: #f5222d;
+}
+
+.log-level.debug {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+/* API日志级别样式 */
+.log-level.api-request {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.log-level.api-success {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.log-level.api-error {
+  background: #fff1f0;
+  color: #f5222d;
+}
+
+.log-level.api-fail {
+  background: #fff2e8;
+  color: #fa541c;
+}
+
+.log-model {
+  background: #f5f5f5;
+  color: #666;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  margin-right: 12rpx;
+  font-size: 20rpx;
+}
+
+.log-time {
+  color: #999;
+  font-size: 22rpx;
+  flex: 1;
+  text-align: right;
+}
+
+.log-message {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.log-page {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+/* API日志项特殊样式 */
+.log-item.api-request {
+  border-left: 4rpx solid #1890ff;
+}
+
+.log-item.api-success {
+  border-left: 4rpx solid #52c41a;
+}
+
+.log-item.api-error, 
+.log-item.api-fail {
+  border-left: 4rpx solid #f5222d;
+}
+
+/* 应用日志项特殊样式 */
+.log-item.error {
+  border-left: 4rpx solid #f5222d;
+}
+
+.log-item.warn {
+  border-left: 4rpx solid #fa8c16;
+}
+
+.log-item.log, 
+.log-item.info {
+  border-left: 4rpx solid #1890ff;
+}
+
+.log-item.debug {
+  border-left: 4rpx solid #52c41a;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+  color: #999;
+}
+
+.empty-state text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+}
+
+/* 日志详情弹窗 */
+.detail-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 30rpx;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.detail-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.detail-close {
+  padding: 10rpx;
+}
+
+.detail-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.detail-info {
+  background: #f9f9f9;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.detail-item {
+  display: flex;
+  margin-bottom: 16rpx;
+}
+
+.detail-label {
+  width: 120rpx;
+  font-size: 26rpx;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  flex: 1;
+  font-size: 26rpx;
+  color: #333;
+  word-break: break-all;
+}
+
+.detail-value.level-error, 
+.detail-value.level-fail {
+  color: #f5222d;
+  font-weight: 500;
+}
+
+.detail-value.level-warn {
+  color: #fa8c16;
+  font-weight: 500;
+}
+
+.detail-value.level-success {
+  color: #52c41a;
+  font-weight: 500;
+}
+
+.detail-value.level-request {
+  color: #1890ff;
+  font-weight: 500;
+}
+
+.detail-message {
+  margin-top: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-message .detail-label {
+  margin-bottom: 16rpx;
+}
+
+.detail-message .detail-value {
+  background: #f5f5f5;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  max-height: 400rpx;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.code-block {
+  font-family: monospace;
+  font-size: 24rpx;
+}
+
+.detail-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 30rpx;
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f2f2f2;
+  border: none;
+  padding: 16rpx 40rpx;
+  border-radius: 40rpx;
+  color: #666;
+  font-size: 26rpx;
+}
+
+.copy-btn text {
+  margin-left: 8rpx;
+} 

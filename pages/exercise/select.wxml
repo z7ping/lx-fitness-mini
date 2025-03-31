@@ -1,0 +1,66 @@
+<view class="container">
+  <!-- 搜索栏 -->
+  <van-search
+    value="{{ searchValue }}"
+    placeholder="搜索训练动作"
+    bind:change="onSearch"
+    shape="round"
+    background="#FF9800"
+  />
+
+  <block wx:if="{{searchValue}}">
+    <view class="search-results">
+      <block wx:if="{{filteredExercises.length > 0}}">
+        <view 
+          class="exercise-item" 
+          wx:for="{{filteredExercises}}" 
+          wx:key="id"
+          data-exercise="{{item}}"
+          bindtap="selectExercise"
+        >
+          <view class="exercise-icon">
+            <van-icon name="{{item.icon}}" size="40rpx" color="#FF9800"/>
+          </view>
+          <view class="exercise-info">
+            <text class="exercise-name">{{item.name}}</text>
+            <text class="exercise-target">{{item.target}}</text>
+          </view>
+          <van-icon name="arrow" color="#999"/>
+        </view>
+      </block>
+      <view wx:else class="empty-result">
+        <van-icon name="search" size="48rpx" color="#999"/>
+        <view>未找到相关训练动作</view>
+      </view>
+    </view>
+  </block>
+  <block wx:else>
+    <van-tabs active="{{ activeTab }}" bind:change="onTabChange" color="#FF9800">
+      <van-tab 
+        wx:for="{{exerciseGroups}}" 
+        wx:key="type" 
+        title="{{item.type}}"
+      >
+        <view class="exercise-list">
+          <view 
+            class="exercise-item" 
+            wx:for="{{item.list}}" 
+            wx:key="id"
+            wx:for-item="exercise"
+            data-exercise="{{exercise}}"
+            bindtap="selectExercise"
+          >
+            <view class="exercise-icon">
+              <van-icon name="{{exercise.icon}}" size="40rpx" color="#FF9800"/>
+            </view>
+            <view class="exercise-info">
+              <text class="exercise-name">{{exercise.name}}</text>
+              <text class="exercise-target">{{exercise.target}}</text>
+            </view>
+            <van-icon name="arrow" color="#999"/>
+          </view>
+        </view>
+      </van-tab>
+    </van-tabs>
+  </block>
+</view> 

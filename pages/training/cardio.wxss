@@ -1,0 +1,1316 @@
+/* pages/training/cardio.wxss */
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f7f8fa;
+  padding: 0;
+  overflow-y: auto;
+  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
+}
+
+/* 运动信息头部 */
+.training-header {
+  padding: 32rpx 24rpx;
+  background: linear-gradient(135deg, #FF9800, #FF6B00);
+  color: #fff;
+  border-bottom-left-radius: 40rpx;
+  border-bottom-right-radius: 40rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.2);
+  position: relative;
+  z-index: 10;
+}
+
+.training-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 12rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+.training-desc {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+.header-actions {
+  position: absolute;
+  top: 32rpx;
+  right: 24rpx;
+  display: flex;
+  align-items: center;
+}
+
+.voice-settings {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 16rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 24rpx;
+  font-size: 24rpx;
+}
+
+.icon-text {
+  font-size: 28rpx;
+  line-height: 1;
+  margin-right: 4rpx;
+}
+
+/* GPS信号质量指示器 */
+.gps-quality {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 16rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  margin-left: 16rpx;
+}
+
+.gps-quality.good {
+  background: rgba(76, 175, 80, 0.3);
+}
+
+.gps-quality.moderate {
+  background: rgba(255, 152, 0, 0.3);
+}
+
+.gps-quality.poor {
+  background: rgba(244, 67, 54, 0.3);
+  animation: pulsePoor 2s infinite;
+}
+
+@keyframes pulsePoor {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* GPS精度信息 */
+.gps-info {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 6rpx 12rpx;
+  border-radius: 30rpx;
+  font-size: 20rpx;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.gps-accuracy, .gps-rate, .fusion-mode {
+  margin: 2px 0;
+}
+
+.fusion-mode {
+  color: #FFEB3B;
+  font-weight: bold;
+}
+
+.gyro-mode {
+  color: #00E5FF;
+  font-weight: bold;
+  animation: gyroPulse 2s infinite;
+}
+
+/* 数据概览区域 */
+.data-overview {
+  width: 100%;
+  padding: 0 0rpx;
+  margin-bottom: 24rpx;
+  overflow: visible; /* 确保不会裁剪内容 */
+}
+
+.progress-rings {
+  display: flex;
+  justify-content: space-between;
+  gap: 24rpx;
+  margin: 24rpx 24rpx;  /* 增加左右边距，防止环形被裁剪 */
+  position: relative;  /* 添加相对定位 */
+}
+
+.progress-ring {
+  width: 180rpx;
+  height: 180rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 6rpx;  /* 添加外边距，确保阴影效果可见 */
+}
+
+.ring-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 12rpx solid rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.ring-progress {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 12rpx solid #FF9800;
+  border-radius: 50%;
+  box-sizing: border-box;
+  clip: rect(0, 180rpx, 180rpx, 90rpx);
+  transition: transform 0.3s ease;
+}
+
+.ring-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.ring-value {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+  line-height: 1;
+  margin-bottom: 4rpx;
+  font-family: 'DIN Condensed', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.ring-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 实时数据展示 */
+.real-time-data {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  padding: 0 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.rt-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.rt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.rt-header text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.rt-unit {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.rt-value {
+  font-size: 40rpx;
+  font-weight: 600;
+  text-align: center;
+  margin: 8rpx 0;
+  font-family: 'DIN Condensed', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.rt-value.excellent {
+  color: #4caf50;
+}
+
+.rt-value.good {
+  color: #2196f3;
+}
+
+.rt-value.normal {
+  color: #ff9800;
+}
+
+.rt-value.attention {
+  color: #ff9800;
+}
+
+.rt-value.warning {
+  color: #f44336;
+  animation: warningPulse 1s infinite;
+}
+
+@keyframes warningPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.rt-chart {
+  height: 60rpx;
+  margin-top: 8rpx;
+  background: linear-gradient(to right, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.05));
+  border-radius: 8rpx;
+  overflow: hidden;
+  position: relative;
+}
+
+.rt-chart::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  to {
+    left: 100%;
+  }
+}
+
+/* 地图容器样式优化 */
+.map-container {
+  width: calc(100% - 48rpx);
+  height: 40vh;
+  min-height: 360rpx;
+  margin: -20rpx 24rpx 24rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.1);
+  position: relative;
+  animation: appearScale 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.running-map {
+  width: 100%;
+  height: 100%;
+}
+
+.map-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx;
+  animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.map-stats {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border-radius: 16rpx;
+  padding: 16rpx 24rpx;
+  display: flex;
+  justify-content: space-around;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.map-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.map-stat .stat-value {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.map-stat .stat-label {
+  font-size: 24rpx;
+  color: #666;
+}
+/* 底部按钮样式优化 */
+.bottom-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 32rpx;
+  padding: 24rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+  backdrop-filter: blur(10px);
+  z-index: 100;
+}
+
+/* 控制区域样式 */
+.control-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 32rpx;
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(transparent, rgba(247, 248, 250, 0.98) 20%);
+  z-index: 100;
+}
+
+/* 开始按钮样式 */
+.start-button {
+  width: 200rpx;
+  height: 200rpx;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.start-button.hidden {
+  opacity: 0;
+  transform: translateY(100rpx);
+  pointer-events: none;
+}
+
+.start-button .button-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF9800, #FF6B00);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 32rpx rgba(255, 152, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.start-button .button-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.start-button:active .button-inner {
+  transform: scale(0.95);
+  box-shadow: 0 4rpx 16rpx rgba(255, 152, 0, 0.2);
+}
+
+.start-button:active .button-inner::after {
+  opacity: 1;
+}
+
+.start-icon {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 28rpx 0 28rpx 48rpx;
+  border-color: transparent transparent transparent #fff;
+  margin-bottom: 16rpx;
+  filter: drop-shadow(0 2rpx 4rpx rgba(0, 0, 0, 0.1));
+}
+
+.start-button text {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 运动中的控制按钮组 */
+.control-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 80rpx;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(100rpx);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.control-buttons.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* 通用按钮基础样式 */
+.control-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.control-button .button-inner {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 继续/暂停按钮 */
+.pause-resume .button-inner {
+  border: 6rpx solid #07c160;
+}
+
+.pause-resume .button-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(7, 193, 96, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* 暂停图标 */
+.pause-resume .icon {
+  width: 48rpx;
+  height: 48rpx;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.pause-resume .icon::before,
+.pause-resume .icon::after {
+  content: '';
+  position: absolute;
+  width: 16rpx;
+  height: 48rpx;
+  background: #07c160;
+  border-radius: 4rpx;
+  transition: all 0.3s ease;
+}
+
+.pause-resume .icon::before {
+  left: 8rpx;
+}
+
+.pause-resume .icon::after {
+  right: 8rpx;
+}
+
+/* 继续状态 */
+.pause-resume .button-inner.resume .icon {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 24rpx 0 24rpx 40rpx;
+  border-color: transparent transparent transparent #07c160;
+  margin-left: 8rpx;
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 按压效果 */
+.pause-resume:active .button-inner {
+  transform: scale(0.95);
+  background: rgba(7, 193, 96, 0.05);
+}
+
+.pause-resume:active .button-inner::after {
+  opacity: 1;
+}
+
+/* 结束按钮 */
+.end .button-inner {
+  border: 6rpx solid #ff3b30;
+}
+
+.end .button-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 59, 48, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* 结束按钮进度环 */
+.end .progress-ring {
+  position: absolute;
+  inset: -6rpx;
+  border-radius: 50%;
+  background: conic-gradient(
+    #ff3b30 calc(var(--progress, 0) * 1%),
+    rgba(255, 59, 48, 0.1) calc(var(--progress, 0) * 1%)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  transform: rotate(-90deg);
+  z-index: 0;
+}
+
+/* 结束按钮图标 */
+.end-icon {
+  width: 40rpx;
+  height: 40rpx;
+  position: relative;
+  z-index: 1;
+  border-radius: 8rpx;
+  background: #ff3b30;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 按钮文字 */
+.control-button text {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+  margin-top: 16rpx;
+  transition: all 0.3s ease;
+}
+
+/* 长按状态 */
+.end.pressing .button-inner {
+  transform: scale(0.98);
+  background: rgba(255, 59, 48, 0.02);
+  box-shadow: 0 2rpx 8rpx rgba(255, 59, 48, 0.1);
+}
+
+.end.pressing .button-inner::after {
+  opacity: 1;
+}
+
+.end.pressing .progress-ring {
+  opacity: 1;
+  animation: progressPulse 3s infinite;
+}
+
+@keyframes progressPulse {
+  0% {
+    filter: brightness(1) blur(0px);
+    transform: rotate(-90deg) scale(1);
+  }
+  50% {
+    filter: brightness(1.2) blur(1px);
+    transform: rotate(-90deg) scale(1.02);
+  }
+  100% {
+    filter: brightness(1) blur(0px);
+    transform: rotate(-90deg) scale(1);
+  }
+}
+
+.end.pressing .end-icon {
+  transform: scale(0.9);
+  border: 4rpx solid #ff3b30;
+  background: transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.end.pressing text {
+  color: #ff3b30;
+  transform: scale(0.98);
+  font-weight: 600;
+}
+
+/* 完成状态 */
+.end.pressing[data-progress="100"] .button-inner {
+  background: #ff3b30;
+  transform: scale(1.05);
+  box-shadow: 0 8rpx 24rpx rgba(255, 59, 48, 0.3);
+  border-color: transparent;
+}
+
+.end.pressing[data-progress="100"] .end-icon {
+  border-color: #fff;
+  background: #fff;
+  transform: scale(1);
+}
+
+.end.pressing[data-progress="100"] .progress-ring {
+  opacity: 0;
+  transform: scale(1.1) rotate(-90deg);
+}
+
+.end.pressing[data-progress="100"] text {
+  color: #ff3b30;
+  font-weight: 600;
+  transform: scale(1.05);
+}
+
+/* 添加按钮光晕效果 */
+.end .button-inner::before {
+  content: '';
+  position: absolute;
+  inset: -2rpx;
+  background: radial-gradient(circle at center, rgba(255, 59, 48, 0.2), transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 0;
+}
+
+.end.pressing .button-inner::before {
+  opacity: 1;
+  animation: glowPulse 2s infinite;
+}
+
+@keyframes glowPulse {
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+}
+
+/* 完成按钮样式优化 */
+.complete-btn {
+  position: relative;
+  width: 120rpx;
+  height: 120rpx;
+  padding: 0;
+  border: none;
+  background: linear-gradient(135deg, #FF416C, #FF4B2B);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6rpx 20rpx rgba(255, 65, 108, 0.3);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.complete-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 10rpx rgba(255, 65, 108, 0.2);
+}
+
+.complete-progress-ring {
+  position: absolute;
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 50%;
+  border: 5rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.complete-progress-ring .progress {
+  position: absolute;
+  top: -5rpx;
+  left: -5rpx;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 5rpx solid #fff;
+  border-color: #fff transparent transparent transparent;
+  box-sizing: border-box;
+  transform-origin: center;
+  transition: transform 0.1s linear;
+}
+
+.complete-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+  text-align: center;
+}
+
+.complete-text {
+  font-size: 26rpx;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 4rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+.complete-tip {
+  font-size: 20rpx;
+  opacity: 0.8;
+  line-height: 1;
+}
+
+/* 按住时的动画效果 */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+.complete-btn.pressing {
+  animation: pulse 1s infinite;
+  background: linear-gradient(135deg, #FF4B2B, #FF416C);
+}
+
+/* 添加按钮按下时的光晕效果 */
+.complete-btn::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.complete-btn:active::after {
+  opacity: 1;
+}
+
+/* 进度环动画优化 */
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.complete-progress-ring::before {
+  content: '';
+  position: absolute;
+  top: -10rpx;
+  left: -10rpx;
+  right: -10rpx;
+  bottom: -10rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  animation: rotate 2s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.complete-btn.pressing .complete-progress-ring::before {
+  opacity: 1;
+}
+
+/* 暂停和继续按钮样式优化 */
+.pause-btn, .resume-btn {
+  flex: 1;
+  height: 88rpx;
+  border: none;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  box-shadow: 0 4rpx 12rpx rgba(33, 150, 243, 0.3);
+  transition: all 0.3s ease;
+}
+
+.pause-btn:active, .resume-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(33, 150, 243, 0.2);
+}
+
+/* 倒计时遮罩样式优化 */
+.countdown-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.countdown-mask.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.countdown-ring {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.8);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.countdown-mask.active .countdown-ring {
+  transform: scale(1);
+}
+
+.countdown-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(#FF9800 0%, transparent 0%);
+  transition: transform 1s linear;
+  mask: radial-gradient(transparent 60%, black 61%);
+  -webkit-mask: radial-gradient(transparent 60%, black 61%);
+}
+
+.countdown-number {
+  font-size: 80rpx;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.2);
+  animation: countdownPulse 1s infinite;
+}
+
+@keyframes countdownPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 恢复倒计时样式优化 */
+.resume-countdown {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.resume-countdown.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.resume-countdown .countdown-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: contentFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes contentFadeIn {
+  from {
+    transform: translateY(40rpx) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.resume-countdown .countdown-ring {
+  width: 320rpx;
+  height: 320rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 40rpx;
+  box-shadow: 0 0 80rpx rgba(7, 193, 96, 0.2);
+}
+
+.resume-countdown .countdown-progress {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 12rpx solid #07c160;
+  border-color: #07c160 transparent transparent transparent;
+  box-sizing: border-box;
+  transition: transform 0.2s linear;
+  transform-origin: center;
+}
+
+.resume-countdown .countdown-number {
+  font-size: 180rpx;
+  font-weight: bold;
+  color: #fff;
+  font-family: 'DIN Condensed', sans-serif;
+  text-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.3);
+  animation: resumeNumberPulse 1s infinite;
+}
+
+@keyframes resumeNumberPulse {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: scale(1.15);
+    text-shadow: 0 12rpx 24rpx rgba(7, 193, 96, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.3);
+  }
+}
+
+.resume-countdown .countdown-text {
+  font-size: 40rpx;
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+  text-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.2);
+  animation: textSlideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+@keyframes textSlideUp {
+  from {
+    transform: translateY(20rpx);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.resume-countdown .countdown-tip {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(7, 193, 96, 0.15);
+  padding: 12rpx 32rpx;
+  border-radius: 32rpx;
+  box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.2);
+  animation: tipSlideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
+}
+
+@keyframes tipSlideUp {
+  from {
+    transform: translateY(20rpx);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 动画关键帧 */
+@keyframes appearScale {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20rpx);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 底部安全区域渐变 */
+.control-area::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(40rpx + env(safe-area-inset-bottom));
+  background: rgba(247, 248, 250, 0.98);
+  z-index: -1;
+}
+
+/* 配速详情卡片样式 */
+.pace-details {
+  margin-top: 24rpx;
+}
+
+.pace-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  max-height: 300rpx;
+  overflow-y: auto;
+  padding: 8rpx 0;
+}
+
+.pace-item, .current-km {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8rpx 16rpx;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8rpx;
+}
+
+.current-km {
+  background: rgba(255, 152, 0, 0.1);
+}
+
+.km-mark {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.km-pace {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.km-pace.excellent {
+  color: #4caf50;
+}
+
+/* 轨迹统计卡片 */
+.track-stats {
+  margin-top: 24rpx;
+}
+
+.track-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 16rpx;
+  padding: 8rpx;
+}
+
+.track-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 12rpx;
+}
+
+.track-stat-value {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4rpx;
+}
+
+.track-stat-label {
+  font-size: 22rpx;
+  color: #666;
+}
+
+/* 滚动条美化 */
+.pace-list::-webkit-scrollbar {
+  width: 4rpx;
+}
+
+.pace-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 2rpx;
+}
+
+.pace-list::-webkit-scrollbar-thumb {
+  background: rgba(25, 137, 250, 0.2);
+  border-radius: 2rpx;
+}
+
+/* 调试数据面板样式 */
+.debug-panel {
+  margin: 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  position: relative;
+  z-index: 5;
+  margin-bottom: calc(120rpx + env(safe-area-inset-bottom));
+}
+
+.debug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  background: #f5f5f5;
+  border-bottom: 1px solid #eee;
+}
+
+.debug-credits {
+  font-size: 22rpx;
+  color: #999;
+  padding: 12rpx 24rpx;
+  background: #f9f9f9;
+  border-bottom: 1px solid #eee;
+  line-height: 1.4;
+  transform-origin: top;
+  transition: all 0.3s ease;
+  max-height: 200rpx;
+}
+
+.debug-credits text {
+  color: #666;
+  font-weight: 500;
+}
+
+.debug-toggle {
+  color: #1976D2;
+  font-size: 26rpx;
+  padding: 8rpx 16rpx;
+  background: rgba(25, 118, 210, 0.1);
+  border-radius: 8rpx;
+  transition: all 0.3s ease;
+}
+
+.debug-toggle:active {
+  opacity: 0.8;
+  transform: scale(0.95);
+}
+
+.debug-content {
+  padding: 16rpx;
+  max-height: 800rpx;
+  overflow-y: auto;
+  background: #fff;
+  transform-origin: top;
+  transition: all 0.3s ease;
+}
+
+/* 添加收起状态的动画 */
+.debug-panel:not(.expanded) .debug-content {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+}
+
+.debug-panel:not(.expanded) .debug-credits {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+  border-bottom: none;
+}
+
+.debug-section {
+  margin-bottom: 24rpx;
+  border-bottom: 1px dashed #eee;
+  padding-bottom: 16rpx;
+}
+
+.debug-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.debug-section-title {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 12rpx;
+  padding-left: 8rpx;
+  border-left: 4rpx solid #FF9800;
+}
+
+.debug-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8rpx 16rpx;
+  font-size: 24rpx;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8rpx;
+  margin-bottom: 8rpx;
+}
+
+.debug-label {
+  color: #666;
+}
+
+.debug-value {
+  color: #333;
+  font-family: monospace;
+  font-weight: 500;
+}
+
+/* 滚动条美化 */
+.debug-content::-webkit-scrollbar {
+  width: 4rpx;
+}
+
+.debug-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 2rpx;
+}
+
+.debug-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 152, 0, 0.2);
+  border-radius: 2rpx;
+}
+
+/* 添加陀螺仪脉冲动画 */
+@keyframes gyroPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}

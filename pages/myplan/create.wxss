@@ -1,0 +1,662 @@
+.container {
+  min-height: 100vh;
+  background: #f7f8fa;
+  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
+}
+
+/* 固定底部样式 */
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #fff;
+  padding: 24rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 活力橙色按钮 */
+.orange-btn {
+  background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 4rpx 12rpx rgba(255, 140, 0, 0.3) !important;
+  border: none;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.orange-btn[disabled] {
+  opacity: 0.5;
+  background: #cccccc !important;
+}
+
+/* 卡片通用样式 */
+.card {
+  margin: 16rpx;
+  padding: 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+}
+
+.card-title .van-icon {
+  margin-right: 8rpx;
+  color: #FF8C00;
+}
+
+/* 训练建议卡片 */
+.tips-card {
+  margin: 16rpx;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #fff5eb 0%, #ffffff 100%);
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(255, 140, 0, 0.1);
+  border: 2rpx solid rgba(255, 140, 0, 0.1);
+}
+
+.tips-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.tips-header text {
+  margin-left: 8rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #FF8C00;
+}
+
+.tips-content {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+.tip-text {
+  display: block;
+  margin-bottom: 16rpx;
+  line-height: 1.5;
+  color: #333;
+}
+
+.tip-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-top: 12rpx;
+}
+
+.tip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8rpx;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 12rpx;
+  border-radius: 8rpx;
+}
+
+.tip-item .van-icon {
+  font-size: 28rpx;
+  color: #FF8C00;
+  margin-top: 4rpx;
+}
+
+/* 表单样式 */
+.form-group {
+  margin-bottom: 16rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+  font-weight: 500;
+}
+
+.van-field {
+  padding: 20rpx !important;
+  background: #f8f9fa !important;
+  border-radius: 12rpx !important;
+  margin-bottom: 16rpx;
+}
+
+.van-field__input {
+  font-size: 28rpx !important;
+  color: #333 !important;
+}
+
+.van-field__label {
+  min-width: 130rpx !important;
+  padding-right: 20rpx !important;
+}
+
+.field-text {
+  font-size: 28rpx !important;
+  color: #333 !important;
+}
+
+.custom-cell {
+  padding: 20rpx !important;
+  background: #f8f9fa !important;
+  border-radius: 12rpx !important;
+  margin-bottom: 16rpx;
+}
+
+.cell-title {
+  min-width: 130rpx !important;
+  font-size: 28rpx !important;
+  color: #646566 !important;
+  padding-right: 20rpx !important;
+}
+
+.cell-value {
+  font-size: 28rpx !important;
+  color: #333 !important;
+  text-align: left !important;
+}
+
+.picker-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.placeholder {
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 训练日期选择 */
+.selected-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 12rpx;
+}
+
+.day-tag {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 16rpx;
+  background: rgba(255, 140, 0, 0.1);
+  border-radius: 20rpx;
+  font-size: 26rpx;
+  color: #FF8C00;
+  transition: all 0.3s;
+  margin-right: 10rpx;
+  margin-bottom: 10rpx;
+}
+
+.day-tag:active {
+  transform: scale(0.95);
+  background: rgba(255, 140, 0, 0.2);
+}
+
+.remove-day {
+  margin-left: 6rpx;
+  font-size: 24rpx;
+  color: #FF8C00;
+}
+
+.add-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 22rpx;
+  background: #f0f0f0;
+  color: #666;
+  transition: all 0.3s;
+}
+
+.add-day:active {
+  transform: scale(0.95);
+  background: #e0e0e0;
+}
+
+/* 训练动作列表 */
+.exercise-list {
+  padding: 16rpx;
+}
+
+.exercise-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+  border-left: 4rpx solid #FF8C00;
+}
+
+.exercise-item:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.05);
+}
+
+.exercise-header {
+  margin-bottom: 8rpx;
+}
+
+.exercise-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-right: 12rpx;
+}
+
+.exercise-type {
+  font-size: 24rpx;
+  color: #FF8C00;
+  background: rgba(255, 140, 0, 0.1);
+  padding: 4rpx 12rpx;
+  border-radius: 16rpx;
+}
+
+.exercise-details {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 8rpx;
+}
+
+.detail-item {
+  font-size: 24rpx;
+  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.detail-item .van-icon {
+  margin-right: 4rpx;
+  font-size: 26rpx;
+  color: #FF8C00;
+}
+
+.exercise-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.action-icon {
+  padding: 8rpx;
+  border-radius: 6rpx;
+  transition: all 0.3s;
+}
+
+.action-icon:active {
+  background: #f5f5f5;
+}
+
+/* 添加训练动作按钮 */
+.add-exercise {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx;
+  background: #fff;
+  border: 2rpx dashed #FF8C00;
+  border-radius: 12rpx;
+  margin-top: 16rpx;
+  color: #FF8C00;
+  font-size: 28rpx;
+  transition: all 0.3s;
+  box-shadow: 0 2rpx 8rpx rgba(255, 140, 0, 0.1);
+}
+
+.add-exercise .van-icon {
+  margin-right: 8rpx;
+  font-size: 32rpx;
+  color: #FF8C00;
+}
+
+.add-exercise:active {
+  background: #fff5eb;
+  border-color: #FF6347;
+  transform: translateY(2rpx);
+}
+
+.add-exercise.disabled {
+  color: #999;
+  background: #f5f5f5;
+  border-color: #eee;
+  box-shadow: none;
+}
+
+.add-exercise.disabled .van-icon {
+  color: #999;
+}
+
+.exercise-tips {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-top: 16rpx;
+  padding: 16rpx;
+  background: rgba(255, 140, 0, 0.05);
+  border-radius: 8rpx;
+  border-left: 4rpx solid #FF8C00;
+}
+
+.exercise-tips .van-icon {
+  color: #FF8C00;
+  font-size: 28rpx;
+}
+
+.exercise-tips text {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* 自定义训练日期选择器 */
+.date-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.date-label {
+  display: flex;
+  align-items: center;
+  min-width: 130rpx;
+  font-size: 28rpx;
+  color: #646566;
+}
+
+.date-label .required {
+  color: #ee0a24;
+  margin-right: 4rpx;
+  font-size: 28rpx;
+}
+
+.date-value {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.date-value .van-icon {
+  margin-left: 8rpx;
+  color: #969799;
+}
+
+/* 日期选择弹窗 */
+.day-picker-header {
+  text-align: center;
+  padding: 0 30rpx 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.day-picker-header text {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-bottom: 12rpx;
+}
+
+.day-picker-tip {
+  font-size: 24rpx !important;
+  color: #999 !important;
+  font-weight: normal !important;
+}
+
+.day-picker-content {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 30rpx 40rpx;
+  justify-content: center;
+}
+
+.day-option {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 28rpx;
+  color: #333;
+  margin: 15rpx 25rpx;
+  background: #f7f7f7;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.day-option.selected {
+  background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 4rpx 12rpx rgba(255, 140, 0, 0.3);
+  transform: scale(1.05);
+}
+
+.day-option.selected::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+  top: 0;
+  left: 0;
+}
+
+.day-option:active {
+  opacity: 0.8;
+  transform: scale(0.95);
+}
+
+.day-picker-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 30rpx 40rpx;
+  border-top: 1rpx solid #f5f5f5;
+  background: #fff;
+  gap: 20rpx;
+}
+
+/* 确保按钮样式正确 */
+.day-picker-footer .van-button {
+  min-width: 100% !important;
+  height: 80rpx !important;
+  border-radius: 40rpx !important;
+  font-size: 30rpx !important;
+}
+
+/* 取消按钮样式 */
+.cancel-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  color: #666;
+  border: none;
+}
+
+/* 确认按钮样式 */
+.confirm-btn {
+  flex: 1;
+}
+
+/* 自定义弹窗样式 */
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+  position: relative;
+  background: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 30rpx 0 0;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* 时长说明弹窗 */
+.duration-tips {
+  padding: 24rpx;
+}
+
+.duration-tip-item {
+  margin-bottom: 20rpx;
+  padding: 16rpx;
+  background: #f8f9fa;
+  border-radius: 8rpx;
+}
+
+.duration-tip-item:last-child {
+  margin-bottom: 0;
+}
+
+.tip-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+  display: flex;
+  align-items: center;
+}
+
+.tip-title .van-icon {
+  margin-right: 6rpx;
+  color: #FF8C00;
+}
+
+.tip-content {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 按钮样式 */
+.btn-cancel {
+  background: #f5f5f5;
+  color: #666;
+  border: none;
+  font-size: 28rpx;
+  margin-right: 12rpx;
+}
+
+.btn-confirm {
+  background: #1296db;
+  color: #fff;
+  border: none;
+  font-size: 28rpx;
+}
+
+.duration-confirm-btn {
+  padding: 20rpx 0 !important;
+  font-size: 32rpx !important;
+  font-weight: 500 !important;
+  margin-top: 30rpx !important;
+}
+
+.duration-confirm-btn.van-button--active::before {
+  opacity: 0.15 !important;
+}
+
+/* 训练动作编辑弹窗样式 */
+.exercise-editor {
+  padding: 24rpx;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 24rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.editor-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.editor-content {
+  padding: 32rpx 0;
+}
+
+.editor-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.editor-item:last-child {
+  margin-bottom: 0;
+}
+
+.item-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-right: 32rpx;
+}
+
+.editor-footer {
+  padding-top: 24rpx;
+  border-top: 1rpx solid #f5f5f5;
+}
+
+/* 自定义步进器样式 */
+.van-stepper__minus,
+.van-stepper__plus {
+  background: rgba(255, 140, 0, 0.1) !important;
+  color: #FF8C00 !important;
+}
+
+.van-stepper__input {
+  background: #f8f9fa !important;
+  color: #333 !important;
+}

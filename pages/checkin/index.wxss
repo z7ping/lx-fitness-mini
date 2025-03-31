@@ -1,0 +1,135 @@
+.container {
+  padding: 20rpx;
+  padding-bottom: 120rpx;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.header {
+  padding: 20rpx 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.create-btn {
+  background: linear-gradient(135deg, #1296db 0%, #0f85c2 100%);
+  color: #fff;
+  padding: 16rpx 32rpx;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+  box-shadow: 0 4rpx 12rpx rgba(18, 150, 219, 0.2);
+  transition: all 0.3s ease;
+}
+
+.create-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(255, 107, 53, 0.15);
+}
+
+.record-list {
+  margin-top: 20rpx;
+}
+
+.record-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.record-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.date {
+  color: #666;
+  font-size: 28rpx;
+}
+
+.plan-title {
+  color: #333;
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+.record-stats {
+  display: flex;
+  gap: 24rpx;
+  margin: 24rpx 0;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  color: #ff6b35;
+  font-size: 28rpx;
+  background: rgba(255, 107, 53, 0.1);
+  padding: 12rpx 20rpx;
+  border-radius: 12rpx;
+}
+
+.location {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin: 24rpx 0;
+  color: #666;
+  font-size: 28rpx;
+  background: #f8f9fa;
+  padding: 16rpx 20rpx;
+  border-radius: 12rpx;
+}
+
+.location-name {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  color: #333;
+}
+
+.location-address {
+  margin-left: 44rpx;
+  font-size: 26rpx;
+  color: #999;
+}
+
+.notes {
+  color: #666;
+  font-size: 28rpx;
+  line-height: 1.6;
+  margin: 20rpx 0;
+  background: #f8f9fa;
+  padding: 16rpx 20rpx;
+  border-radius: 12rpx;
+}
+
+.image-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+
+.record-image {
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.loading {
+  margin: 40rpx auto;
+  text-align: center;
+}

@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "AI生成计划",
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index",
+    "van-loading": "@vant/weapp/loading/index",
+    "van-rate": "@vant/weapp/rate/index",
+    "van-popup": "@vant/weapp/popup/index",
+    "towxml":"/towxml/towxml"
+  }
+}

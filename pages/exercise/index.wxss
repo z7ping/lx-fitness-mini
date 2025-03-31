@@ -1,0 +1,247 @@
+/* pages/exercise/index.wxss */
+.container {
+  min-height: 100vh;
+  background: #f7f8fa;
+  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+/* 数据概览 - 更改为与首页一致的渐变背景 */
+.stats-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+  padding: 32rpx 24rpx;
+  background: linear-gradient(135deg, #FF9800, #FF6B00); /* 更改为与首页一致的橙色渐变 */
+  color: #fff;
+  border-bottom-left-radius: 40rpx;
+  border-bottom-right-radius: 40rpx;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx;
+  background: rgba(255, 255, 255, 0.15); /* 调整透明度与首页一致 */
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.1); /* 添加轻微阴影效果 */
+}
+
+.stat-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1); /* 添加轻微文字阴影 */
+}
+
+.stat-label {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+/* 快速开始 */
+.quick-start {
+  margin: 32rpx 24rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08); /* 添加阴影效果与首页一致 */
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 24rpx;
+  color: #333;
+}
+
+.exercise-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.exercise-item {
+  position: relative;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.exercise-item:active {
+  transform: scale(0.98);
+}
+
+.exercise-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 152, 0, 0.1); /* 使用橙色背景与首页一致 */
+}
+
+.exercise-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.exercise-duration {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 运动记录 */
+.recent-records {
+  margin: 32rpx 24rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08); /* 添加阴影效果与首页一致 */
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.more, .edit {
+  font-size: 26rpx;
+  color: #FF9800; /* 更改为橙色与首页一致 */
+}
+
+.record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  transition: all 0.3s ease; /* 添加过渡效果 */
+}
+
+.record-item:active {
+  transform: scale(0.98); /* 添加点击效果 */
+  background: #f5f5f5;
+}
+
+.record-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.record-name {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.record-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.record-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.duration, .calories {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 运动目标 */
+.exercise-goals {
+  margin: 32rpx 24rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08); /* 添加阴影效果与首页一致 */
+}
+
+.goals-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.goal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.goal-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goal-label {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.goal-value {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.progress-bar {
+  height: 8rpx;
+  background: #f0f0f0;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(90deg, #FF9800, #FF6B00); /* 更改为橙色渐变与首页一致 */
+  border-radius: 4rpx;
+  transition: width 0.3s ease;
+}
+
+/* 底部操作栏 */
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx;
+  background: #fff;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  z-index: 100;
+}
+
+/* 添加按钮样式与首页一致 */
+.van-button--primary {
+  background: linear-gradient(135deg, #FF9800, #FF6B00) !important;
+  border: none !important;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15) !important;
+}

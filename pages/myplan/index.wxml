@@ -1,0 +1,201 @@
+<!-- pages/plan/index.wxml -->
+<view class="container">
+  <!-- 标签页导航 -->
+  <view class="tabs-container">
+    <scroll-view scroll-x class="tabs-nav" enable-flex>
+      <view
+        wx:for="{{weekDays}}"
+        wx:key="index"
+        class="tab-item {{activeTab === index ? 'active' : ''}}"
+        data-index="{{index}}"
+        bindtap="onTabChange"
+      >
+        {{item.day}}
+      </view>
+    </scroll-view>
+    
+    <view class="tab-content">
+      <!-- 计划类型切换 -->
+      <view class="plan-type-switch">
+        <view class="switch-item {{planType === 'training' ? 'active' : ''}}" bindtap="switchPlanType" data-type="training">
+          <van-icon name="todo-list-o" size="20px"/>
+          <text>训练计划</text>
+        </view>
+        <view class="switch-item {{planType === 'diet' ? 'active' : ''}}" bindtap="switchPlanType" data-type="diet">
+          <van-icon name="shop-o" size="20px"/>
+          <text>饮食计划</text>
+        </view>
+      </view>
+
+      <!-- 训练计划内容 -->
+      <block wx:if="{{planType === 'training'}}">
+        <block wx:if="{{weekDays[activeTab].exercises.length > 0}}">
+          <view class="section-title">训练安排</view>
+          
+          <!-- 按时间段分组展示 -->
+          <wxs module="utils">
+            module.exports = {
+              groupExercisesByTimeSlot: function(exercises) {
+                var groups = {};
+                for (var i = 0; i < exercises.length; i++) {
+                  var exercise = exercises[i];
+                  if (!groups[exercise.timeSlot]) {
+                    groups[exercise.timeSlot] = [];
+                  }
+                  groups[exercise.timeSlot].push(exercise);
+                }
+                return groups;
+              }
+            }
+          </wxs>
+          
+          <view class="time-slots">
+            <block wx:for="{{utils.groupExercisesByTimeSlot(weekDays[activeTab].exercises)}}" wx:for-index="timeSlot" wx:for-item="exercises" wx:key="timeSlot">
+              <view class="time-slot-group">
+                <view class="time-slot-header">
+                  <view class="time-slot-title">
+                    <van-icon name="clock" />
+                    <text>{{timeSlot === 'morning' ? '早晨' : timeSlot === 'noon' ? '中午' : '晚上'}}</text>
+                  </view>
+                  <view class="time-slot-actions">
+                    <view class="completion-status {{exercises[0].completed ? 'completed' : ''}}">
+                      {{exercises[0].completed ? '已完成' : '未完成'}}
+                    </view>
+                    <block wx:if="{{!exercises[0].completed}}">
+                      <van-button 
+                        type="primary" 
+                        size="small" 
+                        round 
+                        bindtap="completeTraining" 
+                        data-time-slot="{{timeSlot}}" 
+                        data-day="{{weekDays[activeTab].day}}"
+                        color="linear-gradient(135deg, #ff9800, #ff6d00)"
+                      >
+                        完成训练
+                      </van-button>
+                    </block>
+                  </view>
+                </view>
+                
+                <view class="exercise-list">
+                  <view class="exercise-item" 
+                    wx:for="{{exercises}}" 
+                    wx:key="id"
+                    wx:for-item="exercise">
+                    <view class="exercise-info">
+                      <view class="exercise-name">
+                        <text>{{exercise.name}}</text>
+                        <text class="exercise-type">{{exercise.type}}</text>
+                      </view>
+                      <view class="exercise-detail">
+                        <text class="exercise-params">
+                          <block wx:if="{{exercise.sets && exercise.reps}}">
+                            {{exercise.sets}}组 × {{exercise.reps}}次
+                          </block>
+                          <block wx:elif="{{exercise.duration}}">
+                            时长：{{exercise.duration}}分钟
+                          </block>
+                        </text>
+                        <text wx:if="{{exercise.planName}}" class="plan-name">{{exercise.planName}}</text>
+                      </view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </block>
+          </view>
+        </block>
+        <view wx:else class="empty-tip">
+          <van-icon name="todo-list-o" size="48px" color="#999"/>
+          <text>暂无训练安排</text>
+        </view>
+      </block>
+
+      <!-- 饮食计划内容 -->
+      <block wx:if="{{planType === 'diet'}}">
+        <view class="diet-section">
+          <view class="section-title">饮食安排</view>
+          <view class="diet-list">
+            <view class="meal-row">
+              <view class="meal-time">
+                <van-icon name="sunrise" size="18px"/>
+                <text>早餐</text>
+              </view>
+              <view class="meal-info">
+                <text class="meal-content">{{weekDays[activeTab].diet.breakfast.content}}</text>
+                <view class="meal-nutrition" wx:if="{{weekDays[activeTab].diet.breakfast.nutrition}}">
+                  <text class="calories">{{weekDays[activeTab].diet.breakfast.calories || 0}}千卡</text>
+                  <text class="protein">蛋白质 {{weekDays[activeTab].diet.breakfast.nutrition.protein || 0}}g</text>
+                  <text class="carbs">碳水 {{weekDays[activeTab].diet.breakfast.nutrition.carbs || 0}}g</text>
+                  <text class="fat">脂肪 {{weekDays[activeTab].diet.breakfast.nutrition.fat || 0}}g</text>
+                </view>
+              </view>
+            </view>
+            <view class="meal-row">
+              <view class="meal-time">
+                <van-icon name="sun" size="18px"/>
+                <text>午餐</text>
+              </view>
+              <view class="meal-info">
+                <text class="meal-content">{{weekDays[activeTab].diet.lunch.content}}</text>
+                <view class="meal-nutrition" wx:if="{{weekDays[activeTab].diet.lunch.nutrition}}">
+                  <text class="calories">{{weekDays[activeTab].diet.lunch.calories || 0}}千卡</text>
+                  <text class="protein">蛋白质 {{weekDays[activeTab].diet.lunch.nutrition.protein || 0}}g</text>
+                  <text class="carbs">碳水 {{weekDays[activeTab].diet.lunch.nutrition.carbs || 0}}g</text>
+                  <text class="fat">脂肪 {{weekDays[activeTab].diet.lunch.nutrition.fat || 0}}g</text>
+                </view>
+              </view>
+            </view>
+            <view class="meal-row">
+              <view class="meal-time">
+                <van-icon name="moon" size="18px"/>
+                <text>晚餐</text>
+              </view>
+              <view class="meal-info">
+                <text class="meal-content">{{weekDays[activeTab].diet.dinner.content}}</text>
+                <view class="meal-nutrition" wx:if="{{weekDays[activeTab].diet.dinner.nutrition}}">
+                  <text class="calories">{{weekDays[activeTab].diet.dinner.calories || 0}}千卡</text>
+                  <text class="protein">蛋白质 {{weekDays[activeTab].diet.dinner.nutrition.protein || 0}}g</text>
+                  <text class="carbs">碳水 {{weekDays[activeTab].diet.dinner.nutrition.carbs || 0}}g</text>
+                  <text class="fat">脂肪 {{weekDays[activeTab].diet.dinner.nutrition.fat || 0}}g</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-buttons" wx:if="{{!isPreviewMode}}">
+    <block wx:if="{{planType === 'training'}}">
+      <button class="custom-btn" bindtap="createCustomPlan">
+        <van-icon name="plus" size="18px" />
+        创建训练计划
+      </button>
+      <button class="ai-btn" bindtap="generateAIPlan">
+        <van-icon name="cluster-o" size="18px" />
+        AI生成计划
+      </button>
+    </block>
+    <block wx:else>
+      <button class="custom-btn" bindtap="createDietPlan">
+        <van-icon name="plus" size="18px" />
+        创建饮食计划
+      </button>
+      <button class="ai-btn" bindtap="generateAIDietPlan">
+        <van-icon name="cluster-o" size="18px" />
+        AI生成饮食
+      </button>
+    </block>
+  </view>
+  
+  <!-- 预览模式下的底部按钮 -->
+  <view class="bottom-buttons" wx:if="{{isPreviewMode}}">
+    <button class="back-btn" bindtap="navigateBack">
+      <van-icon name="arrow-left" size="18px" />
+      返回
+    </button>
+  </view>
+</view>

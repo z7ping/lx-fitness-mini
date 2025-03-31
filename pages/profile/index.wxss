@@ -1,0 +1,307 @@
+.container {
+  min-height: 100vh;
+  background: #f7f8fa;
+  /* padding-bottom: calc(100rpx + env(safe-area-inset-bottom)); */
+}
+
+/* 个人信息头部 */
+.profile-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx 24rpx;
+  background: linear-gradient(135deg, #ff9800, #ff6d00);
+  color: #fff;
+}
+
+.header-main {
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.user-info {
+  margin-left: 20rpx;
+  flex: 1;
+}
+
+.nickname {
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-bottom: 4rpx;
+  display: block;
+}
+
+.user-id {
+  font-size: 22rpx;
+  opacity: 0.8;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+/* 健康数据简要显示 */
+.health-brief {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 6rpx;
+}
+
+.health-item {
+  font-size: 22rpx;
+  opacity: 0.9;
+  margin-right: 16rpx;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  margin-bottom: 6rpx;
+}
+
+.login-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 26rpx;
+  padding: 10rpx 24rpx;
+  border-radius: 30rpx;
+  border: none;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.login-btn::after {
+  display: none;
+}
+
+.edit-btn {
+  padding: 10rpx;
+  margin-left: 10rpx;
+}
+
+/* 用户统计 */
+.user-stats {
+  display: flex;
+  padding: 20rpx 16rpx;
+  background: #fff;
+  margin: 16rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.stat-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 2rpx;
+  background: #eee;
+}
+
+.stat-num {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4rpx;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 区域标题 */
+.section-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #666;
+  margin: 24rpx 24rpx 12rpx;
+}
+
+/* 主要功能区域 - 方块布局 */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx;
+  padding: 0 16rpx;
+}
+
+.main-features .feature-block {
+  height: 160rpx;
+}
+
+.feature-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx 20rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.feature-icon {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 40rpx;
+  margin-bottom: 16rpx;
+}
+
+.feature-icon.orange {
+  background: #fff5e6;
+}
+
+.feature-icon.green {
+  background: #e6fff0;
+}
+
+.feature-icon.blue {
+  background: #e6f0ff;
+}
+
+.feature-title {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.feature-desc {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 快捷功能区 */
+.quick-grid {
+  display: flex;
+  justify-content: space-around;
+  background: #fff;
+  padding: 24rpx 16rpx;
+  margin: 0 16rpx 16rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.quick-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.quick-icon {
+  width: 70rpx;
+  height: 70rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 35rpx;
+}
+
+.quick-icon.purple {
+  background: rgba(156, 136, 255, 0.1);
+}
+
+.quick-icon.blue {
+  background: rgba(112, 161, 255, 0.1);
+}
+
+.quick-icon.green {
+  background: rgba(123, 237, 159, 0.1);
+}
+
+.quick-icon.red {
+  background: rgba(255, 77, 79, 0.1);
+}
+
+.quick-item text {
+  font-size: 22rpx;
+  color: #666;
+}
+
+/* 加载状态 */
+.loading {
+  text-align: center;
+  margin: 20rpx 0;
+}
+
+/* 退出登录按钮 */
+.logout-section {
+  margin: 30rpx 16rpx;
+  padding: 0 0rpx;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  width: 100%;
+  height: 88rpx;
+  background: #fff;
+  border: none;
+  border-radius: 12rpx;
+  color: #ff4d4f;
+  font-size: 28rpx;
+  padding: 0;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.logout-btn::after {
+  display: none;
+}
+
+.logout-btn text {
+  margin-left: 4rpx;
+}
+
+/* 响应式调整 */
+@media screen and (max-height: 700px) {
+  .profile-header {
+    padding: 20rpx 16rpx;
+  }
+  
+  .avatar {
+    width: 90rpx;
+    height: 90rpx;
+  }
+  
+  .feature-block {
+    padding: 20rpx 16rpx;
+  }
+  
+  .main-features .feature-block {
+    height: 140rpx;
+  }
+  
+  .feature-icon {
+    width: 70rpx;
+    height: 70rpx;
+    border-radius: 35rpx;
+    margin-bottom: 12rpx;
+  }
+  
+  .quick-icon {
+    width: 60rpx;
+    height: 60rpx;
+    border-radius: 30rpx;
+  }
+}

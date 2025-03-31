@@ -1,0 +1,368 @@
+/* DeepSeek风格的Markdown样式 */
+
+/* 基础文本样式 */
+.deepseek-markdown {
+  font-family: PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+  font-size: 28rpx;
+  line-height: 1.7;
+  color: #333333;
+  word-wrap: break-word;
+  word-break: normal;
+  text-align: left;
+}
+
+/* 标题样式 */
+.deepseek-markdown .h1 {
+  font-size: 40rpx;
+  font-weight: 600;
+  margin: 30rpx 0 20rpx;
+  padding-bottom: 10rpx;
+  border-bottom: 1rpx solid #eaecef;
+  color: #333333;
+}
+
+.deepseek-markdown .h2 {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin: 28rpx 0 18rpx;
+  padding-bottom: 8rpx;
+  border-bottom: 1rpx solid #eaecef;
+  color: #333333;
+}
+
+.deepseek-markdown .h3 {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin: 24rpx 0 16rpx;
+  color: #333333;
+}
+
+.deepseek-markdown .h4 {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin: 22rpx 0 14rpx;
+  color: #333333;
+}
+
+.deepseek-markdown .h5 {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin: 20rpx 0 12rpx;
+  color: #333333;
+}
+
+.deepseek-markdown .h6 {
+  font-size: 26rpx;
+  font-weight: 600;
+  margin: 18rpx 0 10rpx;
+  color: #333333;
+}
+
+/* 段落样式 */
+.deepseek-markdown .p {
+  margin: 16rpx 0;
+  line-height: 1.7;
+}
+
+/* 列表样式 */
+.deepseek-markdown .ul,
+.deepseek-markdown .ol {
+  margin: 16rpx 0;
+  padding-left: 32rpx;
+}
+
+.deepseek-markdown .li {
+  margin: 8rpx 0;
+  line-height: 1.6;
+}
+
+.deepseek-markdown .ul .ul,
+.deepseek-markdown .ol .ol,
+.deepseek-markdown .ul .ol,
+.deepseek-markdown .ol .ul {
+  margin: 8rpx 0;
+}
+
+/* 代码样式 */
+.deepseek-markdown .code {
+  font-family: Consolas, Monaco, 'Andale Mono', monospace;
+  background-color: rgba(27, 31, 35, 0.05);
+  padding: 4rpx 8rpx;
+  border-radius: 6rpx;
+  font-size: 26rpx;
+  color: #333333;
+}
+
+.deepseek-markdown .pre {
+  margin: 20rpx 0;
+  border-radius: 8rpx;
+  background-color: #f6f8fa;
+  overflow-x: auto;
+}
+
+.deepseek-markdown .pre .code {
+  display: block;
+  padding: 20rpx;
+  background: none;
+  color: #24292e;
+  line-height: 1.5;
+  font-size: 26rpx;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* 引用样式 */
+.deepseek-markdown .blockquote {
+  margin: 16rpx 0;
+  padding: 0 16rpx;
+  color: #6a737d;
+  border-left: 4rpx solid #dfe2e5;
+}
+
+/* 强调样式 */
+.deepseek-markdown .strong {
+  font-weight: 600;
+}
+
+.deepseek-markdown .em {
+  font-style: italic;
+}
+
+/* 链接样式 */
+.deepseek-markdown .a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+/* 表格样式 */
+.deepseek-markdown .table {
+  margin: 20rpx 0;
+  border-collapse: collapse;
+  width: 100%;
+  overflow-x: auto;
+  display: block;
+}
+
+.deepseek-markdown .tr {
+  border-top: 1rpx solid #dfe2e5;
+  background-color: #fff;
+}
+
+.deepseek-markdown .tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+.deepseek-markdown .th,
+.deepseek-markdown .td {
+  padding: 12rpx 16rpx;
+  border: 1rpx solid #dfe2e5;
+  text-align: left;
+}
+
+.deepseek-markdown .th {
+  font-weight: 600;
+  background-color: #f6f8fa;
+}
+
+/* 分割线 */
+.deepseek-markdown .hr {
+  height: 1rpx;
+  margin: 24rpx 0;
+  background-color: #e1e4e8;
+  border: 0;
+}
+
+/* 图片 */
+.deepseek-markdown .img {
+  max-width: 100%;
+  height: auto;
+  margin: 16rpx 0;
+  border-radius: 4rpx;
+}
+
+/* 代码高亮 */
+.deepseek-markdown .hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 16rpx;
+  color: #24292e;
+  background: #f6f8fa;
+}
+
+.deepseek-markdown .hljs-comment,
+.deepseek-markdown .hljs-quote {
+  color: #6a737d;
+  font-style: italic;
+}
+
+.deepseek-markdown .hljs-keyword,
+.deepseek-markdown .hljs-selector-tag {
+  color: #d73a49;
+}
+
+.deepseek-markdown .hljs-string,
+.deepseek-markdown .hljs-doctag {
+  color: #032f62;
+}
+
+.deepseek-markdown .hljs-title,
+.deepseek-markdown .hljs-section,
+.deepseek-markdown .hljs-selector-id {
+  color: #6f42c1;
+}
+
+.deepseek-markdown .hljs-type,
+.deepseek-markdown .hljs-class .hljs-title {
+  color: #6f42c1;
+}
+
+.deepseek-markdown .hljs-number,
+.deepseek-markdown .hljs-literal,
+.deepseek-markdown .hljs-variable {
+  color: #005cc5;
+}
+
+.deepseek-markdown .hljs-regexp,
+.deepseek-markdown .hljs-link {
+  color: #032f62;
+}
+
+.deepseek-markdown .hljs-built_in,
+.deepseek-markdown .hljs-builtin-name {
+  color: #005cc5;
+}
+
+/* 行内代码块的行号 */
+.deepseek-markdown .h2w__lineNum {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 16rpx 0;
+  width: 60rpx;
+  text-align: center;
+  background-color: #f6f8fa;
+  border-right: 1rpx solid #e1e4e8;
+  color: #bbb;
+  list-style: none;
+  margin: 0;
+}
+
+.deepseek-markdown .h2w__lineNumLine {
+  list-style: none;
+  text-align: right;
+  padding: 0 8rpx;
+  line-height: 1.5;
+  font-size: 24rpx;
+}
+
+/* 暗色主题 */
+.deepseek-markdown.dark {
+  color: #e1e4e8;
+}
+
+.deepseek-markdown.dark .h1,
+.deepseek-markdown.dark .h2,
+.deepseek-markdown.dark .h3,
+.deepseek-markdown.dark .h4,
+.deepseek-markdown.dark .h5,
+.deepseek-markdown.dark .h6 {
+  color: #fff;
+  border-bottom-color: #343434;
+}
+
+.deepseek-markdown.dark .code {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #e1e4e8;
+}
+
+.deepseek-markdown.dark .pre {
+  background-color: #1e1e1e;
+}
+
+.deepseek-markdown.dark .pre .code {
+  color: #e1e4e8;
+}
+
+.deepseek-markdown.dark .blockquote {
+  color: #959da5;
+  border-left-color: #444;
+}
+
+.deepseek-markdown.dark .a {
+  color: #58a6ff;
+}
+
+.deepseek-markdown.dark .tr {
+  background-color: #1e1e1e;
+  border-top-color: #343434;
+}
+
+.deepseek-markdown.dark .tr:nth-child(2n) {
+  background-color: #2a2a2a;
+}
+
+.deepseek-markdown.dark .th,
+.deepseek-markdown.dark .td {
+  border-color: #343434;
+}
+
+.deepseek-markdown.dark .th {
+  background-color: #2a2a2a;
+}
+
+.deepseek-markdown.dark .hr {
+  background-color: #343434;
+}
+
+.deepseek-markdown.dark .hljs {
+  background: #1e1e1e;
+  color: #e1e4e8;
+}
+
+.deepseek-markdown.dark .hljs-comment,
+.deepseek-markdown.dark .hljs-quote {
+  color: #959da5;
+}
+
+.deepseek-markdown.dark .hljs-keyword,
+.deepseek-markdown.dark .hljs-selector-tag {
+  color: #f97583;
+}
+
+.deepseek-markdown.dark .hljs-string,
+.deepseek-markdown.dark .hljs-doctag {
+  color: #9ecbff;
+}
+
+.deepseek-markdown.dark .hljs-title,
+.deepseek-markdown.dark .hljs-section,
+.deepseek-markdown.dark .hljs-selector-id {
+  color: #b392f0;
+}
+
+.deepseek-markdown.dark .hljs-type,
+.deepseek-markdown.dark .hljs-class .hljs-title {
+  color: #b392f0;
+}
+
+.deepseek-markdown.dark .hljs-number,
+.deepseek-markdown.dark .hljs-literal,
+.deepseek-markdown.dark .hljs-variable {
+  color: #79b8ff;
+}
+
+.deepseek-markdown.dark .hljs-regexp,
+.deepseek-markdown.dark .hljs-link {
+  color: #9ecbff;
+}
+
+.deepseek-markdown.dark .hljs-built_in,
+.deepseek-markdown.dark .hljs-builtin-name {
+  color: #79b8ff;
+}
+
+.deepseek-markdown.dark .h2w__lineNum {
+  background-color: #1e1e1e;
+  border-right-color: #343434;
+  color: #666;
+} 

@@ -1,0 +1,60 @@
+<!-- pages/device/index.wxml -->
+<view class="container">
+  <!-- 设备列表 -->
+  <view class="device-list">
+    <block wx:if="{{!loading && devices.length > 0}}">
+      <view class="device-card" wx:for="{{devices}}" wx:key="id" bindtap="viewDeviceDetail" data-id="{{item.id}}">
+        <view class="device-info">
+          <view class="device-name">{{item.name}}</view>
+          <view class="device-status {{item.status}}">
+            <text>{{item.status === 'connected' ? '已连接' : '未连接'}}</text>
+          </view>
+        </view>
+        <view class="device-details">
+          <view class="detail-item">
+            <text class="label">电量</text>
+            <text class="value">{{item.batteryLevel}}%</text>
+          </view>
+          <view class="detail-item">
+            <text class="label">最后同步</text>
+            <text class="value">{{item.lastSync}}</text>
+          </view>
+        </view>
+        <view class="device-actions">
+          <van-button 
+            type="primary" 
+            size="small" 
+            loading="{{syncing}}"
+            bindtap="syncDeviceData"
+            data-id="{{item.id}}"
+            custom-class="sync-btn"
+          >
+            {{syncing ? '同步中...' : '同步数据'}}
+          </van-button>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && devices.length === 0}}">
+      <view class="empty-icon">
+        <van-icon name="phone-o" size="48px" color="#999" />
+      </view>
+      <text>暂无绑定设备</text>
+      <text>点击下方按钮添加设备</text>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <van-loading type="spinner" color="#1989fa" />
+      <text>加载中...</text>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-button">
+    <van-button type="primary" block bind:click="addDevice">
+      添加设备
+    </van-button>
+  </view>
+</view>

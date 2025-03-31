@@ -1,0 +1,116 @@
+<!-- 体重记录页面 -->
+<view class="container">
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <loading>加载中...</loading>
+  </view>
+
+  <block wx:if="{{!loading}}">
+    <!-- 体重统计 -->
+    <view class="weight-stats">
+      <view class="stats-item">
+        <text class="label">当前体重</text>
+        <view class="value-container">
+          <text class="value">{{weightStats.currentWeight}}</text>
+          <text class="weight-unit">kg</text>
+        </view>
+      </view>
+      <view class="stats-item">
+        <text class="label">起始体重</text>
+        <view class="value-container">
+          <text class="value">{{weightStats.startWeight}}</text>
+          <text class="weight-unit">kg</text>
+        </view>
+        <text class="date">{{weightStats.startDate}}</text>
+      </view>
+      <view class="stats-item">
+        <text class="label">总体变化</text>
+        <view class="value-container">
+          <text class="value {{weightStats.weightChange >= 0 ? 'up' : 'down'}}">{{weightStats.weightChange}}</text>
+          <text class="weight-unit">kg</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 图表视图 -->
+    <view class="chart-section">
+      <view class="view-switcher">
+        <text class="view-item {{currentView === 'week' ? 'active' : ''}}" bindtap="switchView" data-view="week">周</text>
+        <text class="view-item {{currentView === 'month' ? 'active' : ''}}" bindtap="switchView" data-view="month">月</text>
+        <text class="view-item {{currentView === 'year' ? 'active' : ''}}" bindtap="switchView" data-view="year">年</text>
+      </view>
+      <view class="chart-container">
+        <ec-canvas id="weightChart" canvas-id="weightChart" ec="{{ ec }}"></ec-canvas>
+      </view>
+    </view>
+
+    <!-- 记录列表 -->
+    <view class="weight-records">
+      <view class="records-header">
+        <view class="header-left">
+          <text>历史记录</text>
+          <text class="record-count">{{weightRecords.length}}条</text>
+        </view>
+        <button class="add-btn" bindtap="showAddForm">
+          <text class="icon">+</text>
+          添加记录
+        </button>
+      </view>
+      
+      <view class="record-list">
+        <block wx:if="{{weightRecords.length > 0}}">
+          <view class="record-item" wx:for="{{weightRecords}}" wx:key="id">
+            <view class="record-info">
+              <text class="date">{{item.date}}</text>
+              <view class="weight-info">
+                <text class="weight">{{item.weight}}</text>
+                <text class="weight-unit">kg</text>
+              </view>
+              <block wx:if="{{item.bodyFat}}">
+                <text class="body-fat">体脂率 {{item.bodyFat}}%</text>
+              </block>
+            </view>
+            <button class="delete-btn" data-id="{{item.id}}" bindtap="deleteRecord">
+              <text class="icon">×</text>
+            </button>
+          </view>
+        </block>
+        <view class="empty-state" wx:else>
+          <van-icon name="chart-trending-o" size="80rpx" color="#cccccc" />
+          <text class="empty-title">暂无体重记录</text>
+          <text class="empty-desc">记录体重变化，追踪健康目标</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 添加记录表单 -->
+  <view class="add-form" wx:if="{{showAddForm}}">
+    <view class="form-content">
+      <view class="form-header">
+        <text>添加记录</text>
+        <text class="close-btn" bindtap="hideAddForm">×</text>
+      </view>
+      <view class="form-item">
+        <text class="label">体重</text>
+        <input type="digit" 
+               value="{{newRecord.weight}}" 
+               bindinput="onWeightInput" 
+               placeholder="请输入体重"
+               placeholder-class="input-placeholder"/>
+      </view>
+      <view class="form-item">
+        <text class="label">体脂率</text>
+        <input type="digit" 
+               value="{{newRecord.bodyFat}}" 
+               bindinput="onBodyFatInput" 
+               placeholder="请输入体脂率（可选）"
+               placeholder-class="input-placeholder"/>
+      </view>
+      <view class="form-actions">
+        <button class="cancel-btn" bindtap="hideAddForm">取消</button>
+        <button class="save-btn" bindtap="saveRecord">保存</button>
+      </view>
+    </view>
+  </view>
+</view> 

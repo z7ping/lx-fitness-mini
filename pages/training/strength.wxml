@@ -1,0 +1,61 @@
+<!--pages/training/strength.wxml-->
+<view class="container">
+  <!-- 训练信息 -->
+  <view class="exercise-info">
+    <view class="exercise-name">{{exercise.name}}</view>
+    <view class="exercise-details">
+      <view class="detail-item">
+        <text class="label">组数</text>
+        <text class="value">{{currentSet}}/{{exercise.sets}}</text>
+      </view>
+      <view class="detail-item">
+        <text class="label">每组</text>
+        <text class="value">{{exercise.reps}}次</text>
+      </view>
+      <view class="detail-item" wx:if="{{exercise.weight > 0}}">
+        <text class="label">重量</text>
+        <text class="value">{{exercise.weight}}kg</text>
+      </view>
+    </view>
+    <view class="exercise-description" wx:if="{{exercise.description}}">
+      {{exercise.description}}
+    </view>
+  </view>
+
+  <!-- 休息计时器 -->
+  <view class="rest-timer {{showRestTimer ? 'show' : ''}}">
+    <view class="timer-title">休息时间</view>
+    <view class="timer-value">{{restTime}}s</view>
+    <view class="timer-progress">
+      <view class="progress-bar" style="width: {{(restTime/90)*100}}%"></view>
+    </view>
+    <view class="timer-tip">准备开始下一组</view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <block wx:if="{{!isResting}}">
+      <button class="primary-btn" bindtap="completeSet">
+        完成第{{currentSet}}组
+      </button>
+      <button class="secondary-btn" bindtap="skipRest" wx:if="{{currentSet < exercise.sets}}">
+        跳过休息
+      </button>
+    </block>
+    <block wx:else>
+      <button class="primary-btn" bindtap="skipRest">
+        跳过休息
+      </button>
+    </block>
+  </view>
+
+  <!-- 训练提示 -->
+  <view class="training-tips">
+    <view class="tip-title">训练要点</view>
+    <view class="tip-list">
+      <view class="tip-item">• 保持正确的动作姿势</view>
+      <view class="tip-item">• 控制呼吸节奏</view>
+      <view class="tip-item">• 组间注意充分休息</view>
+    </view>
+  </view>
+</view>

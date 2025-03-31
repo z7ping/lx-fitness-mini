@@ -1,0 +1,76 @@
+.container {
+  padding: 20rpx;
+  min-height: 100vh;
+  background: #f7f8fa;
+}
+
+/* 设置组样式 */
+.van-cell-group {
+  margin-bottom: 24rpx !important;
+  border-radius: 12rpx !important;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.van-cell-group__title {
+  padding: 24rpx 16rpx 16rpx !important;
+  font-size: 28rpx !important;
+  font-weight: 500 !important;
+  color: #333 !important;
+}
+
+/* 单元格样式 */
+.van-cell {
+  padding: 24rpx 32rpx !important;
+}
+
+.van-cell::after {
+  border-bottom: 2rpx solid rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 单选框样式 */
+.van-radio__icon--checked {
+  color: #ff6b00 !important;
+  background-color: #fff5f0 !important;
+}
+
+/* 输入框样式 */
+.van-field__input {
+  text-align: right !important;
+}
+
+/* 提示文本样式 */
+.tips {
+  margin: 30rpx 20rpx;
+  color: #999;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+/* 按钮组样式 */
+.button-group {
+  margin: 48rpx 20rpx;
+}
+
+/* 主按钮样式 */
+.van-button--primary {
+  background: linear-gradient(135deg, #ff6b00, #ff9500) !important;
+  border: none !important;
+  border-radius: 44rpx !important;
+  font-size: 32rpx !important;
+  font-weight: 500 !important;
+  height: 88rpx !important;
+  line-height: 88rpx !important;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 0, 0.2) !important;
+}
+
+.van-button--primary.van-button--disabled {
+  opacity: 0.6 !important;
+  background: linear-gradient(135deg, #ff6b00, #ff9500) !important;
+}
+
+/* 按钮点击效果 */
+.van-button--primary:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(255, 107, 0, 0.15) !important;
+}

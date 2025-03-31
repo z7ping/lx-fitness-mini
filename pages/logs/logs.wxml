@@ -1,0 +1,201 @@
+<view class="container">
+  <view class="header">
+    <view class="title">系统日志</view>
+    <view class="actions">
+      <view class="action-btn export-btn" bindtap="exportLogs">
+        <van-icon name="down" size="16px" />
+        <text>导出</text>
+      </view>
+      <view class="action-btn clear-btn" bindtap="clearLogs">
+        <van-icon name="delete" size="16px" />
+        <text>清除</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 日志分类标签页 -->
+  <view class="category-tabs">
+    <view 
+      wx:for="{{categories}}" 
+      wx:key="id" 
+      class="category-tab {{activeCategory === item.id ? 'active' : ''}}"
+      bindtap="onCategoryChange"
+      data-category="{{item.id}}"
+    >
+      {{item.name}}
+    </view>
+  </view>
+  
+  <!-- 搜索框 -->
+  <van-search
+    value="{{ keyword }}"
+    placeholder="搜索日志内容"
+    bind:search="onSearch"
+    bind:change="onSearch"
+    shape="round"
+    background="#f5f6fa"
+  />
+  
+  <!-- 应用日志标签页 -->
+  <view class="tab-container" wx:if="{{activeCategory === 'app'}}">
+    <view class="tabs">
+      <view 
+        wx:for="{{tabs}}" 
+        wx:key="id" 
+        class="tab {{activeTab === item.id ? 'active' : ''}}"
+        bindtap="onTabChange"
+        data-tab="{{item.id}}"
+      >
+        {{item.name}}
+      </view>
+    </view>
+    
+    <!-- 应用日志列表 -->
+    <scroll-view 
+      class="log-list"
+      scroll-y
+      enable-back-to-top
+      enable-flex
+      refresher-enabled
+      refresher-triggered="{{refreshing}}"
+      bindrefresherrefresh="onPullDownRefresh"
+    >
+      <block wx:if="{{filteredLogs.length > 0}}">
+        <view 
+          class="log-item {{item.level}}" 
+          wx:for="{{filteredLogs}}" 
+          wx:key="timestamp"
+          bindtap="viewLogDetail"
+          data-index="{{index}}"
+        >
+          <view class="log-header">
+            <view class="log-level {{item.level}}">{{item.level.toUpperCase()}}</view>
+            <view class="log-time">{{item.timestamp}}</view>
+          </view>
+          <view class="log-message">{{item.message}}</view>
+          <view class="log-page" wx:if="{{item.page}}">{{item.page}}</view>
+        </view>
+      </block>
+      <view class="empty-state" wx:else>
+        <van-icon name="info-o" size="48px" color="#ddd" />
+        <text>没有找到日志记录</text>
+      </view>
+    </scroll-view>
+  </view>
+  
+  <!-- API日志列表 -->
+  <view class="tab-container" wx:if="{{activeCategory === 'api'}}">
+    <scroll-view 
+      class="log-list"
+      scroll-y
+      enable-back-to-top
+      enable-flex
+      refresher-enabled
+      refresher-triggered="{{refreshing}}"
+      bindrefresherrefresh="onPullDownRefresh"
+    >
+      <block wx:if="{{apiLogs.length > 0}}">
+        <view 
+          class="log-item api-{{item.action}}" 
+          wx:for="{{apiLogs}}" 
+          wx:key="timestamp"
+          bindtap="viewApiLogDetail"
+          data-index="{{index}}"
+        >
+          <view class="log-header">
+            <view class="log-level api-{{item.action}}">{{item.action}}</view>
+            <view class="log-model">{{item.model}}</view>
+            <view class="log-time">{{item.timestamp}}</view>
+          </view>
+          <view class="log-message">
+            <block wx:if="{{item.action === 'error'}}">
+              错误: {{item.data.error || '未知错误'}}
+            </block>
+            <block wx:elif="{{item.action === 'request'}}">
+              请求: {{item.data.messages[0].content_preview}}
+            </block>
+            <block wx:elif="{{item.action === 'success'}}">
+              成功: {{item.data.response_preview || '成功响应'}} ({{item.data.duration}}ms)
+            </block>
+            <block wx:else>
+              {{item.data.error || JSON.stringify(item.data).substring(0, 100) + '...'}}
+            </block>
+          </view>
+        </view>
+      </block>
+      <view class="empty-state" wx:else>
+        <van-icon name="info-o" size="48px" color="#ddd" />
+        <text>没有找到API调用记录</text>
+      </view>
+    </scroll-view>
+  </view>
+  
+  <!-- 日志详情弹窗 -->
+  <van-popup
+    show="{{ showDetail }}"
+    position="bottom"
+    round
+    custom-style="height: 70%"
+    bind:close="closeDetail"
+  >
+    <view class="detail-container" wx:if="{{currentLog}}">
+      <view class="detail-header">
+        <text class="detail-title">日志详情</text>
+        <view class="detail-close" bindtap="closeDetail">
+          <van-icon name="cross" size="20px" />
+        </view>
+      </view>
+      
+      <!-- 应用日志详情 -->
+      <view class="detail-content" wx:if="{{activeCategory === 'app'}}">
+        <view class="detail-info">
+          <view class="detail-item">
+            <text class="detail-label">级别:</text>
+            <text class="detail-value level-{{currentLog.level}}">{{currentLog.level.toUpperCase()}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">时间:</text>
+            <text class="detail-value">{{currentLog.timestamp}}</text>
+          </view>
+          <view class="detail-item" wx:if="{{currentLog.page}}">
+            <text class="detail-label">页面:</text>
+            <text class="detail-value">{{currentLog.page}}</text>
+          </view>
+        </view>
+        <view class="detail-message">
+          <text class="detail-label">内容:</text>
+          <text class="detail-value" user-select>{{currentLog.message}}</text>
+        </view>
+      </view>
+      
+      <!-- API日志详情 -->
+      <view class="detail-content" wx:else>
+        <view class="detail-info">
+          <view class="detail-item">
+            <text class="detail-label">模型:</text>
+            <text class="detail-value">{{currentLog.model}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">操作:</text>
+            <text class="detail-value level-{{currentLog.action}}">{{currentLog.action}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">时间:</text>
+            <text class="detail-value">{{currentLog.timestamp}}</text>
+          </view>
+        </view>
+        <view class="detail-message">
+          <text class="detail-label">详细数据:</text>
+          <text class="detail-value code-block" user-select>{{currentLog.data ? JSON.stringify(currentLog.data, null, 2) : '无数据'}}</text>
+        </view>
+      </view>
+      
+      <view class="detail-actions">
+        <button class="copy-btn" bindtap="copyLogContent">
+          <van-icon name="description" size="18px" />
+          <text>复制内容</text>
+        </button>
+      </view>
+    </view>
+  </van-popup>
+</view> 

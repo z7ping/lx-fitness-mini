@@ -1,0 +1,126 @@
+<view class="container {{isRunning ? 'is-running' : ''}}">
+  <!-- 运动准备信息 - 移到最顶部 -->
+  <view class="training-header">
+    <view class="training-title">{{trainingInfo.name}}</view>
+    <view class="training-desc">准备开始 {{trainingInfo.duration}} 分钟的运动</view>
+  </view>
+
+  <!-- 地图组件 -->
+  <view class="map-container">
+    <map id="runningMap" 
+         class="running-map" 
+         show-location="{{true}}" 
+         show-compass="{{true}}" 
+         enable-rotate="{{true}}" 
+         latitude="{{latitude}}" 
+         longitude="{{longitude}}" 
+         scale="16" 
+         polyline="{{polyline.length > 0 ? polyline : []}}"
+         enable-overlooking="{{false}}"
+         enable-3D="{{false}}"
+         enable-zoom="{{true}}"
+         enable-scroll="{{true}}">
+    </map>
+  </view>
+
+  <!-- 运动数据显示 -->
+  <view class="running-stats primary-stats">
+    <view class="stat-item">
+      <text class="stat-value">{{runningData.displayDistance || '0.00'}}</text>
+      <text class="stat-label">公里</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{runningData.currentPaceFormatted || '--\--'}}</text>
+      <text class="stat-label">配速</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{runningData.durationFormatted || '00:00:00'}}</text>
+      <text class="stat-label">时间</text>
+    </view>
+  </view>
+
+  <!-- 详细运动数据 -->
+  <view class="running-stats secondary-stats">
+    <view class="stat-item">
+      <text class="stat-value">{{runningData.cadence || 0}}</text>
+      <text class="stat-label">实时步频</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{runningData.avgCadence || 0}}</text>
+      <text class="stat-label">平均步频</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{runningData.calories || 0}}</text>
+      <text class="stat-label">消耗(kcal)</text>
+    </view>
+  </view>
+  <view class="running-stats tertiary-stats">
+    <view class="stat-item">
+      <text class="stat-value">{{runningData.strideFormatted || '0.00'}}</text>
+      <text class="stat-label">步幅(m)</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{runningData.steps || 0}}</text>
+      <text class="stat-label">总步数</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{runningData.paceFormatted || '--\--'}}</text>
+      <text class="stat-label">平均配速</text>
+    </view>
+  </view>
+
+  <!-- 目标设置 -->
+  <view class="goals-section">
+    <view class="section-title">运动目标</view>
+    <view class="goals-grid">
+      <view class="goal-item">
+        <text class="goal-label">时长</text>
+        <text class="goal-value">{{trainingInfo.duration}}分钟</text>
+      </view>
+      <view class="goal-item">
+        <text class="goal-label">目标配速</text>
+        <text class="goal-value">{{targetPace}}</text>
+      </view>
+      <view class="goal-item">
+        <text class="goal-label">目标距离</text>
+        <text class="goal-value">{{targetDistance}}km</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 运动建议 -->
+  <view class="tips-card">
+    <view class="tips-header">
+      <van-icon name="info-o" color="#1296db" size="40rpx" />
+      <text>运动建议</text>
+    </view>
+    <view class="tips-content">
+      <text class="tip-text">在开始跑步前，请注意以下事项：</text>
+      <view class="tip-items">
+        <view class="tip-item">
+          <van-icon name="checked" />
+          <text>做好充分的热身运动</text>
+        </view>
+        <view class="tip-item">
+          <van-icon name="checked" />
+          <text>确保穿着合适的运动鞋</text>
+        </view>
+        <view class="tip-item">
+          <van-icon name="checked" />
+          <text>准备好水和毛巾</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部空白区域，防止内容被底部按钮遮挡 -->
+  <view style="height: 180rpx;"></view>
+
+  <!-- 底部控制按钮 -->
+  <view class="bottom-buttons">
+    <button class="secondary-btn" bindtap="onCancel">取消</button>
+    <button class="primary-btn" bindtap="onStart">
+      {{isRunning ? '正在运动中' : '开始运动'}}
+    </button>
+  </view>
+</view>

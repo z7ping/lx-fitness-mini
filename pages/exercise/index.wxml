@@ -1,0 +1,83 @@
+<!-- pages/exercise/index.wxml -->
+<view class="container">
+  <!-- 用户运动数据概览 -->
+  <view class="stats-overview">
+    <view class="stat-card">
+      <text class="stat-value">{{todayStats.duration || 0}}</text>
+      <text class="stat-label">今日运动(分钟)</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{todayStats.calories || 0}}</text>
+      <text class="stat-label">消耗(千卡)</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{todayStats.count || 0}}</text>
+      <text class="stat-label">完成训练</text>
+    </view>
+  </view>
+
+  <!-- 运动记录 -->
+  <view class="recent-records">
+    <view class="section-header">
+      <text class="title">最近运动</text>
+      <text class="more" bindtap="viewAllRecords">查看更多</text>
+    </view>
+    <view class="record-list">
+      <view class="record-item" wx:for="{{recentRecords}}" wx:key="id" bindtap="viewRecordDetail" data-id="{{item.id}}">
+        <view class="record-info">
+          <text class="record-name">{{item.name}}</text>
+          <text class="record-time">{{item.date}} {{item.startTime}}</text>
+        </view>
+        <view class="record-stats">
+          <text class="duration">{{item.duration}}</text>
+          <text class="calories">{{item.calories}}千卡</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 运动目标 -->
+  <!-- <view class="exercise-goals">
+    <view class="section-header">
+      <text class="title">运动目标</text>
+      <text class="edit" bindtap="editGoals">编辑</text>
+    </view>
+    <view class="goals-progress">
+      <view class="goal-item">
+        <view class="goal-info">
+          <text class="goal-label">每周运动</text>
+          <text class="goal-value">{{weeklyGoal.current}}/{{weeklyGoal.target}}次</text>
+        </view>
+        <view class="progress-bar">
+          <view class="progress" style="width: {{weeklyGoal.current / weeklyGoal.target * 100}}%"></view>
+        </view>
+      </view>
+      <view class="goal-item">
+        <view class="goal-info">
+          <text class="goal-label">运动时长</text>
+          <text class="goal-value">{{durationGoal.current}}/{{durationGoal.target}}分钟</text>
+        </view>
+        <view class="progress-bar">
+          <view class="progress" style="width: {{durationGoal.current / durationGoal.target * 100}}%"></view>
+        </view>
+      </view>
+    </view>
+  </view> -->
+  
+  <!-- 快速开始运动 -->
+  <view class="quick-start">
+    <view class="section-title">快速开始</view>
+    <view class="exercise-grid">
+      <view class="exercise-item" wx:for="{{quickStartList}}" wx:key="id" bindtap="startExercise" data-item="{{item}}">
+        <view class="exercise-icon">
+          <van-icon name="{{item.icon}}" size="40px" color="{{item.color}}" />
+        </view>
+        <text class="exercise-name">{{item.name}}</text>
+        <text class="exercise-duration">{{item.duration}}分钟</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 登录组件 -->
+<auth-login id="authLogin" />

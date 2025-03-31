@@ -1,0 +1,1448 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f9fafb;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  padding-bottom: calc(100rpx + env(safe-area-inset-bottom));
+}
+
+/* 顶部用户信息区 - 最小化设计 */
+.user-info-section {
+  background: linear-gradient(135deg, #ff9800, #ff6d00);
+  padding: 24rpx 20rpx;
+  margin: 20rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.15);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+}
+
+.section-title::before {
+  content: '';
+  width: 6rpx;
+  height: 28rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 3rpx;
+  margin-right: 12rpx;
+}
+
+.history-btn {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 20rpx;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 24rpx;
+  transition: all 0.3s ease;
+}
+
+.history-btn:active {
+  transform: scale(0.96);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.history-btn van-icon {
+  margin-right: 8rpx;
+  color: #ffffff;
+}
+
+.history-btn text {
+  font-size: 24rpx;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12rpx;
+  padding: 12rpx;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info-item .label {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2rpx;
+}
+
+.info-item .value {
+  font-size: 22rpx;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* 对话区域 - 核心内容区 */
+.chat-section {
+  flex: 1;
+  background: #fff;
+  margin: 0 16rpx 100rpx;
+  border-radius: 16rpx;
+  padding: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+}
+
+.message-list {
+  padding: 8rpx;
+}
+
+.message {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+  animation: fadeIn 0.3s ease;
+}
+
+.message .avatar {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 24rpx;
+  background: #ff9800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+  font-size: 20rpx;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.message .content {
+  margin-top: 4rpx;
+  flex: 1;
+  max-width: 85%;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx 20rpx 60rpx;
+  position: relative;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  user-select: text;
+  margin-bottom: 16rpx;
+}
+
+.ai-message .content {
+  background: #fff5e6;
+  border: 1rpx solid rgba(255, 152, 0, 0.1);
+}
+
+.user-message .content {
+  background: #fff5e6;
+  border: 1rpx solid rgba(255, 152, 0, 0.1);
+}
+
+.message .text {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.6;
+  user-select: text; /* 支持复制 */
+}
+
+/* 底部按钮区域样式 */
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx;
+  background: #fff;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.model-select {
+  flex: 2;
+  background: #FFF5E6;
+  padding: 12rpx 20rpx;
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(255, 107, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.model-select:active {
+  transform: scale(0.98);
+  background: #FFF0D9;
+}
+
+.model-label {
+  font-size: 22rpx;
+  color: #999;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.model-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 26rpx;
+  color: #FF6B00;
+  font-weight: 500;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.action-buttons button {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  border: none;
+}
+
+.btn-start {
+  flex: 0.8;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  background: linear-gradient(135deg, #FF9800, #FF6B00);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-start:active {
+  transform: scale(0.98);
+  background: linear-gradient(135deg, #FF8800, #FF6000);
+}
+
+.btn-cancel {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.btn-continue {
+  background: #07c160;
+  color: #fff;
+}
+
+.btn-adjust {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.btn-save {
+  background: #07c160;
+  color: #fff;
+}
+
+.btn-feedback {
+  background: #f5f5f5;
+  color: #666;
+}
+
+/* 对话气泡中的按钮样式 */
+.message-actions {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-top: 10rpx;
+  position: absolute;
+  bottom: 12rpx;
+  right: 16rpx;
+}
+
+.action-item {
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f5f5f5;
+  transition: all 0.3s ease;
+}
+
+.action-item:active {
+  transform: scale(0.95);
+  background: #e8e8e8;
+}
+
+.action-item van-icon {
+  color: #666;
+}
+
+/* 底部操作区样式优化 */
+.action-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.98);
+  padding: 24rpx 32rpx calc(24rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+/* 生成按钮样式 */
+.generate-btn {
+  flex: 0.8;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  background: linear-gradient(135deg, #FF9800, #FF6B00);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.generate-btn:active {
+  transform: scale(0.98);
+  background: linear-gradient(135deg, #FF8800, #FF6000);
+}
+
+/* 取消生成按钮 */
+.cancel-btn {
+  width: 100%;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  background: #F5F5F5;
+  color: #666;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:active {
+  transform: scale(0.98);
+  background: #EEEEEE;
+}
+
+/* 重试按钮 */
+.retry-btn {
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  background: linear-gradient(135deg, #FF9800, #FF6B00);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.retry-btn:active {
+  transform: scale(0.98);
+  background: linear-gradient(135deg, #FF8800, #FF6000);
+}
+
+/* 计划操作按钮组 */
+.plan-actions {
+  display: flex;
+  gap: 24rpx;
+  padding: 0 16rpx;
+}
+
+.plan-actions button {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  transition: all 0.3s ease;
+}
+
+/* 预览按钮 */
+.preview-btn {
+  background: #FFF5E6;
+  color: #FF6B00;
+  border: 1rpx solid rgba(255, 107, 0, 0.2);
+}
+
+.preview-btn:active {
+  transform: scale(0.96);
+  background: #FFF0D9;
+}
+
+/* 调整按钮 */
+.adjust-btn {
+  background: #F5F5F5;
+  color: #666;
+  border: none;
+}
+
+.adjust-btn:active {
+  transform: scale(0.96);
+  background: #EEEEEE;
+}
+
+/* 保存按钮 */
+.save-btn {
+  background: linear-gradient(135deg, #FF9800, #FF6B00);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 0, 0.2);
+}
+
+.save-btn:active {
+  transform: scale(0.96);
+  background: linear-gradient(135deg, #FF8800, #FF6000);
+}
+
+/* 加载状态 */
+.save-btn[loading] {
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* 图标样式统一 */
+.plan-actions button van-icon {
+  font-size: 32rpx;
+}
+
+/* 添加过渡动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.action-section {
+  animation: fadeIn 0.3s ease;
+}
+
+/* 模型选择弹窗样式 */
+.model-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.model-picker-header .title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.model-picker-content {
+  padding: 24rpx;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-bottom: calc(140rpx + env(safe-area-inset-bottom)); /* 确保内容不被底部按钮遮挡 */
+}
+
+.model-item {
+  padding: 24rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  border: 2rpx solid #eee;
+  transition: all 0.3s ease;
+}
+
+.model-item.active {
+  border-color: #ff6b35;
+  background: #fff5e6;
+}
+
+.model-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.model-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.model-desc {
+  font-size: 26rpx;
+  color: #666;
+  display: block;
+}
+
+/* 修改van-popup的样式 */
+.van-popup {
+  max-height: 80vh !important;
+  overflow: hidden !important;
+}
+
+/* 预览弹窗样式优化 */
+.preview-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.preview-header {
+  padding: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #ff9800, #ff6d00);
+  color: #fff;
+}
+
+.preview-content {
+  flex: 1;
+  padding: 20rpx;
+  user-select: text; /* 支持复制 */
+}
+
+.preview-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.preview-text {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.6;
+  user-select: text; /* 支持复制 */
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* rich-text 支持复制 */
+.message .content rich-text {
+  user-select: text;
+}
+
+/* 思考中的消息样式 */
+.ai-thinking {
+  opacity: 0.8;
+}
+
+.thinking-dots {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.thinking-dots .dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background-color: #1296db;
+  margin-right: 8rpx;
+  animation: thinking 1.4s infinite ease-in-out;
+}
+
+.thinking-dots .dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.thinking-dots .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.thinking-dots .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes thinking {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10rpx);
+  }
+}
+
+/* 预览弹窗样式 */
+.preview-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f8f8f8;
+}
+
+.preview-header {
+  padding: 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+}
+
+.preview-header .title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.preview-content {
+  flex: 1;
+  padding: 24rpx;
+}
+
+.preview-section {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.section-header .section-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  margin-left: 12rpx;
+}
+
+.section-content {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+.preview-text {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* 头像样式 */
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 16rpx;
+  border: 2rpx solid #fff;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.ai-avatar {
+  background: linear-gradient(135deg, #1296db 0%, #0d7ab8 100%);
+}
+
+.user-avatar {
+  background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
+}
+
+/* Markdown 样式 */
+.rich-text {
+  font-size: 28rpx;
+  line-height: 1.5;
+  color: #333;
+}
+
+.rich-text h1 {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin: 30rpx 0 20rpx;
+  color: #2c3e50;
+}
+
+.rich-text h2 {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin: 26rpx 0 16rpx;
+  color: #2c3e50;
+}
+
+.rich-text h3 {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin: 22rpx 0 14rpx;
+  color: #2c3e50;
+}
+
+.rich-text p {
+  margin: 16rpx 0;
+}
+
+.rich-text ul, .rich-text ol {
+  margin: 16rpx 0;
+  padding-left: 40rpx;
+}
+
+.rich-text li {
+  margin: 8rpx 0;
+}
+
+.rich-text code {
+  background-color: #f5f5f5;
+  padding: 4rpx 8rpx;
+  border-radius: 4rpx;
+  font-family: monospace;
+}
+
+.rich-text pre {
+  background-color: #f5f5f5;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  margin: 16rpx 0;
+  overflow-x: auto;
+}
+
+.rich-text blockquote {
+  border-left: 6rpx solid #ddd;
+  padding-left: 20rpx;
+  margin: 16rpx 0;
+  color: #666;
+}
+
+.rich-text strong {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.rich-text em {
+  font-style: italic;
+}
+
+/* 优化消息气泡样式 */
+.message .content {
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.ai-message .content {
+  background: #f0f9ff;
+  border: 1rpx solid rgba(18, 150, 219, 0.1);
+}
+
+.user-message .content {
+  background: #fff5eb;
+  border: 1rpx solid rgba(255, 107, 0, 0.1);
+}
+
+/* rich-text 样式 */
+.message .content rich-text {
+  font-size: 28rpx;
+  line-height: 1.5;
+  color: #333;
+}
+
+.message .content rich-text h1,
+.message .content rich-text h2,
+.message .content rich-text h3 {
+  margin: 16rpx 0 8rpx;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #222;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4rpx;
+}
+
+.message .content rich-text h1 { font-size: 36rpx; }
+.message .content rich-text h2 { font-size: 32rpx; }
+.message .content rich-text h3 { font-size: 30rpx; }
+
+.message .content rich-text p {
+  margin: 8rpx 0;
+}
+
+.message .content rich-text ul,
+.message .content rich-text ol {
+  margin: 8rpx 0;
+  padding-left: 2em;
+}
+
+.message .content rich-text li {
+  margin: 4rpx 0;
+  line-height: 1.5;
+}
+
+.message .content rich-text code {
+  background: #f5f5f5;
+  padding: 4rpx 8rpx;
+  border-radius: 4rpx;
+  font-family: monospace;
+  font-size: 24rpx;
+}
+
+.message .content rich-text pre {
+  background: #f5f5f5;
+  padding: 12rpx;
+  border-radius: 8rpx;
+  margin: 8rpx 0;
+  overflow-x: auto;
+}
+
+.message .content rich-text pre code {
+  display: block;
+  background: none;
+  padding: 0;
+  color: #333;
+  line-height: 1.6;
+}
+
+.message .content rich-text blockquote {
+  margin: 8rpx 0;
+  padding: 0 12rpx;
+  color: #666;
+  border-left: 4rpx solid #ff9800;
+  background: rgba(255, 152, 0, 0.05);
+}
+
+.message .content rich-text strong {
+  font-weight: 600;
+  color: #ff6d00;
+}
+
+.message .content rich-text em {
+  font-style: italic;
+  color: #666;
+}
+
+/* 链接样式 */
+.message .content rich-text a {
+  color: #ff9800;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+/* 表格样式 */
+.message .content rich-text table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16rpx 0;
+  font-size: 26rpx;
+}
+
+.message .content rich-text th,
+.message .content rich-text td {
+  padding: 12rpx 16rpx;
+  border: 1px solid #eee;
+  text-align: left;
+}
+
+.message .content rich-text th {
+  background: #f8f8f8;
+  font-weight: 500;
+}
+
+/* 分割线 */
+.message .content rich-text hr {
+  margin: 24rpx 0;
+  border: none;
+  border-top: 1px solid #eee;
+}
+
+/* 图片 */
+.message .content rich-text image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8rpx;
+  margin: 16rpx 0;
+}
+
+/* 模型选择区域 */
+.model-section {
+  margin: 20rpx;
+  background-color: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.model-header {
+  padding: 24rpx;
+}
+
+.model-title {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.model-field {
+  padding: 0 !important;
+  background: #fff5e6 !important;
+  border-radius: 8rpx !important;
+}
+
+.model-field .van-field__label {
+  color: #333 !important;
+  font-size: 28rpx !important;
+}
+
+.model-field .van-field__input {
+  color: #ff6b35 !important;
+  font-size: 28rpx !important;
+}
+
+.message .content {
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.ai-message .content {
+  background: #f0f9ff;
+  border: 1rpx solid rgba(18, 150, 219, 0.1);
+}
+
+.user-message .content {
+  background: #fff5eb;
+  border: 1rpx solid rgba(255, 107, 0, 0.1);
+}
+
+/* 模型选择区域 */
+.model-section {
+  margin: 20rpx;
+  background-color: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.model-header {
+  padding: 24rpx;
+}
+
+.model-title {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.model-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 16rpx;
+  vertical-align: middle;
+}
+
+.model-value {
+  color: #ff6b35 !important;
+}
+
+.van-dropdown-menu {
+  box-shadow: none !important;
+}
+
+.van-dropdown-item__title {
+  color: #333 !important;
+}
+
+.van-dropdown-item__option--active {
+  color: #ff6b35 !important;
+}
+
+.van-cell {
+  padding: 24rpx !important;
+}
+
+.van-cell__title {
+  font-size: 28rpx !important;
+}
+
+.van-cell__label {
+  font-size: 24rpx !important;
+  color: #999 !important;
+  margin-top: 8rpx !important;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 复制按钮样式 */
+.copy-btn {
+  position: absolute;
+  right: 20rpx;
+  bottom: 12rpx;
+  display: flex;
+  align-items: center;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 152, 0, 0.1);
+  font-size: 22rpx;
+  color: #ff9800;
+  z-index: 1;
+}
+
+.copy-btn van-icon {
+  margin-right: 4rpx;
+}
+
+.copy-btn:active {
+  opacity: 0.8;
+}
+
+/* 优化的 Markdown 样式 */
+.message .content rich-text {
+  font-size: 28rpx;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* 标题样式 */
+.message .content rich-text h1,
+.message .content rich-text h2,
+.message .content rich-text h3 {
+  margin: 16rpx 0 8rpx;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #222;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4rpx;
+}
+
+.message .content rich-text h1 { font-size: 36rpx; }
+.message .content rich-text h2 { font-size: 32rpx; }
+.message .content rich-text h3 { font-size: 30rpx; }
+
+/* 段落和列表 */
+.message .content rich-text p,
+.message .content rich-text ul,
+.message .content rich-text ol {
+  margin: 8rpx 0;
+  line-height: 1.8;
+  color: #333;
+}
+
+.message .content rich-text ul,
+.message .content rich-text ol {
+  padding-left: 2em;
+}
+
+.message .content rich-text li {
+  margin: 4rpx 0;
+  line-height: 1.5;
+}
+
+/* 代码样式 */
+.message .content rich-text code {
+  background: #f8f8f8;
+  padding: 4rpx 8rpx;
+  border-radius: 4rpx;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 24rpx;
+  color: #e96900;
+}
+
+.message .content rich-text pre {
+  background: #f8f8f8;
+  padding: 12rpx;
+  border-radius: 8rpx;
+  margin: 8rpx 0;
+  overflow-x: auto;
+  position: relative;
+}
+
+.message .content rich-text pre code {
+  display: block;
+  background: none;
+  padding: 0;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* 引用样式 */
+.message .content rich-text blockquote {
+  margin: 8rpx 0;
+  padding: 0 12rpx;
+  color: #666;
+  border-left: 4rpx solid #ff9800;
+  background: rgba(255, 152, 0, 0.05);
+}
+
+/* 强调样式 */
+.message .content rich-text strong {
+  font-weight: 600;
+  color: #ff6d00;
+}
+
+.message .content rich-text em {
+  font-style: italic;
+  color: #666;
+}
+
+/* 链接样式 */
+.message .content rich-text a {
+  color: #ff9800;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+/* 表格样式 */
+.message .content rich-text table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16rpx 0;
+  font-size: 26rpx;
+}
+
+.message .content rich-text th,
+.message .content rich-text td {
+  padding: 12rpx 16rpx;
+  border: 1px solid #eee;
+  text-align: left;
+}
+
+.message .content rich-text th {
+  background: #f8f8f8;
+  font-weight: 500;
+}
+
+/* 分割线 */
+.message .content rich-text hr {
+  margin: 24rpx 0;
+  border: none;
+  border-top: 1px solid #eee;
+}
+
+/* 图片 */
+.message .content rich-text image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8rpx;
+  margin: 16rpx 0;
+}
+
+/* Towxml 样式优化 */
+.message .towxml {
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: #333;
+  padding: 0 10rpx;
+}
+
+.message .towxml .h1 {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin: 24rpx 0 16rpx;
+  color: #222;
+}
+
+.message .towxml .h2 {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin: 20rpx 0 14rpx;
+  color: #222;
+}
+
+.message .towxml .h3 {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin: 18rpx 0 12rpx;
+  color: #222;
+}
+
+.message .towxml .p {
+  margin: 16rpx 0;
+  color: #333;
+}
+
+.message .towxml .ul,
+.message .towxml .ol {
+  padding-left: 30rpx;
+  margin: 16rpx 0;
+}
+
+.message .towxml .li {
+  margin: 8rpx 0;
+}
+
+.message .towxml .strong {
+  font-weight: 600;
+  color: #222;
+}
+
+.message .towxml .code {
+  background: #f5f5f5;
+  padding: 2rpx 8rpx;
+  border-radius: 4rpx;
+  font-family: monospace;
+  font-size: 26rpx;
+}
+
+.message .towxml .table {
+  border-collapse: collapse;
+  margin: 16rpx 0;
+  width: 100%;
+}
+
+.message .towxml .tr {
+  border-bottom: 1rpx solid #eee;
+}
+
+.message .towxml .th,
+.message .towxml .td {
+  padding: 12rpx;
+  text-align: left;
+}
+
+.message .towxml .th {
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+.message .towxml .blockquote {
+  border-left: 6rpx solid #ddd;
+  padding: 0 16rpx;
+  margin: 16rpx 0;
+  color: #666;
+}
+
+.message .towxml .hr {
+  border: none;
+  border-top: 1rpx solid #eee;
+  margin: 20rpx 0;
+}
+
+/* 暗色主题适配 */
+.message.dark .towxml {
+  color: #e0e0e0;
+}
+
+.message.dark .towxml .h1,
+.message.dark .towxml .h2,
+.message.dark .towxml .h3,
+.message.dark .towxml .strong {
+  color: #fff;
+}
+
+.message.dark .towxml .p {
+  color: #e0e0e0;
+}
+
+.message.dark .towxml .code {
+  background: #333;
+  color: #e0e0e0;
+}
+
+.message.dark .towxml .blockquote {
+  border-left-color: #444;
+  color: #999;
+}
+
+.message.dark .towxml .table .tr {
+  border-bottom-color: #333;
+}
+
+.message.dark .towxml .th {
+  background: #333;
+}
+
+/* 加载动画样式 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 0;
+  margin: 40rpx 0;
+}
+
+.loading-animation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30rpx;
+}
+
+.loading-circle {
+  width: 20rpx;
+  height: 20rpx;
+  margin: 0 10rpx;
+  background: linear-gradient(135deg, #ff9800, #ff6d00);
+  border-radius: 50%;
+  animation: loadingBounce 1.4s infinite ease-in-out both;
+}
+
+.loading-circle:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-circle:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes loadingBounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #666;
+  text-align: center;
+}
+
+.message-actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 16rpx;
+  justify-content: flex-end;
+  position: absolute;
+  bottom: 12rpx;
+  right: 16rpx;
+}
+
+.message-actions .action-btn {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  padding: 6rpx 12rpx;
+  font-size: 22rpx;
+  border-radius: 8rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  background: rgba(255, 255, 255, 0.9);
+  height: 32rpx;
+  line-height: 1;
+}
+
+.message-actions .action-btn:active {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+.message-actions .copy-btn {
+  color: #1890ff;
+  border-color: rgba(24, 144, 255, 0.3);
+  background: rgba(230, 247, 255, 0.9);
+}
+
+.message-actions .retry-btn {
+  color: #ff6b35;
+  border-color: rgba(255, 107, 53, 0.3);
+  background: rgba(255, 247, 237, 0.9);
+}
+
+.message-actions van-icon {
+  font-size: 24rpx !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 2rpx;
+}
+
+/* 暗色主题适配 */
+@media (prefers-color-scheme: dark) {
+  .message-actions .action-btn {
+    background: rgba(30, 30, 30, 0.8);
+    border-color: rgba(100, 100, 100, 0.3);
+  }
+  
+  .message-actions .copy-btn {
+    color: #40a9ff;
+    border-color: rgba(64, 169, 255, 0.3);
+    background: rgba(16, 42, 66, 0.8);
+  }
+  
+  .message-actions .retry-btn {
+    color: #ff8f66;
+    border-color: rgba(255, 143, 102, 0.3);
+    background: rgba(66, 29, 16, 0.8);
+  }
+}
+
+/* 继续生成按钮 */
+.continue-btn {
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  background: linear-gradient(135deg, #36A3FF, #1e88e5);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(30, 136, 229, 0.25);
+  transition: all 0.3s ease;
+}
+
+.continue-btn:active {
+  transform: scale(0.98);
+  background: linear-gradient(135deg, #2196f3, #1976d2);
+}

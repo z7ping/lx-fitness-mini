@@ -1,0 +1,336 @@
+<!--pages/training/cardio.wxml-->
+<view class="container">
+  <!-- 运动信息头部 -->
+  <view class="training-header">
+    <view class="training-title">{{exercise.name}}</view>
+    <view class="training-desc">{{isRunning ? '正在进行中' : '准备开始运动'}}</view>
+    <view class="header-actions">
+      <view class="voice-settings" bindtap="showVoiceSettings">
+        <text class="icon-text">🔊</text>
+        <text>{{voiceSettings.enabled ? voiceSettings.interval + '分钟' : '已关闭'}}</text>
+      </view>
+      
+      <!-- 添加GPS信号质量指示器 -->
+      <view class="gps-quality {{gpsQuality.signal}}">
+        <text class="icon-text">📍</text>
+        <text>GPS: {{gpsQuality.signal === 'good' ? '良好' : gpsQuality.signal === 'moderate' ? '一般' : '较弱'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 地图组件 - 移到头部下方 -->
+  <view class="map-container">
+    <map id="runningMap"
+         class="running-map"
+         latitude="{{mapData.latitude}}"
+         longitude="{{mapData.longitude}}"
+         scale="{{mapData.scale}}"
+         show-location="true"
+         polyline="{{mapData.polyline}}"
+         show-compass="true"
+         enable-rotate="true"
+         enable-overlooking="true"
+         enable-3D="true"
+         enable-zoom="true"
+         enable-scroll="true">
+      <view class="map-overlay">
+        <view class="map-stats">
+          <view class="map-stat">
+            <text class="stat-value">{{runningData.speedFormatted}}</text>
+            <text class="stat-label">速度(km/h)</text>
+          </view>
+          <view class="map-stat">
+            <text class="stat-value">{{runningData.cadence}}</text>
+            <text class="stat-label">步频</text>
+          </view>
+        </view>
+        
+        <!-- 添加GPS精度信息 -->
+        <view class="gps-info" wx:if="{{isRunning}}">
+          <text class="gps-accuracy">精度: {{gpsQuality.accuracy}}m</text>
+          <text class="gps-rate">有效率: {{gpsQuality.accuracyRate}}%</text>
+          <text class="fusion-mode" wx:if="{{runningData.usingFusedDistance}}">传感器融合模式</text>
+          <text class="gyro-mode" wx:if="{{runningData.usingGyroCorrection}}">陀螺仪方向修正</text>
+        </view>
+      </view>
+    </map>
+  </view>
+
+  <!-- 主要运动数据 -->
+  <view class="data-overview">
+    <view class="progress-rings">
+      <!-- 距离进度环 -->
+      <view class="progress-ring">
+        <view class="ring-background"></view>
+        <view class="ring-progress" style="transform: rotate({{runningData.distance/goals.distance * 360}}deg)"></view>
+        <view class="ring-content">
+          <text class="ring-value">{{runningData.distanceFormatted}}</text>
+          <text class="ring-label">公里</text>
+        </view>
+      </view>
+      <!-- 时间进度环 -->
+      <view class="progress-ring">
+        <view class="ring-background"></view>
+        <view class="ring-progress" style="transform: rotate({{runningData.duration/(goals.duration*60) * 360}}deg)"></view>
+        <view class="ring-content">
+          <text class="ring-value">{{runningData.durationFormatted}}</text>
+          <text class="ring-label">时间</text>
+        </view>
+      </view>
+      <!-- 卡路里进度环 -->
+      <view class="progress-ring">
+        <view class="ring-background"></view>
+        <view class="ring-progress" style="transform: rotate({{runningData.calories/goals.calories * 360}}deg)"></view>
+        <view class="ring-content">
+          <text class="ring-value">{{runningData.calories}}</text>
+          <text class="ring-label">千卡</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 实时数据展示 -->
+  <view class="real-time-data">
+    <view class="rt-card">
+      <view class="rt-header">
+        <text>实时配速</text>
+        <text class="rt-unit">分钟/公里</text>
+      </view>
+      <view class="rt-value {{runningData.pace < 5 ? 'excellent' : runningData.pace < 6 ? 'good' : 'normal'}}">
+        {{runningData.paceFormatted}}
+      </view>
+      <view class="rt-chart">
+        <!-- 这里后续会添加实时配速曲线图 -->
+      </view>
+    </view>
+    
+    <!-- 添加配速详情卡片 -->
+    <view class="rt-card pace-details">
+      <view class="rt-header">
+        <text>配速详情</text>
+        <text class="rt-unit">每公里</text>
+      </view>
+      <view class="pace-list">
+        <block wx:if="{{runningData.kmPaces.length > 0}}">
+          <view class="pace-item" wx:for="{{runningData.kmPaces}}" wx:key="km">
+            <text class="km-mark">{{item.km}}km</text>
+            <text class="km-pace {{item.pace < runningData.avgPace ? 'excellent' : 'normal'}}">{{item.paceFormatted}}</text>
+          </view>
+        </block>
+        <view class="current-km" wx:if="{{runningData.distance > 0}}">
+          <text class="km-mark">当前</text>
+          <text class="km-pace">{{runningData.paceFormatted}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 添加轨迹统计卡片 -->
+    <view class="rt-card track-stats">
+      <view class="rt-header">
+        <text>轨迹统计</text>
+      </view>
+      <view class="track-stats-grid">
+        <view class="track-stat-item">
+          <text class="track-stat-value">{{runningData.totalLocationCount}}</text>
+          <text class="track-stat-label">总点数</text>
+        </view>
+        <view class="track-stat-item">
+          <text class="track-stat-value">{{runningData.accurateLocationCount}}</text>
+          <text class="track-stat-label">有效点</text>
+        </view>
+        <view class="track-stat-item">
+          <text class="track-stat-value">{{runningData.filteredDistanceKm}}</text>
+          <text class="track-stat-label">有效距离(km)</text>
+        </view>
+        <view class="track-stat-item">
+          <text class="track-stat-value">{{runningData.avgSpeedFormatted}}</text>
+          <text class="track-stat-label">平均速度(km/h)</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="rt-card">
+      <view class="rt-header">
+        <text>实时心率</text>
+        <text class="rt-unit">次/分钟</text>
+      </view>
+      <view class="rt-value {{runningData.heartRate > 160 ? 'warning' : runningData.heartRate > 140 ? 'attention' : 'normal'}}">
+        {{runningData.heartRate || '--'}}
+      </view>
+      <view class="rt-chart">
+        <!-- 这里后续会添加实时心率曲线图 -->
+      </view>
+    </view>
+  </view>
+
+  <!-- 调试数据面板 -->
+  <view class="debug-panel {{showDebugPanel ? 'expanded' : ''}}">
+    <view class="debug-header">
+      <text>调试数据</text>
+      <view class="debug-toggle" bindtap="toggleDebugPanel">{{showDebugPanel ? '收起' : '展开'}}</view>
+    </view>
+    
+    <view class="debug-credits">
+      运动数据调试来自 <text>胖胖胖了就可以吃</text>、<text>程序员七平</text> 等热心跑友的贡献
+    </view>
+
+    <view class="debug-content">
+      <!-- GPS数据 -->
+      <view class="debug-section">
+        <view class="debug-section-title">GPS数据</view>
+        <view class="debug-item">
+          <text class="debug-label">精度</text>
+          <text class="debug-value">{{gpsQuality.accuracy}}米</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">信号质量</text>
+          <text class="debug-value">{{gpsQuality.signal}}</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">准确率</text>
+          <text class="debug-value">{{gpsQuality.accuracyRate}}%</text>
+        </view>
+      </view>
+
+      <!-- 传感器融合数据 -->
+      <view class="debug-section">
+        <view class="debug-section-title">传感器融合</view>
+        <view class="debug-item">
+          <text class="debug-label">GPS距离</text>
+          <text class="debug-value">{{debugInfo.fusion.gpsDistance}}米</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">步数距离</text>
+          <text class="debug-value">{{debugInfo.fusion.stepDistance}}米</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">融合距离</text>
+          <text class="debug-value">{{debugInfo.fusion.fusedDistance}}米</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">GPS权重</text>
+          <text class="debug-value">{{debugInfo.fusion.gpsReliability}}</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">步数权重</text>
+          <text class="debug-value">{{debugInfo.fusion.stepReliability}}</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">估计步幅</text>
+          <text class="debug-value">{{debugInfo.fusion.strideLength}}米/步</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">检测环境</text>
+          <text class="debug-value">{{debugInfo.fusion.environment}}</text>
+        </view>
+      </view>
+
+      <!-- 距离数据 -->
+      <view class="debug-section">
+        <view class="debug-section-title">距离数据</view>
+        <view class="debug-item">
+          <text class="debug-label">原始距离</text>
+          <text class="debug-value">{{runningData.rawDistance}}米</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">过滤后距离</text>
+          <text class="debug-value">{{runningData.filteredDistance}}米</text>
+        </view>
+      </view>
+
+      <!-- 速度数据 -->
+      <view class="debug-section">
+        <view class="debug-section-title">速度数据</view>
+        <view class="debug-item">
+          <text class="debug-label">当前速度</text>
+          <text class="debug-value">{{runningData.speedFormatted}}km/h</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">最后有效速度</text>
+          <text class="debug-value">{{runningData.lastValidSpeed}}m/s</text>
+        </view>
+      </view>
+
+      <!-- 配速数据 -->
+      <view class="debug-section">
+        <view class="debug-section-title">配速数据</view>
+        <view class="debug-item">
+          <text class="debug-label">当前配速</text>
+          <text class="debug-value">{{runningData.paceFormatted}}</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">最后有效配速</text>
+          <text class="debug-value">{{runningData.lastValidPace}}</text>
+        </view>
+      </view>
+
+      <!-- 步频数据 -->
+      <view class="debug-section">
+        <view class="debug-section-title">步频数据</view>
+        <view class="debug-item">
+          <text class="debug-label">当前步频</text>
+          <text class="debug-value">{{sensorData.cadence}}步/分钟</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">总步数</text>
+          <text class="debug-value">{{sensorData.steps}}步</text>
+        </view>
+      </view>
+
+      <!-- 过滤器状态 -->
+      <view class="debug-section">
+        <view class="debug-section-title">过滤器状态</view>
+        <view class="debug-item">
+          <text class="debug-label">有效点数</text>
+          <text class="debug-value">{{runningData.accurateLocationCount}}/{{runningData.totalLocationCount}}</text>
+        </view>
+        <view class="debug-item">
+          <text class="debug-label">连续无效点</text>
+          <text class="debug-value">{{gpsQuality.consecutiveInvalidCount}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部控制按钮区域 -->
+  <view class="control-area {{isRunning || isPaused ? 'active' : ''}}">
+    <!-- 开始按钮 -->
+    <view class="start-button {{isRunning || isPaused ? 'hidden' : ''}}" bindtap="startTraining">
+      <view class="button-inner">
+        <view class="start-icon"></view>
+        <text>开始运动</text>
+      </view>
+    </view>
+
+    <!-- 运动中的控制按钮组 -->
+    <view class="control-buttons {{(isRunning || isPaused) ? 'active' : ''}}">
+      <!-- 暂停/继续按钮 -->
+      <view class="control-button pause-resume" bindtap="{{isPaused ? 'resumeTraining' : 'pauseTraining'}}">
+        <view class="button-inner {{isPaused ? 'resume' : ''}}">
+          <view class="icon"></view>
+        </view>
+        <text>{{isPaused ? '继续' : '暂停'}}</text>
+      </view>
+
+      <!-- 结束按钮 -->
+      <view class="control-button end {{isPressingComplete ? 'pressing' : ''}}"
+            bindlongpress="handleCompleteLongPress"
+            bindtouchend="handleCompleteTouchEnd"
+            data-progress="{{completeProgress * 100}}">
+        <view class="button-inner">
+          <view class="progress-ring" style="--progress: {{completeProgress * 100}}"></view>
+          <view class="end-icon"></view>
+        </view>
+        <text>结束</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 倒计时遮罩 -->
+  <view class="countdown-mask {{showCountdown ? 'active' : ''}}" wx:if="{{showCountdown}}">
+    <view class="countdown-ring">
+      <view class="countdown-progress" style="background: conic-gradient(#FF9800 {{countdownProgress}}%, transparent {{countdownProgress}}%)"></view>
+      <text class="countdown-number">{{countdown}}</text>
+    </view>
+  </view>
+</view>

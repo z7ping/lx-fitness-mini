@@ -1,0 +1,349 @@
+.container {
+  min-height: 100vh;
+  height: 100vh; /* 固定高度 */
+  background: #f7f8fa;
+  padding: 0;
+  /*padding-bottom: calc(50px + env(safe-area-inset-bottom));  为tabBar预留空间 */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 防止出现滚动条 */
+}
+
+/* 内容区域可滚动 */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16rpx 16rpx 120rpx; /* 增加底部padding */
+  box-sizing: border-box;
+}
+
+/* 用户信息概览 - 更有活力的橙色渐变背景 */
+.user-overview {
+  margin: 0;
+  padding: 32rpx;
+  background: linear-gradient(135deg, #FF9800, #FF6B00); /* 更改为活力橙色渐变 */
+  border-bottom-left-radius: 40rpx;
+  border-bottom-right-radius: 40rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 调整装饰圆圈的颜色 */
+.user-overview::after,
+.user-overview::before {
+  background: rgba(255, 255, 255, 0.15); /* 略微提高透明度 */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+.avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 44rpx;
+  margin-right: 20rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.5); /* 调整边框透明度 */
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1); /* 添加轻微阴影 */
+}
+
+.greeting {
+  display: flex;
+  flex-direction: column;
+}
+
+.hello {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 4rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1); /* 添加轻微文字阴影 */
+}
+
+.today-date {
+  text-align: right;
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.95);
+  z-index: 1;
+}
+
+.weekday {
+  margin-left: 8rpx;
+  opacity: 0.9;
+} 
+
+/* 健康数据卡片 - 减小内边距和图标大小 */
+.health-card {
+  margin: 16rpx 16rpx 16rpx;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(255, 152, 0, 0.1); /* 调整为橙色阴影 */
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.subtitle {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+}
+
+.stats-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.stats-item:active {
+  transform: scale(0.98);
+}
+
+.stats-icon {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16rpx;
+  border-radius: 50%;
+}
+
+.calories-icon {
+  background: rgba(255, 152, 0, 0.1);
+}
+
+.steps-icon {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.duration-icon {
+  background: rgba(33, 150, 243, 0.1);
+}
+
+.stats-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-value {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  line-height: 1.2;
+}
+
+.stats-label {
+  font-size: 20rpx;
+  color: #666;
+  margin-top: 4rpx;
+}
+
+/* 今日计划卡片 */
+.plan-card {
+  margin: 24rpx 16rpx 16rpx; /* 增加上边距 */
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+}
+
+.more {
+  font-size: 26rpx;
+  color: #1296db;
+}
+
+/* 修复文字重叠问题 */
+.plan-content {
+  margin-top: 16rpx;
+}
+
+.exercise-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+  background: #f8f8f8;
+  border-radius: 8rpx;
+}
+
+.exercise-info {
+  flex: 1;
+  margin-right: 16rpx;
+}
+
+.exercise-name {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-bottom: 8rpx;
+}
+
+.exercise-type {
+  font-size: 24rpx;
+  color: #666;
+  background: #eee;
+  padding: 2rpx 8rpx;
+  border-radius: 4rpx;
+}
+
+.exercise-detail {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.exercise-params {
+  margin-right: 16rpx;
+}
+
+.plan-name {
+  color: #999;
+}
+
+/* 空状态 - 减小图片大小 */
+.empty-plan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 0;
+}
+
+.empty-icon {
+  margin-bottom: 20rpx;
+  width: 96rpx;
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.empty-plan text {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 30rpx;
+}
+
+.create-options {
+  display: flex;
+  justify-content: center;
+  gap: 24rpx;
+}
+
+.create-btn {
+  min-width: 160rpx !important;
+  height: 72rpx !important;
+  line-height: 72rpx !important;
+  font-size: 26rpx !important;
+  border-radius: 32rpx !important;
+  font-weight: 500 !important;
+}
+
+/* 优化快捷功能入口 */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16rpx;
+  padding: 24rpx 16rpx;
+  margin-bottom: 24rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx;
+}
+
+.action-icon {
+  width: 96rpx;
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24rpx;
+  margin-bottom: 12rpx;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.action-item text {
+  font-size: 24rpx;
+  color: #333;
+  margin-top: 8rpx;
+}
+
+/* 为不同功能设置不同的图标背景色 */
+.action-checkin {
+  background: rgba(18, 150, 219, 0.1);
+}
+
+.action-weight {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.action-ai {
+  background: rgba(255, 152, 0, 0.1);
+}
+
+.action-stats {
+  background: rgba(156, 39, 176, 0.1);
+}
+
+/* 添加图标动效 */
+.action-item van-icon {
+  transition: all 0.3s ease;
+}
+
+.action-item:active van-icon {
+  transform: translateY(-4rpx);
+}
+
+/* 添加渐变背景按钮 */
+.van-button--info {
+  background: linear-gradient(135deg, #FF9800, #FF6B00) !important; /* 保持与顶部一致 */
+  border: none !important;
+}
+
+.van-button--primary {
+  background: linear-gradient(135deg, #ff9800, #f57c00) !important;
+  border: none !important;
+}
+
+/* 添加阴影效果 */
+.van-button {
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15) !important;
+}

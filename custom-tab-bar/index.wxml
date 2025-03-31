@@ -1,0 +1,22 @@
+<van-tabbar 
+  active="{{ active }}" 
+  bind:change="onChange"
+  active-color="#ff9800"
+  inactive-color="#999999"
+  safe-area-inset-bottom
+  custom-class="custom-tabbar"
+  border="{{false}}"
+>
+  <van-tabbar-item wx:for="{{ list }}" wx:key="index">
+    <view class="tab-item {{item.isCenter ? 'center-item' : ''}} {{active === index ? 'active' : ''}}">
+      <view class="{{item.isCenter ? 'icon-wrapper' : ''}}">
+        <van-icon 
+          name="{{ item.icon }}" 
+          size="{{item.isCenter ? '32px' : '24px'}}"
+          class="{{item.isCenter ? 'center-icon' : ''}}"
+        />
+      </view>
+      <view class="text">{{ item.text }}</view>
+    </view>
+  </van-tabbar-item>
+</van-tabbar>
