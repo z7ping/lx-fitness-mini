@@ -238,7 +238,7 @@ Page({
       wx.setStorageSync('temp_preview_plan', planData);
       // 跳转到预览页面
       wx.navigateTo({
-        url: '/pages/myplan/index?mode=preview'
+        url: '/pages/plan/index?mode=preview'
       });
     } catch (error) {
       console.error('解析训练计划失败:', error);

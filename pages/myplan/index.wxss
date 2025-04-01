@@ -1,667 +1,244 @@
 .container {
-  padding: 0;
-  background-color: #f5f7fa;
   min-height: 100vh;
+  background: #f7f8fa;
+  padding: 0;
+  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
 }
 
-.calendar-section {
-  background: #fff;
-  padding: 16rpx;
-  margin-bottom: 2rpx;
+/* 头部样式 */
+.today-header {
+  background: linear-gradient(135deg, #FF6B00, #FF9800);
+  padding: 40rpx 32rpx;
+  color: #fff;
+  border-bottom-left-radius: 48rpx;
+  border-bottom-right-radius: 48rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
 }
 
-.calendar-header {
+.header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16rpx;
 }
 
-.calendar-month {
+.date-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.today-date {
+  font-size: 40rpx;
+  font-weight: 700;
+  margin-bottom: 8rpx;
+  letter-spacing: 1rpx;
+}
+
+.today-weekday {
+  font-size: 28rpx;
+  opacity: 0.95;
+  font-weight: 500;
+}
+
+.plan-status {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 12rpx 24rpx;
+  border-radius: 30rpx;
+  backdrop-filter: blur(10px);
+}
+
+.status-text {
   font-size: 28rpx;
   font-weight: 600;
-  color: #333;
 }
 
-.calendar-days {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.calendar-day {
+/* 内容区域样式 */
+.content-area {
   flex: 1;
-  text-align: center;
-  padding: 12rpx 0;
+  overflow-y: auto;
+  padding: 24rpx;
 }
 
-.calendar-date {
+.section {
+  margin-bottom: 32rpx;
+}
+
+.section-header {
+  margin-bottom: 20rpx;
+}
+
+.section-title {
   font-size: 32rpx;
-  font-weight: 500;
+  font-weight: 600;
   color: #333;
-  margin-bottom: 4rpx;
+  display: block;
+  margin-bottom: 8rpx;
 }
 
-.calendar-weekday {
-  font-size: 24rpx;
-  color: #666;
-}
-
-.calendar-day.active {
-  background: linear-gradient(135deg, #ff9800, #ff6d00);
-  border-radius: 8rpx;
-}
-
-.calendar-day.active .calendar-date,
-.calendar-day.active .calendar-weekday {
-  color: #fff;
-}
-
-.completion-status {
-  padding: 6rpx 16rpx;
+.section-desc {
   font-size: 26rpx;
-  border-radius: 20rpx;
-  margin-left: 16rpx;
-  font-weight: 500;
+  color: #999;
 }
 
-.completion-status.completed {
-  background-color: rgba(76, 175, 80, 0.15);
-  color: #2e7d32;
-}
-
-.completion-status.incomplete {
-  background-color: rgba(255, 152, 0, 0.15);
-  color: #e65100;
-}
-
-.time-slot {
-  padding: 10rpx;
-  margin-bottom: 10rpx;
-  border-radius: 10rpx;
-  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.06);
+/* 计划卡片样式 */
+.plan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
 }
 
 .plan-card {
   background: #fff;
-  border-radius: 14rpx;
-  margin-bottom: 16rpx;
-  overflow: hidden;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .plan-card:active {
   transform: scale(0.98);
-}
-
-.plan-card-header {
-  background: linear-gradient(135deg, #ff9800, #ff6d00);
-  color: #fff;
-  font-size: 26rpx;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rpx 12rpx;
-}
-
-.tabs-nav {
-  display: flex;
-  padding: 12rpx;
-  height: 56rpx;
-  border-bottom: 1px solid #f0f0f0;
-  background: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.tab-item {
-  flex: 0 0 auto;
-  padding: 8rpx 20rpx;
-  margin: 0 6rpx;
-  font-size: 26rpx;
-  color: #666;
-  border-radius: 20rpx;
-  transition: all 0.3s ease;
-}
-
-.tab-item.active {
-  color: #fff;
-  background: linear-gradient(135deg, #ff9800, #ff6d00);
-  font-weight: 600;
-}
-
-.tab-content {
-  padding: 16rpx;
-}
-
-.plan-list {
-  margin-bottom: 20rpx;
-  padding-bottom: 150rpx;
-}
-
-.van-cell-group {
-  margin-bottom: 16rpx;
-  border-radius: 12rpx;
-  overflow: hidden;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
-}
-
-.van-cell-group__title {
-  padding: 12rpx 16rpx 8rpx;
-  font-size: 28rpx;
-  color: #333;
-  font-weight: 600;
-}
-
-.plan-exercises {
-  padding: 0 16px;
-}
-
-.exercise-item {
-  padding: 12rpx 0;
-  border-bottom: 1rpx solid #f5f5f5;
-}
-
-.exercise-header {
-  margin-bottom: 12rpx;
-}
-
-.exercise-name {
-  font-size: 30rpx;
-  font-weight: 500;
-  color: #333;
-  line-height: 1.3;
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.exercise-type {
-  margin-left: 6rpx;
-  padding: 2rpx 12rpx;
-  font-size: 22rpx;
-  color: #4CAF50;
-  background: rgba(76, 175, 80, 0.1);
-  border-radius: 8rpx;
-}
-
-.exercise-description {
-  font-size: 24rpx;
-  color: #666666;
-  line-height: 1.3;
-}
-
-.exercise-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12rpx;
-  padding: 16rpx;
-  background-color: rgba(255, 152, 0, 0.05);
-  border-radius: 10rpx;
-  margin: 12rpx;
-}
-
-.detail-item {
-  display: flex;
-  align-items: center;
-  padding: 2rpx 8rpx;
   background: #f8f9fa;
-  border-radius: 6rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.04);
 }
 
-.detail-label {
-  font-size: 22rpx;
-  color: #666;
-  margin-right: 2rpx;
+.plan-info {
+  flex: 1;
+  margin-right: 24rpx;
 }
 
-.detail-value {
-  font-size: 22rpx;
+.plan-title {
+  font-size: 32rpx;
+  font-weight: 700;
   color: #333;
-  font-weight: 500;
+  margin-bottom: 16rpx;
 }
 
+.plan-meta {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+  flex-wrap: wrap;
+}
+
+.plan-duration,
+.plan-level,
+.plan-category {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 12rpx;
+  font-weight: 600;
+}
+
+.plan-duration {
+  background: rgba(255, 107, 0, 0.12);
+  color: #FF6B00;
+}
+
+.plan-level {
+  background: rgba(255, 152, 0, 0.12);
+  color: #FF9800;
+}
+
+.plan-category {
+  background: rgba(255, 183, 77, 0.12);
+  color: #FFB74D;
+}
+
+.plan-desc {
+  font-size: 28rpx;
+  color: #666;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+.plan-action {
+  padding: 16rpx;
+  opacity: 0.7;
+}
+
+/* 空状态样式 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 32rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.empty-state van-icon {
+  margin-bottom: 32rpx;
+  opacity: 0.7;
+}
+
+.empty-state text {
+  font-size: 30rpx;
+  color: #666;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.empty-state text:last-child {
+  font-size: 28rpx;
+  margin-top: 12rpx;
+  color: #999;
+}
+
+/* 底部按钮样式 */
 .bottom-buttons {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
-  background-color: #fff;
-  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.05);
+  padding: 32rpx 40rpx calc(32rpx + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.06);
   display: flex;
-  justify-content: space-between;
-  gap: 16rpx;
+  gap: 32rpx;
   z-index: 100;
 }
 
-.custom-btn, .ai-btn {
+.custom-btn,
+.ai-btn {
   flex: 1;
   margin: 0 !important;
-  height: 88rpx;
-  line-height: 88rpx;
-  border-radius: 44rpx;
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #fff;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  height: 88rpx !important;
+  line-height: 88rpx !important;
+  border-radius: 44rpx !important;
+  font-size: 28rpx !important;
+  font-weight: 500 !important;
+  color: #fff !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1) !important;
 }
 
 .custom-btn {
-  background: linear-gradient(135deg, #ff9800, #ff6d00);
-  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.3);
+  background: linear-gradient(135deg, #ff9800, #ff6d00) !important;
+  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.3) !important;
 }
 
 .ai-btn {
-  background: linear-gradient(135deg, #ff9800, #ff9800);
-  opacity: 0.85;
-  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.2);
+  background: linear-gradient(135deg, #ff9800, #ff9800) !important;
+  opacity: 0.85 !important;
+  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.2) !important;
 }
 
-.custom-btn:active, .ai-btn:active {
+.custom-btn:active,
+.ai-btn:active {
   transform: translateY(2rpx);
   opacity: 0.9;
-}
-
-.custom-btn van-icon, .ai-btn van-icon {
-  margin-right: 8rpx;
-}
-
-.back-btn, .apply-btn {
-  flex: 1;
-  margin: 0 !important;
-  height: 88rpx;
-  line-height: 88rpx;
-  border-radius: 44rpx;
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #fff;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-}
-
-.back-btn {
-  background: linear-gradient(135deg, #ff9800, #ff6d00);
-  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.3);
-}
-
-.apply-btn {
-  background: linear-gradient(135deg, #ff9800, #ff9800);
-  opacity: 0.85;
-  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.2);
-}
-
-.back-btn:active, .apply-btn:active {
-  transform: translateY(2rpx);
-  opacity: 0.9;
-}
-
-.back-btn van-icon, .apply-btn van-icon {
-  margin-right: 8rpx;
-}
-
-.plan-actions {
-  display: flex;
-  justify-content: flex-end;
-  padding: 16rpx;
-  border-top: 1rpx solid #ebedf0;
-  background: #fff;
-}
-
-.completed .exercise-name {
-  color: #666666;
-  text-decoration: line-through;
-}
-
-.completed .exercise-type {
-  color: #999;
-  background: rgba(153, 153, 153, 0.1);
-}
-
-.completed .exercise-description,
-.completed .detail-label,
-.completed .detail-value {
-  color: #999;
-}
-
-/* 添加空状态样式 */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60rpx 32rpx;
-  background: #fff;
-  border-radius: 12rpx;
-  margin: 20rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
-}
-
-.empty-icon {
-  width: 200rpx;
-  height: 200rpx;
-  margin-bottom: 24rpx;
-}
-
-.empty-text {
-  font-size: 28rpx;
-  color: #999;
-  margin-bottom: 32rpx;
-  text-align: center;
-}
-
-.empty-actions {
-  display: flex;
-  justify-content: center;
-}
-
-.create-btn {
-  min-width: 240rpx !important;
-  border-radius: 24rpx !important;
-  font-weight: normal !important;
-}
-
-/* 修改 section-title 样式使其更突出 */
-.section-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #333;
-  margin: 24rpx 0 16rpx;
-  padding: 0 16rpx;
-}
-
-.section-title::after {
-  content: '';
-  position: absolute;
-  left: 20rpx;
-  bottom: 0;
-  width: 40rpx;
-  height: 4rpx;
-  background: #ff6d00;
-  border-radius: 2rpx;
-}
-
-/* 调整饮食部分的空状态 */
-.diet-section:empty {
-  display: none;
-}
-
-.diet-list:empty {
-  padding: 32rpx;
-  text-align: center;
-  color: #999;
-  font-size: 28rpx;
-}
-
-.diet-list:empty::after {
-  content: '暂无饮食安排';
-}
-
-/* 训练计划列表样式 */
-.exercise-list {
-  padding: 0;
-}
-
-.exercise-item {
-  padding: 20rpx;
-  border-bottom: 1rpx solid #f5f5f5;
-}
-
-.exercise-item:last-child {
-  border-bottom: none;
-}
-
-.exercise-info {
-  flex: 1;
-  margin-right: 16rpx;
-}
-
-.exercise-name {
-  display: flex;
-  align-items: center;
-  gap: 12rpx;
-  margin-bottom: 8rpx;
-}
-
-.exercise-name text:first-child {
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #333;
-}
-
-.exercise-type {
-  font-size: 24rpx;
-  color: #ff9800;
-  background: rgba(255, 152, 0, 0.1);
-  padding: 2rpx 12rpx;
-  border-radius: 8rpx;
-}
-
-.exercise-detail {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12rpx;
-  font-size: 24rpx;
-  color: #666;
-}
-
-.exercise-time {
-  color: #1296db;
-  background: rgba(18, 150, 219, 0.1);
-  padding: 2rpx 12rpx;
-  border-radius: 8rpx;
-}
-
-.exercise-params {
-  color: #666;
-}
-
-.plan-name {
-  color: #999;
-}
-
-.exercise-status {
-  font-size: 24rpx;
-  color: #ff9800;
-  padding: 4rpx 16rpx;
-  border: 1px solid #ff9800;
-  border-radius: 24rpx;
-}
-
-.exercise-status.completed {
-  color: #4caf50;
-  border-color: #4caf50;
-}
-
-.empty-tip {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 48rpx 0;
-  color: #999;
-  font-size: 28rpx;
-}
-
-.empty-tip van-icon {
-  margin-bottom: 16rpx;
-}
-
-/* 饮食安排样式优化 */
-.diet-section {
-  margin-top: 32rpx;
-}
-
-.diet-list {
-  padding: 0 16rpx;
-}
-
-.meal-row {
-  display: flex;
-  padding: 24rpx;
-  margin-bottom: 16rpx;
-  background: #fff;
-  border-radius: 12rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
-}
-
-.meal-time {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-  width: 140rpx;
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #333;
-}
-
-.meal-time van-icon {
-  color: #ff9800;
-}
-
-.meal-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8rpx;
-}
-
-.meal-content {
-  font-size: 26rpx;
-  color: #666;
-}
-
-.meal-calories {
-  font-size: 24rpx;
-  color: #ff9800;
-}
-
-/* 计划类型切换 */
-.plan-type-switch {
-  display: flex;
-  justify-content: center;
-  padding: 16rpx;
-  margin-bottom: 16rpx;
-  background: #fff;
-  border-radius: 16rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
-}
-
-.switch-item {
-  display: flex;
-  align-items: center;
-  padding: 12rpx 32rpx;
-  margin: 0 8rpx;
-  border-radius: 24rpx;
-  transition: all 0.3s ease;
-}
-
-.switch-item.active {
-  background: linear-gradient(135deg, #ff9800, #ff6d00);
-  color: #fff;
-}
-
-.switch-item van-icon {
-  margin-right: 8rpx;
-}
-
-/* 营养信息展示 */
-.meal-nutrition {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12rpx;
-  margin-top: 8rpx;
-  padding: 8rpx;
-  background: rgba(255, 152, 0, 0.05);
-  border-radius: 8rpx;
-}
-
-.meal-nutrition text {
-  font-size: 22rpx;
-  padding: 4rpx 12rpx;
-  border-radius: 12rpx;
-}
-
-.calories {
-  color: #ff9800;
-  background: rgba(255, 152, 0, 0.1);
-}
-
-.protein {
-  color: #2196f3;
-  background: rgba(33, 150, 243, 0.1);
-}
-
-.carbs {
-  color: #4caf50;
-  background: rgba(76, 175, 80, 0.1);
-}
-
-.fat {
-  color: #f44336;
-  background: rgba(244, 67, 54, 0.1);
-}
-
-/* 时间段分组样式 */
-.time-slots {
-  padding: 0 16rpx;
-}
-
-.time-slot-group {
-  margin-bottom: 32rpx;
-  background: #fff;
-  border-radius: 12rpx;
-  overflow: hidden;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
-}
-
-.time-slot-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx;
-  background: #f8f9fa;
-  border-bottom: 1rpx solid #f0f0f0;
-}
-
-.time-slot-title {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #333;
-}
-
-.time-slot-title van-icon {
-  color: #ff9800;
-}
-
-.time-slot-actions {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-}
-
-.completion-status {
-  font-size: 24rpx;
-  padding: 4rpx 12rpx;
-  border-radius: 24rpx;
-  background: rgba(255, 152, 0, 0.1);
-  color: #ff9800;
-}
-
-.completion-status.completed {
-  background: rgba(76, 175, 80, 0.1);
-  color: #4caf50;
 }

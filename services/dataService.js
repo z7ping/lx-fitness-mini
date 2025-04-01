@@ -4,6 +4,7 @@
  */
 
 const TimeUtils = require('../utils/timeUtils');
+const utils = require('../utils/utils');
 const { DictionaryConverter, GOAL_MAPPING, LEVEL_MAPPING } = require('../utils/dictionary');
 
 // 存储键名常量

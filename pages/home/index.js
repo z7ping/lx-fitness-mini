@@ -170,13 +170,13 @@ Page({
   // 查看更多食谱
   viewMoreDiet() {
     wx.navigateTo({
-      url: '/pages/myplan/index?type=diet'
+      url: '/pages/plan/index?type=diet'
     });
   },
   // 查看更多计划
   viewMorePlans() {
     wx.navigateTo({
-      url: '/pages/myplan/index?type=training'
+      url: '/pages/plan/index?type=training'
     });
   },
 
@@ -284,7 +284,7 @@ Page({
       };
 
       wx.navigateTo({ 
-        url: `/pages/myplan/ai-generate?userData=${JSON.stringify(userData)}`
+        url: `/pages/plan/ai-generate?userData=${JSON.stringify(userData)}`
       });
     });
   },

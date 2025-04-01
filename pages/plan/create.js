@@ -1,201 +1,465 @@
-// pages/plan/create.js
+// pages/myplan/create.js
+const app = getApp()
+const { dataService } = require('../../services/dataService');
 Page({
   data: {
     planInfo: {
-      name: '',
-      description: '',
-      type: 'strength',
-      level: 'beginner',
-      duration: '4周',
+      name: `训练计划${Date.now().toString().slice(-6)}`,  // 添加默认名称
+      type: '',
+      days: ['周一', '周三', '周五'], // 默认三天
+      timeSlot: 'morning',
+      duration: 45,
       exercises: []
     },
-    types: [
-      { id: 'strength', name: '力量训练' },
-      { id: 'cardio', name: '有氧训练' },
-      { id: 'flexibility', name: '柔韧性训练' },
-      { id: 'mixed', name: '混合训练' }
+    types: ['力量训练', '有氧训练', '拉伸放松', '混合训练'],
+    timeSlots: [
+      { text: '早晨', value: 'morning' },
+      { text: '中午', value: 'noon' },
+      { text: '晚上', value: 'evening' }
     ],
-    levels: [
-      { id: 'beginner', name: '初级' },
-      { id: 'intermediate', name: '中级' },
-      { id: 'advanced', name: '高级' }
-    ]
+    timeSlotIndex: 0,
+    timeSlotText: '早晨',
+    weekDays: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+    showDayPicker: false,
+    showDurationDialog: false,
+    canSave: false,
+    trainingTips: {
+      description: '',
+      items: []
+    },
+    selectedDaysMap: {}, // 使用对象来管理选中状态
+    showExerciseEditor: false,
+    editingExercise: null,
+    editingExerciseIndex: -1
   },
 
-  // 输入计划名称
-  inputName(e) {
+  onLoad(options) {
+    if (options.planData) {
+      const planData = JSON.parse(options.planData);
+      this.setData({
+        'planInfo.type': this.data.types[0],
+        'planInfo.duration': planData.defaultDuration || 45
+      });
+      this.updateTrainingTips();
+    }
+    
+    this.updateTimeSlotText();
+    // 初始化选中状态对象
+    const selectedDaysMap = {};
+    this.data.planInfo.days.forEach(day => {
+      selectedDaysMap[day] = true;
+    });
     this.setData({
-      'planInfo.name': e.detail.value
+      selectedDaysMap,
+      showDayPicker: false
     });
   },
 
-  // 输入计划描述
-  inputDescription(e) {
+  onFormChange() {
+    const { name, type, days, exercises } = this.data.planInfo;
+    const canSave = name && type && days.length > 0 && exercises.length > 0;
+    console.log("===>name", name)
+    console.log("===>type", type)
+    console.log("===>days", days)
+    console.log("===>exercises", exercises)
+    console.log("===>canSave", canSave)
+    this.setData({ canSave });
+  },
+
+  updateTimeSlotText() {
+    const slot = this.data.timeSlots.find(item => item.value === this.data.planInfo.timeSlot);
     this.setData({
-      'planInfo.description': e.detail.value
+      timeSlotText: slot ? slot.text : '请选择',
+      timeSlotIndex: this.data.timeSlots.findIndex(item => item.value === this.data.planInfo.timeSlot)
     });
   },
 
-  // 选择计划类型
-  selectType(e) {
+  onInputChange(e) {
+    const { field } = e.currentTarget.dataset;
     this.setData({
-      'planInfo.type': e.detail.value
+      [`planInfo.${field}`]: e.detail
+    }, () => {
+      this.onFormChange();
     });
   },
 
-  // 选择难度级别
-  selectLevel(e) {
-    this.setData({
-      'planInfo.level': e.detail.value
+  showTypeSelector() {
+    // 训练类型选择器已经通过picker实现，不需要额外处理
+  },
+
+  onPickerChange(e) {
+    const { field } = e.currentTarget.dataset;
+    const { value } = e.detail;
+    
+    if (field === 'type') {
+      this.setData({
+        'planInfo.type': this.data.types[value]
+      }, () => {
+        this.updateTrainingTips();
+        this.onFormChange();
+      });
+    } else if (field === 'timeSlot') {
+      this.setData({
+        'planInfo.timeSlot': this.data.timeSlots[value].value,
+      }, () => {
+        this.updateTimeSlotText();
+        this.onFormChange();
+      });
+    }
+  },
+
+  updateTrainingTips() {
+    const { type } = this.data.planInfo;
+    let tips = {
+      description: '',
+      items: []
+    };
+
+    switch (type) {
+      case '力量训练':
+        tips = {
+          description: '力量训练有助于增强肌肉力量和提高基础代谢',
+          items: [
+            '建议每个动作3-4组，每组8-12次',
+            '组间休息60-90秒',
+            '注意动作标准和呼吸节奏'
+          ]
+        };
+        break;
+      case '有氧训练':
+        tips = {
+          description: '有氧训练可以提高心肺功能和燃烧脂肪',
+          items: [
+            '保持中等强度，心率在最大心率的65-75%',
+            '持续30-45分钟最为适宜',
+            '可以选择跑步、游泳等持续性运动'
+          ]
+        };
+        break;
+      case '拉伸放松':
+        tips = {
+          description: '拉伸有助于提高柔韧性和预防运动损伤',
+          items: [
+            '每个动作保持15-30秒',
+            '动作要缓慢，不要反弹',
+            '感觉轻微拉伸即可，避免过度'
+          ]
+        };
+        break;
+      case '混合训练':
+        tips = {
+          description: '混合训练可以全面提高身体素质',
+          items: [
+            '先进行力量训练，后进行有氧',
+            '注意安排适当的转换时间',
+            '强度要循序渐进'
+          ]
+        };
+        break;
+    }
+
+    this.setData({ trainingTips: tips });
+  },
+
+  showDaySelector() {
+    // 初始化选中状态对象
+    const selectedDaysMap = {};
+    this.data.planInfo.days.forEach(day => {
+      selectedDaysMap[day] = true;
+    });
+    
+    this.setData({ 
+      showDayPicker: true,
+      selectedDaysMap
     });
   },
 
-  // 选择计划时长
-  selectDuration(e) {
+  toggleDay(e) {
+    const day = e.currentTarget.dataset.day;
+    
+    // 添加触感反馈
+    wx.vibrateShort({
+      type: 'light'
+    });
+    
+    // 更新选中状态
+    const selectedDaysMap = { ...this.data.selectedDaysMap };
+    selectedDaysMap[day] = !selectedDaysMap[day];
+    
     this.setData({
-      'planInfo.duration': e.detail.value
+      selectedDaysMap
     });
   },
 
-  // 添加运动
+  confirmDays() {
+    // 将选中的日期转换为数组并排序
+    const selectedDays = this.data.weekDays.filter(day => this.data.selectedDaysMap[day]);
+    
+    this.setData({
+      'planInfo.days': selectedDays,
+      showDayPicker: false
+    }, () => {
+      this.onFormChange();
+    });
+  },
+
+  removeDay(e) {
+    const { day } = e.currentTarget.dataset;
+    const days = this.data.planInfo.days.filter(d => d !== day);
+    this.setData({
+      'planInfo.days': days
+    }, () => {
+      this.onFormChange();
+    });
+  },
+
+  onDayClose() {
+    this.setData({ showDayPicker: false });
+  },
+
+  showDurationTip() {
+    this.setData({ showDurationDialog: true });
+  },
+
+  closeDurationTip() {
+    this.setData({ showDurationDialog: false });
+  },
+
   addExercise() {
+    if (!this.data.planInfo.type) {
+      wx.showToast({
+        title: '请先选择训练类型',
+        icon: 'none'
+      });
+      return;
+    }
+    const self = this;
     wx.navigateTo({
       url: '/pages/exercise/select',
-      events: {
-        // 接收选择的运动
-        acceptExercise: (exercise) => {
-          console.log('接收到选择的运动:', exercise);
-          const exercises = [...this.data.planInfo.exercises, exercise];
+      success: (res) => {
+        console.log('Data set successfully111')
+        res.eventChannel.on('acceptExercise', (exercise) => {
+          console.log('Data set successfully122')
+          const exercises = [...self.data.planInfo.exercises];
+          // 直接使用从select.js接收到的完整exercise对象，避免重复设置属性
+          exercises.push(exercise);
+          console.log('Data set successfully133')
+          self.setData({
+            'planInfo.exercises': exercises
+          }, () => {
+            console.log('Data set successfully')
+            self.onFormChange();
+          });
+        });
+      }
+    });
+  },
+
+  editExercise(e) {
+    const { index } = e.currentTarget.dataset;
+    const exercise = { ...this.data.planInfo.exercises[index] };
+    this.setData({
+      editingExercise: exercise,
+      editingExerciseIndex: index,
+      showExerciseEditor: true
+    });
+  },
+
+  onExerciseEditorClose() {
+    this.setData({
+      showExerciseEditor: false,
+      editingExercise: null,
+      editingExerciseIndex: -1
+    });
+  },
+
+  onSetsChange(e) {
+    this.setData({
+      'editingExercise.sets': e.detail
+    });
+  },
+
+  onRepsOrDurationChange(e) {
+    if (this.data.editingExercise.duration) {
+      this.setData({
+        'editingExercise.duration': e.detail
+      });
+    } else {
+      this.setData({
+        'editingExercise.reps': e.detail
+      });
+    }
+  },
+
+  onWeightChange(e) {
+    this.setData({
+      'editingExercise.weight': e.detail
+    });
+  },
+
+  confirmExerciseEdit() {
+    const { editingExercise, editingExerciseIndex } = this.data;
+    const exercises = [...this.data.planInfo.exercises];
+    exercises[editingExerciseIndex] = editingExercise;
+    
+    this.setData({
+      'planInfo.exercises': exercises,
+      showExerciseEditor: false,
+      editingExercise: null,
+      editingExerciseIndex: -1
+    });
+  },
+
+  removeExercise(e) {
+    const { index } = e.currentTarget.dataset;
+    wx.showModal({
+      title: '确认删除',
+      content: '确定要删除这个训练动作吗？',
+      success: (res) => {
+        if (res.confirm) {
+          const exercises = this.data.planInfo.exercises;
+          exercises.splice(index, 1);
           this.setData({
             'planInfo.exercises': exercises
+          }, () => {
+            this.onFormChange();
           });
         }
       }
     });
   },
 
-  // 删除运动
-  deleteExercise(e) {
-    const { index } = e.currentTarget.dataset;
-    const exercises = [...this.data.planInfo.exercises];
-    exercises.splice(index, 1);
-    this.setData({
-      'planInfo.exercises': exercises
-    });
-  },
+  async savePlan() {
+    if (!this.validatePlan()) return;
 
-  // 验证表单
-  validateForm() {
-    const { name, exercises } = this.data.planInfo;
-    
-    if (!name.trim()) {
-      wx.showToast({
-        title: '请输入计划名称',
-        icon: 'none'
-      });
-      return false;
-    }
-    
-    if (exercises.length === 0) {
-      wx.showToast({
-        title: '请添加至少一个运动',
-        icon: 'none'
-      });
-      return false;
-    }
-    
-    return true;
-  },
-
-  // 保存训练计划
-  saveTrainingPlan() {
-    if (!this.validateForm()) return;
-    
     try {
-      wx.showLoading({ title: '保存中...' });
       
-      const dataService = require('../../services/dataService');
-      
-      // 准备训练计划数据
-      const planData = {
+      // 准备计划数据
+      const plan = {
         id: Date.now().toString(),
         name: this.data.planInfo.name,
-        description: this.data.planInfo.description,
         type: this.data.planInfo.type,
-        level: this.data.planInfo.level,
+        exercises: [],
         duration: this.data.planInfo.duration,
-        exercises: this.data.planInfo.exercises.map(exercise => ({
-          ...exercise,
-          scheduledDay: exercise.scheduledDay || null
-        })),
-        createdAt: new Date().toISOString(),
+        createTime: new Date().getTime(),
+        isAIPlan: false,
         progress: 0,
         completed: false
       };
-      
-      // 保存训练计划
-      const savedPlan = dataService.saveTrainingPlan(planData);
-      
-      // 清除缓存，确保下次获取时从存储中重新加载
-      dataService.cache.trainingPlans = null;
-      
-      wx.hideLoading();
-      wx.showToast({
-        title: '训练计划已保存',
-        icon: 'success'
-      });
-      
-      // 返回上一页并刷新
-      setTimeout(() => {
-        // 返回上一页
-        const pages = getCurrentPages();
-        const prevPage = pages[pages.length - 2]; // 获取上一个页面
-        
-        // 如果上一页是计划列表页，直接更新其数据
-        if (prevPage && prevPage.route === 'pages/plan/index') {
-          // 获取最新的计划列表
-          const dataService = require('../../services/dataService');
-          const plans = dataService.getTrainingPlans();
-          
-          // 格式化用户自定义计划
-          const customPlans = plans.map(plan => ({
-            id: plan.id,
-            title: plan.name,
-            duration: plan.duration,
-            level: plan.level,
-            category: prevPage.getTypeDisplayName(plan.type),
-            description: plan.description || '自定义训练计划',
-            progress: plan.progress || 0,
-            exercises: plan.exercises || []
-          }));
-          
-          // 直接更新上一页的数据
-          prevPage.setData({
-            customPlanList: customPlans
+
+      // 为每个训练动作分配到选定的训练日期
+      this.data.planInfo.days.forEach(day => {
+        this.data.planInfo.exercises.forEach(exercise => {
+          plan.exercises.push({
+            ...exercise,
+            id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            scheduledDay: day,  // 为每个训练分配训练日期
+            timeSlot: this.data.planInfo.timeSlot
           });
-          
-          // 调用上一页的刷新方法
-          prevPage.loadPlanList();
-        }
-        
+        });
+      });
+
+      console.log('准备保存的计划数据:', plan);
+
+      // 使用dataService保存计划
+      dataService.saveTrainingPlan(plan);
+
+      wx.showToast({
+        title: '创建成功',
+        icon: 'success',
+        duration: 2000
+      });
+
+      setTimeout(() => {
         wx.navigateBack({
           delta: 1,
           success: () => {
             const pages = getCurrentPages();
             const prevPage = pages[pages.length - 2];
             if (prevPage) {
-              prevPage.loadWeeklyPlans(); // 刷新周计划
+              // 刷新上一页的数据
+              prevPage.loadWeeklyPlans();
             }
           }
         });
-      }, 1000);
+      }, 2000);
+
     } catch (error) {
-      wx.hideLoading();
-      console.error('保存训练计划失败:', error);
+      console.error('保存计划失败:', error);
       wx.showToast({
         title: '保存失败',
-        icon: 'none'
+        icon: 'error'
       });
     }
+  },
+
+  validatePlan() {
+    const { name, type, days, exercises, duration } = this.data.planInfo;
+    
+    if (!name) {
+      wx.showToast({
+        title: '请输入计划名称',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    if (!type) {
+      wx.showToast({
+        title: '请选择训练类型',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    if (!days.length) {
+      wx.showToast({
+        title: '请选择训练日期',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    if (days.length < 2) {
+      wx.showToast({
+        title: '建议每周至少训练2天',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    if (days.length > 5) {
+      wx.showToast({
+        title: '建议每周训练不超过5天',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    if (!duration || duration < 15) {
+      wx.showToast({
+        title: '训练时长至少15分钟',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    if (duration > 120) {
+      wx.showToast({
+        title: '单次训练建议不超过120分钟',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    if (!exercises.length) {
+      wx.showToast({
+        title: '请添加训练动作',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    return true;
   }
 });
