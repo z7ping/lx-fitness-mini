@@ -43,6 +43,21 @@ const TimeUtils = require('../utils/timeUtils');
 const { DictionaryConverter, GOAL_MAPPING, LEVEL_MAPPING } = require('../utils/dictionary');
 
 /**
+ * 获取训练类型显示名称
+ * @param {string} typeId 训练类型ID
+ * @returns {string} 训练类型显示名称
+ */
+function getTypeDisplayName(typeId) {
+  const typeMap = {
+    'strength': '力量训练',
+    'cardio': '有氧训练',
+    'flexibility': '柔韧性训练',
+    'mixed': '混合训练'
+  };
+  return typeMap[typeId] || '其他';
+}
+
+/**
  * 数据存储类
  */
 class DataService {

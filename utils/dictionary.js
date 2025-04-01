@@ -3,6 +3,12 @@
  * 用于管理所有的数据映射关系
  */
 
+// 星期映射
+const WEEKDAY_MAPPING = ['一', '二', '三', '四', '五', '六', '日'];
+
+// 时间段映射
+const TIME_SLOTS = ['早晨', '上午', '下午', '晚上'];
+
 // 目标映射
 const GOAL_MAPPING = {
   // 存储键（英文）
@@ -285,10 +291,22 @@ class DictionaryConverter {
   }
 }
 
+// 时间时段映射
+const TIME_SLOTS = {
+  DISPLAY_TEXT: ['早晨', '上午', '下午', '晚上']
+};
+
+// 星期映射
+const WEEKDAY_MAPPING = {
+  DISPLAY_TEXT: ['日', '一', '二', '三', '四', '五', '六']
+};
+
 module.exports = {
   GOAL_MAPPING,
   FREQUENCY_MAPPING,
   DURATION_MAPPING,
   LEVEL_MAPPING,
+  TIME_SLOTS,
+  WEEKDAY_MAPPING,
   DictionaryConverter
 };
