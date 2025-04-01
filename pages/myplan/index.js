@@ -26,10 +26,12 @@ Page({
       this.setData({ isPreviewMode: true });
       this.loadPreviewData();
     } else {
+      // 根据URL参数设置默认计划类型
+      if (options && options.type) {
+        this.setData({ planType: options.type });
+      }
       // 先加载周计划，因为它包含了日期信息
       this.loadWeeklyPlans();
-      // 再加载其他计划列表
-      this.loadPlanList();
     }
     
     // 初始化日历
@@ -186,64 +188,6 @@ Page({
       this.setData({
         activeTab: index
       });
-    }
-  },
-  // 切换到上一周
-  prevWeek() {
-    // TODO: 加载上一周的计划
-    getApp().utils.showToast('加载上一周计划');
-  },
-  // 切换到下一周
-  nextWeek() {
-    // TODO: 加载下一周的计划
-    getApp().utils.showToast('加载下一周计划');
-  },
-  // 编辑计划
-  editPlan(e) {
-    const { type, day } = e.currentTarget.dataset;
-    wx.navigateTo({
-      url: `/pages/plan/edit?type=${type}&day=${day}`
-    });
-  },
-   // 加载计划列表
-   async loadPlanList() {
-    try {
-      this.setData({ loading: true });
-      // TODO: 从服务器获取计划列表
-      this.setData({
-        planList: [
-          {
-            id: 1,
-            title: '初级燃脂计划',
-            duration: '4周',
-            level: '初级',
-            category: '燃脂',
-            description: '适合初学者的燃脂训练计划'
-          },
-          {
-            id: 2,
-            title: '中级力量训练',
-            duration: '8周',
-            level: '中级',
-            category: '增肌',
-            description: '针对有一定基础的训练者的力量训练计划'
-          }
-        ],
-        customPlanList: [
-          {
-            id: 101,
-            title: '自定义训练A',
-            duration: '持续',
-            category: '混合',
-            description: '个性化定制的训练计划'
-          }
-        ]
-      });
-    } catch (error) {
-      console.error('加载计划列表失败:', error);
-      getApp().utils.showToast('加载计划列表失败');
-    } finally {
-      this.setData({ loading: false });
     }
   },
   // 完成训练并跳转到打卡页面

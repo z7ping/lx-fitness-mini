@@ -3,6 +3,9 @@
  * 处理所有模块数据的存储、检索和同步
  */
 
+const TimeUtils = require('../utils/timeUtils');
+const { DictionaryConverter, GOAL_MAPPING, LEVEL_MAPPING } = require('../utils/dictionary');
+
 // 存储键名常量
 const STORAGE_KEYS = {
   EXERCISE_RECORDS: 'exerciseRecords',
@@ -38,9 +41,6 @@ const EVENT_TYPES = {
   TRAINING_PLAN_UPDATED: 'trainingPlanUpdated',
   DEVICE_INFO_UPDATED: 'deviceInfoUpdated'
 };
-
-const TimeUtils = require('../utils/timeUtils');
-const { DictionaryConverter, GOAL_MAPPING, LEVEL_MAPPING } = require('../utils/dictionary');
 
 /**
  * 获取训练类型显示名称
@@ -591,6 +591,59 @@ class DataService {
     }
   }
   
+  /**
+   * 获取今日训练计划
+   * @returns {Array} 今日训练计划数组
+   */
+  getTodayPlans() {
+    try {
+      let todayExercises = [];
+      const today = new Date();
+      const dayOfWeek = utils.getDayOfWeek(today);
+      
+      // 获取周计划
+      const weeklyPlan = this.getWeeklyPlan() || { days: [] };
+      
+      // 找到今天的计划
+      const todayPlan = weeklyPlan.days ? weeklyPlan.days.find(day => day && day.day === dayOfWeek) : null;
+      
+      if (todayPlan && todayPlan.plans && Array.isArray(todayPlan.plans)) {
+        // 遍历每个时间段的训练
+        todayPlan.plans.forEach(timePlan => {
+          if (timePlan && timePlan.exercises && Array.isArray(timePlan.exercises)) {
+            const exercises = timePlan.exercises.map(exercise => ({
+              id: exercise.id || `${Date.now()}_${Math.random()}`,
+              name: exercise.name || '未命名训练',
+              type: exercise.type || '训练',
+              sets: exercise.sets,
+              reps: exercise.reps,
+              duration: exercise.duration,
+              distance: exercise.distance,
+              timeSlot: timePlan.timeSlot,
+              planName: exercise.planName,
+              completed: exercise.completed || false,
+              statusText: exercise.completed ? '已完成' : '未完成',
+              statusClass: exercise.completed ? 'completed' : 'pending'
+            }));
+            todayExercises = todayExercises.concat(exercises);
+          }
+        });
+      }
+      
+      // 按时间段排序
+      const timeSlotOrder = ['早晨', '上午', '下午', '晚上'];
+      todayExercises.sort((a, b) => {
+        return timeSlotOrder.indexOf(a.timeSlot) - timeSlotOrder.indexOf(b.timeSlot);
+      });
+
+      return todayExercises;
+      
+    } catch (error) {
+      console.error('获取今日计划失败:', error);
+      return [];
+    }
+  }
+
   /**
    * 更新训练统计数据
    * @param {Object} exerciseData 运动数据

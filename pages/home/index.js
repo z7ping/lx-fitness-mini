@@ -1,6 +1,7 @@
 // pages/home/index.js
 const app = getApp()
 const { dataService, EVENT_TYPES } = require('../../services/dataService')
+const { WEEKDAY_MAPPING } = require('../../utils/dictionary');
 const utils = require('../../utils/utils')
 
 Page({
@@ -30,7 +31,6 @@ Page({
     this.initTodayInfo();
     this.loadUserInfo();
     this.setGreeting();
-    this.loadBanners();
     
     // 如果已登录，加载用户相关数据
     if (app.globalData.isLoggedIn) {
@@ -124,31 +124,14 @@ Page({
     this.setData({ greeting });
   },
 
-  // 加载轮播图数据
-  async loadBanners() {
-    try {
-      // TODO: 从服务器获取轮播图数据
-      this.setData({
-        bannerList: [
-          { id: 1, image: '/assets/images/banner1.png', url: '' },
-          { id: 2, image: '/assets/images/banner2.png', url: '' }
-        ]
-      });
-    } catch (error) {
-      console.error('加载轮播图失败:', error);
-      getApp().utils.showToast('加载轮播图失败');
-    }
-  },
-
   // 初始化今日信息
   initTodayInfo() {
     const now = new Date();
-    const weekday = ['日', '一', '二', '三', '四', '五', '六'];
     
     this.setData({
       todayInfo: {
         date: `${now.getMonth() + 1}月${now.getDate()}日`,
-        weekday: weekday[now.getDay()]
+        weekday: WEEKDAY_MAPPING.DISPLAY_TEXT[now.getDay()]
       }
     });
   },
@@ -177,70 +160,23 @@ Page({
 
   // 加载今日计划
   loadTodayPlans() {
-    try {
-      // 检查登录状态
-      if (!app.checkLoginAndAuth()) {
-        return;
-      }
-
-      let todayExercises = [];
-      const today = new Date();
-      const dayOfWeek = utils.getDayOfWeek(today);
-      
-      // 获取周计划
-      const weeklyPlan = dataService.getWeeklyPlan() || { days: [] };
-      
-      // 找到今天的计划
-      const todayPlan = weeklyPlan.days ? weeklyPlan.days.find(day => day && day.day === dayOfWeek) : null;
-      
-      if (todayPlan && todayPlan.plans && Array.isArray(todayPlan.plans)) {
-        // 遍历每个时间段的训练
-        todayPlan.plans.forEach(timePlan => {
-          if (timePlan && timePlan.exercises && Array.isArray(timePlan.exercises)) {
-            const exercises = timePlan.exercises.map(exercise => ({
-              id: exercise.id || `${Date.now()}_${Math.random()}`,
-              name: exercise.name || '未命名训练',
-              type: exercise.type || '训练',
-              sets: exercise.sets,
-              reps: exercise.reps,
-              duration: exercise.duration,
-              distance: exercise.distance,
-              timeSlot: timePlan.timeSlot,
-              planName: exercise.planName,
-              completed: exercise.completed || false,
-              statusText: exercise.completed ? '已完成' : '未完成',
-              statusClass: exercise.completed ? 'completed' : 'pending'
-            }));
-            todayExercises = todayExercises.concat(exercises);
-          }
-        });
-      }
-      
-      // 按时间段排序
-      const timeSlotOrder = ['早晨', '上午', '下午', '晚上'];
-      todayExercises.sort((a, b) => {
-        return timeSlotOrder.indexOf(a.timeSlot) - timeSlotOrder.indexOf(b.timeSlot);
-      });
-
-      // 更新页面数据
-      this.setData({
-        todayExercises,
-        hasPlans: todayExercises.length > 0
-      });
-      
-    } catch (error) {
-      console.error('加载今日计划失败:', error);
-      this.setData({ 
-        todayExercises: [],
-        hasPlans: false 
-      });
-    }
+    const todayExercises = dataService.getTodayPlans();
+    this.setData({
+      todayExercises,
+      hasPlans: todayExercises.length > 0
+    });
   },
-
+  
+  // 查看更多食谱
+  viewMoreDiet() {
+    wx.navigateTo({
+      url: '/pages/myplan/index?type=diet'
+    });
+  },
   // 查看更多计划
   viewMorePlans() {
     wx.navigateTo({
-      url: '/pages/plan/index'
+      url: '/pages/myplan/index?type=training'
     });
   },
 
@@ -264,16 +200,7 @@ Page({
     });
   },
 
-  // 获取类型显示名称
-  getTypeDisplayName(typeId) {
-    const typeMap = {
-      'strength': '力量训练',
-      'cardio': '有氧训练',
-      'flexibility': '柔韧性训练',
-      'mixed': '混合训练'
-    };
-    return typeMap[typeId] || '其他';
-  },
+
 
   // 加载健康数据
   async loadHealthStats() {
@@ -290,11 +217,6 @@ Page({
       console.error('加载健康数据失败:', error);
       getApp().utils.showToast('加载健康数据失败');
     }
-  },
-
-  // 导航方法
-  navigateToPlan() {
-    wx.navigateTo({ url: '/pages/plan/index' });
   },
 
   navigateToCheckin() {
@@ -367,14 +289,6 @@ Page({
     });
   },
 
-  // 如果首页也有跳转到计划详情的功能
-  viewPlanDetail(e) {
-    const { id, type } = e.currentTarget.dataset;
-    wx.navigateTo({
-      url: `/pages/myplan/detail?id=${id}&type=${type}`  // 使用正确的路径
-    });
-  },
-
   // 快速训练入口
   quickTraining() {
     app.checkLoginAndAuth(() => {
@@ -419,13 +333,7 @@ Page({
   onLoginClose() {
     console.log('登录弹窗已关闭');
   },
-  
-// 查看更多食谱
-viewMoreDiet() {
-  wx.navigateTo({
-    url: '/pages/diet/index'
-  });
-},
+
 
 // 手动创建食谱
 createDietManually() {
