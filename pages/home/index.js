@@ -418,5 +418,30 @@ Page({
   // 登录关闭回调
   onLoginClose() {
     console.log('登录弹窗已关闭');
-  }
+  },
+  
+// 查看更多食谱
+viewMoreDiet() {
+  wx.navigateTo({
+    url: '/pages/diet/index'
+  });
+},
+
+// 手动创建食谱
+createDietManually() {
+  app.checkLoginAndAuth(() => {
+    wx.navigateTo({
+      url: '/pages/diet/create'
+    });
+  });
+},
+
+// AI智能推荐食谱
+createDietWithAI() {
+  app.checkLoginAndAuth(() => {
+    wx.navigateTo({
+      url: '/pages/diet/ai-generate'
+    });
+  });
+}
 });

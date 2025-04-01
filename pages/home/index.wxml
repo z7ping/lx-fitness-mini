@@ -1,55 +1,103 @@
 <!-- pages/home/index.wxml -->
 <view class="container">
   <!-- 用户信息概览 -->
+  <!-- 用户信息概览 -->
   <view class="user-overview">
-    <view class="user-info">
-      <image class="avatar" src="{{userInfo.avatarUrl || '/assets/images/default-avatar.png'}}" />
-      <view class="greeting">
-        <text class="hello">{{greeting}}</text>
-        <text class="name">{{userInfo.nickName || '健身达人'}}</text>
+    <view class="user-overview-content">
+      <view class="user-info">
+        <image class="avatar" src="{{userInfo.avatarUrl || '/assets/images/default-avatar.png'}}" />
+        <view class="user-text">
+          <text class="name">{{userInfo.nickName || '健身达人'}}</text>
+          <view class="today-date">
+            <text>{{todayInfo.date}}</text>
+            <text class="weekday">周{{todayInfo.weekday}}</text>
+          </view>
+        </view>
       </view>
-    </view>
-    <view class="today-date">
-      <text>{{todayInfo.date}}</text>
-      <text class="weekday">周{{todayInfo.weekday}}</text>
+      <view class="health-data">
+        <view class="health-item">
+          <view class="health-icon">
+            <van-icon name="fire" color="#ff9800" size="24px" />
+          </view>
+          <view class="health-info">
+            <text class="health-value">{{healthStats.calories || 0}}</text>
+            <text class="health-label">今日消耗</text>
+            <text class="health-unit">千卡</text>
+          </view>
+        </view>
+        <view class="health-item">
+          <view class="health-icon">
+            <van-icon name="upgrade" color="#4caf50" size="24px" />
+          </view>
+          <view class="health-info">
+            <text class="health-value">{{healthStats.steps || 0}}</text>
+            <text class="health-label">今日步数</text>
+            <text class="health-unit">步</text>
+          </view>
+        </view>
+        <view class="health-item">
+          <view class="health-icon">
+            <van-icon name="clock" color="#2196f3" size="24px" />
+          </view>
+          <view class="health-info">
+            <text class="health-value">{{healthStats.duration || 0}}</text>
+            <text class="health-label">运动时长</text>
+            <text class="health-unit">分钟</text>
+          </view>
+        </view>
+      </view>
     </view>
   </view>
 
   <!-- 添加可滚动的内容区域 -->
   <view class="content-area">
-    <!-- 健康数据卡片 -->
-    <view class="health-card">
+    <!-- 今日食谱卡片 -->
+    <view class="diet-card">
       <view class="card-header">
-        <text class="title">今日数据</text>
-        <text class="subtitle">健康生活，从现在开始</text>
+        <text class="title">今日食谱</text>
+        <text class="more" bindtap="viewMoreDiet">查看更多</text>
       </view>
-      <view class="stats-grid">
-        <view class="stats-item">
-          <view class="stats-icon calories-icon">
-            <van-icon name="fire" color="#ff9800" size="24px" />
+      <view class="diet-content" wx:if="{{hasDiet}}">
+        <block wx:for="{{todayDiet}}" wx:key="id">
+          <view class="diet-item">
+            <view class="diet-info">
+              <view class="diet-name">
+                <text>{{item.name}}</text>
+                <text class="meal-type">{{item.mealType}}</text>
+              </view>
+              <view class="diet-detail">
+                <text class="diet-calories">{{item.calories}}千卡</text>
+                <text wx:if="{{item.time}}" class="meal-time">{{item.time}}</text>
+              </view>
+            </view>
+            <van-button 
+              type="primary" 
+              size="small" 
+              data-diet="{{item}}"
+              bindtap="recordDiet"
+              disabled="{{item.recorded}}"
+            >{{item.recorded ? '已记录' : '记录'}}</van-button>
           </view>
-          <view class="stats-info">
-            <text class="stats-value">{{healthStats.calories || 0}}</text>
-            <text class="stats-label">消耗热量(千卡)</text>
-          </view>
+        </block>
+      </view>
+      <view class="empty-diet" wx:else>
+        <view class="empty-icon">
+          <van-icon name="shop-o" size="48px" color="#999" />
         </view>
-        <view class="stats-item">
-          <view class="stats-icon steps-icon">
-            <van-icon name="upgrade" color="#4caf50" size="24px" />
-          </view>
-          <view class="stats-info">
-            <text class="stats-value">{{healthStats.steps || 0}}</text>
-            <text class="stats-label">今日步数</text>
-          </view>
-        </view>
-        <view class="stats-item">
-          <view class="stats-icon duration-icon">
-            <van-icon name="clock" color="#2196f3" size="24px" />
-          </view>
-          <view class="stats-info">
-            <text class="stats-value">{{healthStats.duration || 0}}</text>
-            <text class="stats-label">运动时长(分钟)</text>
-          </view>
+        <text>还没有今日食谱</text>
+        <view class="create-options">
+          <van-button 
+            type="primary" 
+            size="small" 
+            bindtap="createDietManually"
+            custom-class="create-btn"
+          >手动创建</van-button>
+          <van-button 
+            type="info" 
+            size="small" 
+            bindtap="createDietWithAI"
+            custom-class="create-btn"
+          >AI智能推荐</van-button>
         </view>
       </view>
     </view>

@@ -14,70 +14,201 @@
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 16rpx 16rpx 120rpx; /* 增加底部padding */
   box-sizing: border-box;
 }
 
 /* 用户信息概览 - 更有活力的橙色渐变背景 */
 .user-overview {
-  margin: 0;
-  padding: 32rpx;
-  background: linear-gradient(135deg, #FF9800, #FF6B00); /* 更改为活力橙色渐变 */
-  border-bottom-left-radius: 40rpx;
-  border-bottom-right-radius: 40rpx;
-  position: relative;
-  overflow: hidden;
+  background: linear-gradient(135deg, #ff9800, #ff6d00);
+  padding: 20rpx 30rpx;
+  border-radius: 20rpx;
+  margin: 20rpx 20rpx 0 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
 }
 
-/* 调整装饰圆圈的颜色 */
-.user-overview::after,
-.user-overview::before {
-  background: rgba(255, 255, 255, 0.15); /* 略微提高透明度 */
+.user-overview-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  z-index: 1;
+  gap: 20rpx;
 }
 
 .avatar {
-  width: 88rpx;
-  height: 88rpx;
-  border-radius: 44rpx;
-  margin-right: 20rpx;
-  border: 4rpx solid rgba(255, 255, 255, 0.5); /* 调整边框透明度 */
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1); /* 添加轻微阴影 */
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  border: 2rpx solid rgba(255, 255, 255, 0.8);
 }
 
-.greeting {
-  display: flex;
-  flex-direction: column;
-}
-
-.hello {
-  font-size: 26rpx;
-  color: rgba(255, 255, 255, 0.95);
+.user-text {
+  flex: 1;
 }
 
 .name {
   font-size: 36rpx;
-  font-weight: 600;
-  color: #fff;
-  margin-top: 4rpx;
-  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1); /* 添加轻微文字阴影 */
+  color: #ffffff;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+  display: block;
 }
 
 .today-date {
-  text-align: right;
-  font-size: 28rpx;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.weekday {
+  margin-left: 10rpx;
+}
+
+.health-icon {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.health-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.health-value {
+  font-size: 40rpx;
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.health-label {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 4rpx;
+}
+
+.health-unit {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 2rpx;
+}
+
+/* 左侧用户信息 */
+.user-info {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16rpx;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  margin-right: 16rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200rpx;
+}
+
+.today-date {
+  font-size: 24rpx;
   color: rgba(255, 255, 255, 0.95);
-  z-index: 1;
+  display: flex;
+  align-items: center;
 }
 
 .weekday {
   margin-left: 8rpx;
   opacity: 0.9;
+}
+
+/* 右侧健康数据 - 固定三列布局 */
+.health-data {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12rpx;
+  width: 100%;
+}
+
+.health-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 10rpx 12rpx;
+  border-radius: 12rpx;
+  text-align: center;
+  transition: transform 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.health-item:active {
+  transform: scale(0.95);
+}
+
+.health-value {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 2rpx;
+}
+
+.health-label {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+
+
+/* 装饰背景 */
+.user-overview::after,
+.user-overview::before {
+  content: '';
+  position: absolute;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+}
+
+.user-overview::before {
+  top: -100rpx;
+  right: -50rpx;
+}
+
+.user-overview::after {
+  bottom: -120rpx;
+  left: -80rpx;
 } 
 
 /* 健康数据卡片 - 减小内边距和图标大小 */
@@ -274,7 +405,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 16rpx;
   padding: 24rpx 16rpx;
-  margin-bottom: 24rpx;
+  margin: 20rpx 20rpx 0 20rpx;
   background: #fff;
   border-radius: 24rpx;
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
@@ -346,4 +477,96 @@
 /* 添加阴影效果 */
 .van-button {
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 今日食谱卡片 */
+.diet-card {
+  margin: 24rpx 16rpx 16rpx;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+}
+
+.diet-content {
+  margin-top: 16rpx;
+}
+
+.diet-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+  background: #f8f8f8;
+  border-radius: 8rpx;
+}
+
+.diet-info {
+  flex: 1;
+  margin-right: 16rpx;
+}
+
+.diet-name {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.meal-type {
+  font-size: 22rpx;
+  color: #ff9800;
+  background: rgba(255, 152, 0, 0.1);
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  margin-left: 12rpx;
+}
+
+.diet-detail {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.diet-calories {
+  margin-right: 16rpx;
+}
+
+.meal-time {
+  color: #999;
+}
+
+.empty-diet {
+  padding: 48rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-diet .empty-icon {
+  margin-bottom: 16rpx;
+  width: 96rpx;
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.empty-diet text {
+  margin-bottom: 24rpx;
+}
+
+.empty-diet .create-options {
+  margin-top: 24rpx;
+}
+
+.empty-diet .create-btn {
+  margin: 0 8rpx;
 }
