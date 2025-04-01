@@ -20,6 +20,7 @@ Page({
         image: '/images/foods/chicken-breast.jpg',
         calories: 165,
         unit: '100g',
+        weightPerUnit: 100,
         nutrition: {
           protein: 31,
           carbs: 0,
@@ -33,6 +34,7 @@ Page({
         image: '/images/foods/broccoli.jpg',
         calories: 34,
         unit: '100g',
+        weightPerUnit: 100,
         nutrition: {
           protein: 2.8,
           carbs: 7,
@@ -50,7 +52,8 @@ Page({
       protein: 0,
       carbs: 0,
       fat: 0
-    }
+    },
+    totalWeight: 0
   },
 
   onLoad() {
@@ -107,70 +110,121 @@ Page({
   // 选择食材
   selectFood(e) {
     const { food } = e.currentTarget.dataset;
+    const amount = 1;
+    const totalWeight = (amount * 100).toFixed(1);
+    
+    // 计算初始营养成分
+    const calculatedNutrition = {
+      calories: (food.calories * amount).toFixed(1),
+      protein: (food.nutrition.protein * amount).toFixed(1),
+      carbs: (food.nutrition.carbs * amount).toFixed(1),
+      fat: (food.nutrition.fat * amount).toFixed(1)
+    };
+
     this.setData({
       selectedFood: food,
-      amount: 1,
+      amount,
+      totalWeight,
+      calculatedNutrition,
       showAmountDialog: true
     });
-    this.calculateNutrition(1);
   },
 
   // 修改数量
-  onAmountChange(e) {
-    const amount = e.detail;
-    this.setData({ amount });
-    this.calculateNutrition(amount);
+  onAmountChange(event) {
+    const amount = event.detail;
+    const totalWeight = (amount * 100).toFixed(1);
+    
+    // 计算营养成分
+    const calculatedNutrition = {
+      calories: (this.data.selectedFood.calories * amount).toFixed(1),
+      protein: (this.data.selectedFood.nutrition.protein * amount).toFixed(1),
+      carbs: (this.data.selectedFood.nutrition.carbs * amount).toFixed(1),
+      fat: (this.data.selectedFood.nutrition.fat * amount).toFixed(1)
+    };
+
+    this.setData({
+      amount,
+      totalWeight,
+      calculatedNutrition
+    });
   },
 
   // 计算营养成分
   calculateNutrition(amount) {
     const { selectedFood } = this.data;
     if (!selectedFood) return;
-
-    const calculatedCalories = Math.round(selectedFood.calories * amount * 10) / 10;
+    
+    // 确保amount是有效数字且在合理范围内
+    amount = Math.max(0, Math.min(10, Number(amount) || 1));
+    
+    // 计算总重量
+    const totalWeight = (selectedFood.weightPerUnit * amount).toFixed(1);
+    
     const calculatedNutrition = {
-      protein: Math.round(selectedFood.nutrition.protein * amount * 10) / 10,
-      carbs: Math.round(selectedFood.nutrition.carbs * amount * 10) / 10,
-      fat: Math.round(selectedFood.nutrition.fat * amount * 10) / 10
+      calories: (selectedFood.calories * amount).toFixed(1),
+      protein: (selectedFood.nutrition.protein * amount).toFixed(1),
+      carbs: (selectedFood.nutrition.carbs * amount).toFixed(1),
+      fat: (selectedFood.nutrition.fat * amount).toFixed(1)
     };
 
     this.setData({
-      calculatedCalories,
+      amount,
+      totalWeight,
       calculatedNutrition
-    });
-  },
-
-  // 关闭数量选择弹窗
-  onAmountClose() {
-    this.setData({
-      showAmountDialog: false,
-      selectedFood: null,
-      amount: 1
     });
   },
 
   // 确认添加食材
   confirmAmount() {
-    const { selectedFood, amount, calculatedCalories, calculatedNutrition } = this.data;
+    const { selectedFood, amount, totalWeight, calculatedNutrition } = this.data;
     
+    // 构建食物对象
     const food = {
-      ...selectedFood,
-      amount,
-      calories: calculatedCalories,
-      nutrition: calculatedNutrition
+      id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      name: selectedFood.name,
+      amount: `${amount}份`,
+      weight: parseFloat(totalWeight),
+      calories: parseFloat(calculatedNutrition.calories),
+      protein: parseFloat(calculatedNutrition.protein),
+      carbs: parseFloat(calculatedNutrition.carbs),
+      fat: parseFloat(calculatedNutrition.fat),
+      unit: selectedFood.unit
     };
 
-    // 获取页面实例
-    const pages = getCurrentPages();
-    const prevPage = pages[pages.length - 2];
+    console.log('准备传递的食材数据:', food);
 
+    // 获取事件通道
+    const eventChannel = this.getOpenerEventChannel();
+    
     // 通过事件通道传递数据
-    if (prevPage) {
-      const eventChannel = this.getOpenerEventChannel();
+    if (eventChannel) {
       eventChannel.emit('acceptFood', food);
     }
+    
+    // 关闭弹窗并返回上一页
+    this.setData({
+      showAmountDialog: false,
+      selectedFood: null,
+      amount: 1
+    }, () => {
+      wx.navigateBack();
+    });
+  },
 
-    // 关闭页面
-    wx.navigateBack();
+  // 关闭数量设置弹窗
+  closeAmountDialog() {
+    this.setData({
+      showAmountDialog: false,
+      selectedFood: null,
+      amount: 1,
+      totalWeight: 0,
+      calculatedNutrition: {
+        calories: 0,
+        protein: 0,
+        carbs: 0,
+        fat: 0
+      }
+    });
   }
-}); 
+});

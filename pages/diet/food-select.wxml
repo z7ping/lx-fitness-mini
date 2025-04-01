@@ -30,7 +30,6 @@
     <block wx:if="{{foods.length > 0}}">
       <view class="food-item" wx:for="{{foods}}" wx:key="id" bindtap="selectFood" data-food="{{item}}">
         <view class="food-info">
-          <image class="food-image" src="{{item.image}}" mode="aspectFill" />
           <view class="food-detail">
             <text class="food-name">{{item.name}}</text>
             <view class="nutrition-info">
@@ -50,46 +49,59 @@
     </view>
   </scroll-view>
 
-  <!-- 食材数量选择弹窗 -->
-  <van-popup
-    show="{{ showAmountDialog }}"
-    position="bottom"
-    bind:close="onAmountClose"
-    round
-  >
-    <view class="amount-dialog">
-      <view class="dialog-header">
-        <text>设置数量</text>
-        <van-icon name="cross" bind:click="onAmountClose" />
+  <!-- 设置数量弹窗 -->
+  <view class="custom-modal" wx:if="{{showAmountDialog}}">
+    <view class="modal-mask" bindtap="closeAmountDialog"></view>
+    <view class="modal-content">
+      <view class="amount-header">
+        <text class="title">设置数量</text>
       </view>
-      <view class="dialog-content">
-        <view class="selected-food">
+      <view class="amount-content">
+        <view class="food-info">
           <text class="food-name">{{selectedFood.name}}</text>
-          <text class="unit-text">单位：{{selectedFood.unit}}</text>
+          <text class="food-unit">每份 {{selectedFood.unit}}</text>
         </view>
-        <view class="amount-input">
+        <view class="amount-display">
+          <text class="value">{{totalWeight || 0}}</text>
+          <text class="unit">克</text>
+        </view>
+        <view class="amount-control">
           <van-stepper
-            value="{{ amount }}"
-            min="0.1"
-            max="1000"
-            step="0.1"
-            decimal-length="{{ 1 }}"
+            value="{{amount}}"
+            min="0"
+            max="10"
+            step="0.5"
+            decimal-length="1"
+            input-width="120px"
+            button-size="36px"
             bind:change="onAmountChange"
+            custom-class="custom-stepper"
           />
+          <text class="unit-text">份</text>
         </view>
-        <view class="nutrition-preview">
-          <text class="preview-title">营养成分预览</text>
-          <view class="preview-content">
-            <text class="calories">{{calculatedCalories}}千卡</text>
-            <text class="protein">蛋白质 {{calculatedNutrition.protein}}g</text>
-            <text class="carbs">碳水 {{calculatedNutrition.carbs}}g</text>
-            <text class="fat">脂肪 {{calculatedNutrition.fat}}g</text>
+        <view class="nutrition-info">
+          <view class="nutrition-item">
+            <text class="label">热量</text>
+            <text class="value">{{calculatedNutrition.calories || 0}}千卡</text>
+          </view>
+          <view class="nutrition-item">
+            <text class="label">蛋白质</text>
+            <text class="value">{{calculatedNutrition.protein || 0}}克</text>
+          </view>
+          <view class="nutrition-item">
+            <text class="label">碳水</text>
+            <text class="value">{{calculatedNutrition.carbs || 0}}克</text>
+          </view>
+          <view class="nutrition-item">
+            <text class="label">脂肪</text>
+            <text class="value">{{calculatedNutrition.fat || 0}}克</text>
           </view>
         </view>
       </view>
-      <view class="dialog-footer">
-        <van-button type="primary" block bind:click="confirmAmount">确认添加</van-button>
+      <view class="amount-footer">
+        <button class="cancel-btn" bindtap="closeAmountDialog">取消</button>
+        <button class="orange-btn" bindtap="confirmAmount">确定</button>
       </view>
     </view>
-  </van-popup>
-</view> 
+  </view>
+</view>

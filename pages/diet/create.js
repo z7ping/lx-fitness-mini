@@ -167,25 +167,124 @@ Page({
     this.setData({ canSave });
   },
 
-  // 保存饮食计划
-  saveDietPlan() {
-    if (!this.data.canSave) return;
+  // 添加食材
+  addFood(e) {
+    const { mealIndex } = e.currentTarget.dataset;
+    const self = this;
+    wx.navigateTo({
+      url: '/pages/diet/food-select',
+      events: {
+        // 监听选中食材
+        acceptFood: function(food) {
+          console.log('接收到食材数据:', food);
+          const meals = [...self.data.dietInfo.meals];
+          meals[mealIndex].foods.push(food);
+          
+          // 更新餐次的总热量
+          meals[mealIndex].calories = meals[mealIndex].foods.reduce((total, item) => {
+            return total + (item.calories || 0);
+          }, 0);
 
-    const dietPlan = { ...this.data.dietInfo };
-    
-    // TODO: 调用保存接口
-    console.log('保存饮食计划:', dietPlan);
-
-    wx.showToast({
-      title: '保存成功',
-      icon: 'success',
-      duration: 2000,
-      success: () => {
-        setTimeout(() => {
-          wx.navigateBack();
-        }, 2000);
+          self.setData({
+            'dietInfo.meals': meals
+          }, () => {
+            console.log('更新后的餐次数据:', self.data.dietInfo.meals);
+            self.checkCanSave();
+          });
+        }
       }
     });
+  },
+
+  // 保存饮食计划
+  async saveDietPlan() {
+    if (!this.validatePlan()) return;
+
+    try {
+      // 准备计划数据
+      const plan = {
+        id: Date.now().toString(),
+        name: this.data.dietInfo.name,
+        selectedDays: this.data.dietInfo.selectedDays,
+        calories: this.data.dietInfo.calories,
+        proteinRatio: this.data.dietInfo.proteinRatio,
+        carbsRatio: this.data.dietInfo.carbsRatio,
+        fatRatio: this.data.dietInfo.fatRatio,
+        meals: this.data.dietInfo.meals.map(meal => ({
+          ...meal,
+          foods: meal.foods.map(food => ({
+            ...food,
+            id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+          }))
+        })),
+        createTime: new Date().getTime()
+      };
+
+      console.log('准备保存的计划数据:', plan);
+
+      // 使用dataService保存计划
+      const { dataService } = require('../../services/dataService');
+      await dataService.saveDietPlan(plan);
+
+      wx.showToast({
+        title: '创建成功',
+        icon: 'success',
+        duration: 2000
+      });
+
+      setTimeout(() => {
+        wx.navigateBack({
+          delta: 1
+        });
+      }, 2000);
+
+    } catch (error) {
+      console.error('保存计划失败:', error);
+      wx.showToast({
+        title: '保存失败',
+        icon: 'error'
+      });
+    }
+  },
+
+  // 验证计划
+  validatePlan() {
+    const { name, selectedDays, calories, meals } = this.data.dietInfo;
+    
+    if (!name.trim()) {
+      wx.showToast({
+        title: '请输入计划名称',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    if (!selectedDays.length) {
+      wx.showToast({
+        title: '请选择训练日期',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    if (!calories || calories < 1000) {
+      wx.showToast({
+        title: '请设置合理的热量',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    const hasFood = meals.some(meal => meal.foods.length > 0);
+    if (!hasFood) {
+      wx.showToast({
+        title: '请至少添加一个食材',
+        icon: 'none'
+      });
+      return false;
+    }
+
+    return true;
   },
 
   // 取消创建
@@ -193,27 +292,6 @@ Page({
     this.setData({
       showDayPicker: false,
       showCaloriesDialog: false
-    });
-  },
-
-  // 添加食材
-  addFood(e) {
-    const { mealIndex } = e.currentTarget.dataset;
-    wx.navigateTo({
-      url: '/pages/diet/food-select',
-      events: {
-        // 监听选中食材
-        acceptFood: (food) => {
-          const meals = [...this.data.dietInfo.meals];
-          const foods = [...meals[mealIndex].foods];
-          foods.push(food);
-          meals[mealIndex].foods = foods;
-          
-          this.setData({
-            'dietInfo.meals': meals
-          });
-        }
-      }
     });
   }
 });
