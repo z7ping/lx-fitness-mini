@@ -275,6 +275,42 @@
   margin-right: 8rpx;
 }
 
+.back-btn, .apply-btn {
+  flex: 1;
+  margin: 0 !important;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.back-btn {
+  background: linear-gradient(135deg, #ff9800, #ff6d00);
+  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.3);
+}
+
+.apply-btn {
+  background: linear-gradient(135deg, #ff9800, #ff9800);
+  opacity: 0.85;
+  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.2);
+}
+
+.back-btn:active, .apply-btn:active {
+  transform: translateY(2rpx);
+  opacity: 0.9;
+}
+
+.back-btn van-icon, .apply-btn van-icon {
+  margin-right: 8rpx;
+}
+
 .plan-actions {
   display: flex;
   justify-content: flex-end;

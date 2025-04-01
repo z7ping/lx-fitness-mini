@@ -497,5 +497,47 @@ Page({
   // 返回上一页
   navigateBack() {
     wx.navigateBack();
+  },
+
+  // 应用当前预览计划
+  applyCurrentPlan() {
+    wx.showModal({
+      title: '确认应用',
+      content: '确定要将当前预览的计划设置为您的训练计划吗？',
+      success: (res) => {
+        if (res.confirm) {
+          try {
+            // 获取预览数据
+            const previewData = wx.getStorageSync('temp_preview_plan');
+            if (!previewData) {
+              wx.showToast({
+                title: '预览数据不存在',
+                icon: 'none'
+              });
+              return;
+            }
+
+            // 保存为正式计划
+            dataService.saveWeeklyPlan(previewData);
+
+            wx.showToast({
+              title: '应用成功',
+              icon: 'success'
+            });
+
+            // 延迟返回，让用户看到成功提示
+            setTimeout(() => {
+              wx.navigateBack();
+            }, 1500);
+          } catch (error) {
+            console.error('应用计划失败:', error);
+            wx.showToast({
+              title: '应用失败，请重试',
+              icon: 'none'
+            });
+          }
+        }
+      }
+    });
   }
 });

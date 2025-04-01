@@ -82,11 +82,13 @@
 
   <!-- 底部按钮 -->
   <view class="bottom-buttons">
-    <van-button custom-class="custom-btn" block bind:click="createCustomPlan">
+    <button class="custom-btn" bindtap="createCustomPlan">
+      <van-icon name="plus" size="18px" />
       创建训练计划
-    </van-button>
-    <van-button custom-class="ai-btn" block bind:click="generateAIPlan">
+    </button>
+    <button class="ai-btn" bindtap="generateAIPlan">
+      <van-icon name="cluster-o" size="18px" />
       AI生成计划
-    </van-button>
+    </button>
   </view>
 </view>

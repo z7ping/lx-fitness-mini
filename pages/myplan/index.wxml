@@ -197,5 +197,9 @@
       <van-icon name="arrow-left" size="18px" />
       返回
     </button>
+    <button class="apply-btn" bindtap="applyCurrentPlan">
+      <van-icon name="success" size="18px" />
+      应用当前计划
+    </button>
   </view>
 </view>
