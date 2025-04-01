@@ -1,22 +1,57 @@
 .container {
+  padding: 32rpx;
+  background: #f5f7fa;
   min-height: 100vh;
-  background: #f7f8fa;
-  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
+  padding-bottom: calc(150rpx + env(safe-area-inset-bottom));
 }
 
 .form-section {
-  margin: 24rpx 16rpx;
-  background: #fff;
-  border-radius: 16rpx;
+  margin: 24rpx 0;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 24rpx;
   overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 24rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+  background: linear-gradient(to right, rgba(255, 140, 0, 0.1), transparent);
 }
 
 .section-title {
   font-size: 32rpx;
   font-weight: 600;
   color: #333;
-  padding: 24rpx;
-  border-bottom: 1rpx solid #f5f5f5;
+}
+
+/* 自定义单元格样式 */
+.custom-cell-group {
+  padding: 16rpx 0;
+}
+
+.custom-cell {
+  padding: 24rpx !important;
+}
+
+.cell-title {
+  font-size: 28rpx !important;
+  font-weight: 500 !important;
+  color: #333 !important;
+}
+
+.cell-value {
+  font-size: 28rpx !important;
+  color: #666 !important;
+}
+
+.highlight-value {
+  color: #FF8C00 !important;
+  font-weight: 600 !important;
 }
 
 /* 营养比例样式 */
@@ -26,9 +61,22 @@
 }
 
 .ratio-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12rpx 20rpx;
+  border-radius: 16rpx;
+  min-width: 120rpx;
+}
+
+.ratio-label {
   font-size: 24rpx;
-  padding: 4rpx 12rpx;
-  border-radius: 12rpx;
+  margin-bottom: 4rpx;
+}
+
+.ratio-value {
+  font-size: 28rpx;
+  font-weight: 600;
 }
 
 .protein {
@@ -53,38 +101,60 @@
 
 .meal-card {
   background: #fff;
-  border-radius: 12rpx;
+  border-radius: 16rpx;
   margin-bottom: 24rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.meal-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rpx;
+  background: linear-gradient(135deg, #FF8C00, #FF6347);
 }
 
 .meal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20rpx;
-  background: #f8f9fa;
+  padding: 24rpx;
+  background: rgba(255, 140, 0, 0.05);
+  border-bottom: 1rpx solid rgba(255, 140, 0, 0.1);
 }
 
 .meal-title {
   display: flex;
   align-items: center;
-  gap: 8rpx;
-  font-size: 28rpx;
-  font-weight: 500;
+  gap: 12rpx;
 }
 
-.meal-title van-icon {
-  color: #ff9800;
+.meal-title text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
 }
 
 .meal-calories {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+}
+
+.calories-value {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #FF8C00;
+}
+
+.calories-unit {
   font-size: 24rpx;
-  color: #ff9800;
-  background: rgba(255, 152, 0, 0.1);
-  padding: 4rpx 12rpx;
-  border-radius: 12rpx;
+  color: #999;
 }
 
 .food-list {
@@ -95,13 +165,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16rpx;
+  padding: 20rpx;
   border-bottom: 1rpx solid #f5f5f5;
 }
 
+.food-name {
+  font-size: 28rpx;
+  color: #333;
+}
+
 .food-amount {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #666;
+  background: #f7f8fa;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
 }
 
 .add-food {
@@ -109,9 +187,18 @@
   align-items: center;
   justify-content: center;
   gap: 8rpx;
-  padding: 20rpx;
-  color: #1296db;
+  padding: 24rpx;
+  color: #FF8C00;
   font-size: 28rpx;
+  transition: all 0.3s ease;
+  background: rgba(255, 140, 0, 0.05);
+  border-radius: 16rpx;
+  margin: 16rpx;
+}
+
+.add-food:active {
+  transform: scale(0.98);
+  opacity: 0.8;
 }
 
 /* 推荐食谱样式 */
@@ -120,20 +207,16 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16rpx;
+  justify-content: space-between;
 }
 
 .recipe-card {
-  width: calc(50% - 8rpx);
+  width: 48%;
   background: #fff;
   border-radius: 12rpx;
   overflow: hidden;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
-}
-
-.recipe-image {
-  width: 100%;
-  height: 200rpx;
-  background: #f5f5f5;
+  margin-bottom: 16rpx;
 }
 
 .recipe-info {
@@ -158,80 +241,654 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
-  background: #fff;
-  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.05);
-}
-
-/* 日期选择器样式 */
-.day-picker {
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.98);
   padding: 24rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
 }
 
-.day-picker-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 24rpx;
-  border-bottom: 1rpx solid #f5f5f5;
-}
-
-.day-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16rpx;
-  padding: 24rpx 0;
-}
-
-.day-item {
-  width: calc(25% - 12rpx);
-  height: 80rpx;
+.save-btn {
+  width: 100%;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(255, 140, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8f9fa;
-  border-radius: 8rpx;
-  font-size: 28rpx;
+  transition: all 0.3s ease;
+}
+
+.save-btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.save-btn.disabled {
+  background: #cccccc;
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+/* 日期选择弹窗 */
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+  position: relative;
+  background: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx;
+  z-index: 1;
+  animation: slideUp 0.3s ease-out;
+}
+
+.day-picker-header {
+  text-align: center;
+  padding-bottom: 32rpx;
+}
+
+.day-picker-header text {
+  font-size: 32rpx;
+  font-weight: 500;
   color: #333;
 }
 
-.day-item.active {
-  background: #ff9800;
+.day-picker-content {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 32rpx 0;
+  justify-content: center;
+  gap: 32rpx;
+}
+
+.day-option {
+  width: 88rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 28rpx;
+  color: #333;
+  background: #f7f7f7;
+  transition: all 0.3s;
+}
+
+.day-option.selected {
+  background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
   color: #fff;
+  font-weight: bold;
+  transform: scale(1.05);
+  box-shadow: 0 4rpx 12rpx rgba(255, 140, 0, 0.3);
+}
+
+.day-option:active {
+  opacity: 0.8;
+  transform: scale(0.95);
 }
 
 .day-picker-footer {
-  padding-top: 24rpx;
-  border-top: 1rpx solid #f5f5f5;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 32rpx;
+  gap: 24rpx;
+}
+
+.cancel-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  color: #666;
+  border: none;
+}
+
+.orange-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(255, 140, 0, 0.3);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 /* 热量设置弹窗样式 */
 .calories-dialog {
-  padding: 24rpx;
+  padding: 0;
+  border-radius: 32rpx 32rpx 0 0;
+  overflow: hidden;
+  background: #fff;
 }
 
 .calories-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 24rpx;
+  padding: 32rpx;
   border-bottom: 1rpx solid #f5f5f5;
 }
 
+.calories-header .title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.calories-header .van-icon {
+  font-size: 40rpx;
+  color: #999;
+  padding: 16rpx;
+}
+
 .calories-content {
-  padding: 32rpx 0;
+  padding: 48rpx 32rpx;
+}
+
+.calories-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-bottom: 48rpx;
+}
+
+.calories-display .value {
+  font-size: 72rpx;
+  font-weight: 600;
+  color: #FF8C00;
+  line-height: 1;
+}
+
+.calories-display .unit {
+  font-size: 28rpx;
+  color: #999;
+  margin-left: 8rpx;
+}
+
+.calories-control {
+  padding: 0 32rpx;
+  margin-bottom: 48rpx;
+  display: flex;
+  justify-content: center;
+}
+
+/* 自定义步进器样式 */
+.custom-stepper {
+  --button-background-color: #FF8C00 !important;
+  --button-color: #fff !important;
+  --input-background-color: #f7f8fa !important;
+  --input-font-size: 36rpx !important;
+  --input-font-weight: 600 !important;
+  --button-round: true !important;
+}
+
+.custom-stepper .van-stepper__input {
+  height: 108rpx !important;
+  font-weight: 600 !important;
+  color: #333 !important;
+}
+
+.custom-stepper .van-stepper__minus,
+.custom-stepper .van-stepper__plus {
+  width: 108rpx !important;
+  height: 108rpx !important;
+  background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%) !important;
+  color: #fff !important;
+  font-size: 40rpx !important;
+  border-radius: 54rpx !important;
+  border: none !important;
+  box-shadow: 0 4rpx 12rpx rgba(255, 140, 0, 0.3) !important;
+}
+
+.custom-stepper .van-stepper__minus--disabled,
+.custom-stepper .van-stepper__plus--disabled {
+  background: #f7f7f7 !important;
+  color: #ccc !important;
+  opacity: 0.8 !important;
+  box-shadow: none !important;
+}
+
+.calories-tips {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 16rpx;
 }
 
-.calories-tip {
+.tip-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 16rpx 24rpx;
+  background: rgba(255, 140, 0, 0.1);
+  border-radius: 16rpx;
+}
+
+.tip-item .van-icon {
+  font-size: 32rpx;
+}
+
+.tip-item text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.calories-footer {
+  display: flex;
+  gap: 24rpx;
+  padding: 32rpx;
+  border-top: 1rpx solid #f5f5f5;
+}
+
+.calories-footer button {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  border: none;
+}
+
+.calories-footer .cancel-btn {
+  background: #f7f7f7;
+  color: #666;
+}
+
+.calories-footer .confirm-btn {
+  background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+  color: #fff;
+  box-shadow: 0 4rpx 12rpx rgba(255, 140, 0, 0.3);
+}
+
+/* 卡片样式 */
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.card-title .van-icon {
+  font-size: 36rpx;
+  color: #FF8C00;
+}
+
+/* 表单样式 */
+.van-field {
+  padding: 20rpx !important;
+  background: #f8f9fa !important;
+  border-radius: 12rpx !important;
+  margin-bottom: 16rpx;
+}
+
+.van-field__input {
+  font-size: 28rpx !important;
+  color: #333 !important;
+}
+
+.van-field__label {
+  min-width: 130rpx !important;
+  padding-right: 20rpx !important;
+}
+
+.field-text {
+  font-size: 28rpx !important;
+  color: #333 !important;
+}
+
+/* 自定义训练日期选择器 */
+.date-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.date-label {
+  display: flex;
+  align-items: center;
+  min-width: 130rpx;
+  font-size: 28rpx;
+  color: #646566;
+}
+
+.date-label .required {
+  color: #ee0a24;
+  margin-right: 4rpx;
+  font-size: 28rpx;
+}
+
+.date-value {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.date-value .van-icon {
+  margin-left: 8rpx;
+  color: #969799;
+}
+
+/* 已选择的日期标签 */
+.selected-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.day-tag {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 16rpx;
+  background: rgba(255, 140, 0, 0.1);
+  border-radius: 20rpx;
+  font-size: 26rpx;
+  color: #FF8C00;
+  transition: all 0.3s;
+}
+
+.day-tag:active {
+  transform: scale(0.95);
+  background: rgba(255, 140, 0, 0.2);
+}
+
+.remove-day {
+  font-size: 24rpx;
+  color: #FF8C00;
+}
+
+/* 营养比例卡片 */
+.nutrition-ratio-card {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 20rpx;
+}
+
+.ratio-title {
+  font-size: 28rpx;
+  color: #646566;
+  margin-bottom: 16rpx;
+}
+
+.nutrition-ratio {
+  display: flex;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.ratio-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx;
+  background: #fff;
+  border-radius: 8rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.ratio-label {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+}
+
+.ratio-value {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.protein .ratio-value {
+  color: #FF8C00;
+}
+
+.carbs .ratio-value {
+  color: #2196F3;
+}
+
+.fat .ratio-value {
+  color: #4CAF50;
+}
+
+/* 三餐卡片样式 */
+.meal-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.meal-card {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 20rpx;
+}
+
+.meal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.meal-title {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.meal-title .van-icon {
+  font-size: 32rpx;
+  color: #FF8C00;
+}
+
+.meal-calories {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+}
+
+.calories-value {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #FF8C00;
+}
+
+.calories-unit {
   font-size: 24rpx;
   color: #999;
 }
 
-.calories-footer {
-  padding-top: 24rpx;
-  border-top: 1rpx solid #f5f5f5;
-} 
+.food-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12rpx 16rpx;
+  background: #fff;
+  border-radius: 8rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
+}
+
+.food-name {
+  font-size: 26rpx;
+  color: #333;
+}
+
+.food-amount {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.add-food {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 16rpx;
+  background: #fff;
+  border: 2rpx dashed #FF8C00;
+  border-radius: 8rpx;
+  color: #FF8C00;
+  font-size: 26rpx;
+  transition: all 0.3s;
+}
+
+.add-food .van-icon {
+  font-size: 28rpx;
+  color: #FF8C00;
+}
+
+.add-food:active {
+  background: #fff5eb;
+  transform: scale(0.98);
+}
+
+/* 底部按钮 */
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #fff;
+  padding: 24rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.orange-btn {
+  background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+  color: #fff;
+  border: none;
+  height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(255, 140, 0, 0.3);
+}
+
+.orange-btn:active {
+  opacity: 0.9;
+  transform: scale(0.98);
+}
+
+.orange-btn[disabled] {
+  opacity: 0.5;
+  background: #cccccc !important;
+  box-shadow: none;
+}
+
+/* 热量选择器样式 */
+.calories-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.calories-label {
+  display: flex;
+  align-items: center;
+  min-width: 130rpx;
+  font-size: 28rpx;
+  color: #646566;
+}
+
+.calories-label .required {
+  color: #ee0a24;
+  margin-right: 4rpx;
+  font-size: 28rpx;
+}
+
+.calories-value {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.calories-value.highlight-value {
+  color: #FF8C00;
+  font-weight: 500;
+}
+
+.calories-value .van-icon {
+  margin-left: 8rpx;
+  color: #969799;
+}

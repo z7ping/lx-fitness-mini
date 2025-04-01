@@ -1,95 +1,101 @@
 <!-- pages/diet/create.wxml -->
 <view class="container">
-  <!-- 计划基本信息 -->
-  <view class="form-section">
-    <view class="section-title">基本信息</view>
-    <van-cell-group>
-      <van-field
-        model:value="{{ planInfo.name }}"
-        label="计划名称"
-        placeholder="请输入计划名称"
-        border="{{ false }}"
-      />
-      <van-cell title="训练日期" is-link value="{{planInfo.days.join(', ')}}" bind:click="showDaySelector" />
-    </van-cell-group>
+  <!-- 基本信息卡片 -->
+  <view class="card">
+    <view class="card-title">
+      <van-icon name="edit" />
+      <text>基本信息</text>
+    </view>
+    <van-field
+      value="{{ dietInfo.name }}"
+      label="计划名称"
+      placeholder="请输入计划名称"
+      data-field="name"
+      bind:change="onFormChange"
+    />
+    <view class="date-selector" bindtap="showDaySelector">
+      <view class="date-label">
+        <text class="required">*</text>
+        <text>训练日期</text>
+      </view>
+      <view class="date-value {{ dietInfo.selectedDays.length ? 'highlight-value' : '' }}">
+        <block wx:if="{{ dietInfo.selectedDays.length }}">
+          已选择 {{ dietInfo.selectedDays.length }} 天
+        </block>
+        <block wx:else>请选择训练日期</block>
+        <van-icon name="arrow" />
+      </view>
+    </view>
+    <view class="selected-days" wx:if="{{ dietInfo.selectedDays.length }}">
+      <view class="day-tag" wx:for="{{ dietInfo.selectedDays }}" wx:key="*this">
+        {{ daysMap[item] }}
+        <view class="remove-day" data-day="{{ item }}" catchtap="removeDay">×</view>
+      </view>
+    </view>
   </view>
 
-  <!-- 饮食目标 -->
-  <view class="form-section">
-    <view class="section-title">饮食目标</view>
-    <van-cell-group>
-      <van-cell title="每日热量" is-link value="{{planInfo.calories}}千卡" bind:click="showCaloriesDialog" />
-      <van-cell title="营养比例" is-link>
-        <view class="nutrition-ratio">
-          <text class="ratio-item protein">蛋白质 {{planInfo.nutritionRatio.protein}}%</text>
-          <text class="ratio-item carbs">碳水 {{planInfo.nutritionRatio.carbs}}%</text>
-          <text class="ratio-item fat">脂肪 {{planInfo.nutritionRatio.fat}}%</text>
+  <!-- 营养比例卡片 -->
+  <view class="card">
+    <view class="card-title">
+      <van-icon name="chart-trending-o" />
+      <text>营养比例</text>
+    </view>
+    <!-- 添加热量控制部分 -->
+    <view class="calories-selector" bindtap="showCaloriesDialog">
+      <view class="calories-label">
+        <text class="required">*</text>
+        <text>每日热量</text>
+      </view>
+      <view class="calories-value highlight-value">
+        <text>{{ dietInfo.calories }}千卡</text>
+        <van-icon name="arrow" />
+      </view>
+    </view>
+    <view class="nutrition-ratio-card">
+      <view class="ratio-title">每日营养素比例</view>
+      <view class="nutrition-ratio">
+        <view class="ratio-item protein">
+          <text class="ratio-label">蛋白质</text>
+          <text class="ratio-value">{{ dietInfo.proteinRatio }}%</text>
         </view>
-      </van-cell>
-    </van-cell-group>
+        <view class="ratio-item carbs">
+          <text class="ratio-label">碳水化合物</text>
+          <text class="ratio-value">{{ dietInfo.carbsRatio }}%</text>
+        </view>
+        <view class="ratio-item fat">
+          <text class="ratio-label">脂肪</text>
+          <text class="ratio-value">{{ dietInfo.fatRatio }}%</text>
+        </view>
+      </view>
+    </view>
   </view>
 
-  <!-- 三餐安排 -->
-  <view class="form-section">
-    <view class="section-title">三餐安排</view>
+  <!-- 三餐安排卡片 -->
+  <view class="card">
+    <view class="card-title">
+      <van-icon name="clock-o" />
+      <text>三餐安排</text>
+    </view>
     <view class="meal-section">
-      <!-- 早餐 -->
-      <view class="meal-card">
+      <view class="meal-card" wx:for="{{ dietInfo.meals }}" wx:key="name">
         <view class="meal-header">
           <view class="meal-title">
-            <van-icon name="sunrise" />
-            <text>早餐</text>
+            <van-icon name="clock" />
+            <text>{{ item.name }}</text>
           </view>
-          <view class="meal-calories">{{planInfo.breakfast.calories || 0}}千卡</view>
+          <view class="meal-calories">
+            <text class="calories-value">{{ item.calories }}</text>
+            <text class="calories-unit">千卡</text>
+          </view>
         </view>
         <view class="food-list">
-          <view class="food-item" wx:for="{{planInfo.breakfast.foods}}" wx:key="index">
-            <text>{{item.name}}</text>
-            <text class="food-amount">{{item.amount}}{{item.unit}}</text>
-          </view>
-          <view class="add-food" bindtap="addFood" data-meal="breakfast">
-            <van-icon name="plus" />
-            <text>添加食材</text>
-          </view>
-        </view>
-      </view>
-
-      <!-- 午餐 -->
-      <view class="meal-card">
-        <view class="meal-header">
-          <view class="meal-title">
-            <van-icon name="sun" />
-            <text>午餐</text>
-          </view>
-          <view class="meal-calories">{{planInfo.lunch.calories || 0}}千卡</view>
-        </view>
-        <view class="food-list">
-          <view class="food-item" wx:for="{{planInfo.lunch.foods}}" wx:key="index">
-            <text>{{item.name}}</text>
-            <text class="food-amount">{{item.amount}}{{item.unit}}</text>
-          </view>
-          <view class="add-food" bindtap="addFood" data-meal="lunch">
-            <van-icon name="plus" />
-            <text>添加食材</text>
-          </view>
-        </view>
-      </view>
-
-      <!-- 晚餐 -->
-      <view class="meal-card">
-        <view class="meal-header">
-          <view class="meal-title">
-            <van-icon name="moon" />
-            <text>晚餐</text>
-          </view>
-          <view class="meal-calories">{{planInfo.dinner.calories || 0}}千卡</view>
-        </view>
-        <view class="food-list">
-          <view class="food-item" wx:for="{{planInfo.dinner.foods}}" wx:key="index">
-            <text>{{item.name}}</text>
-            <text class="food-amount">{{item.amount}}{{item.unit}}</text>
-          </view>
-          <view class="add-food" bindtap="addFood" data-meal="dinner">
+          <block wx:if="{{ item.foods.length }}">
+            <view class="food-item" wx:for="{{ item.foods }}" wx:key="id">
+              <text class="food-name">{{ item.name }}</text>
+              <text class="food-amount">{{ item.amount }}</text>
+            </view>
+          </block>
+          <view class="add-food" data-meal-index="{{ index }}" bindtap="addFood">
             <van-icon name="plus" />
             <text>添加食材</text>
           </view>
@@ -98,65 +104,75 @@
     </view>
   </view>
 
-  <!-- 推荐食谱 -->
-  <view class="form-section">
-    <view class="section-title">推荐食谱</view>
-    <view class="recipe-list">
-      <view class="recipe-card" wx:for="{{recommendedRecipes}}" wx:key="id" bindtap="applyRecipe" data-id="{{item.id}}">
-        <image class="recipe-image" src="{{item.image}}" mode="aspectFill" />
-        <view class="recipe-info">
-          <text class="recipe-name">{{item.name}}</text>
-          <text class="recipe-calories">{{item.calories}}千卡</text>
-        </view>
-      </view>
-    </view>
-  </view>
-
-  <!-- 底部按钮 -->
-  <view class="bottom-buttons">
-    <van-button type="primary" block bind:click="savePlan" disabled="{{!canSave}}">
-      保存计划
-    </van-button>
+  <!-- 底部保存按钮 -->
+  <view class="fixed-bottom">
+    <button class="orange-btn" disabled="{{ !canSave }}" bindtap="saveDietPlan">保存计划</button>
   </view>
 
   <!-- 日期选择弹窗 -->
-  <van-popup show="{{ showDayPicker }}" position="bottom" bind:close="onDayClose">
-    <view class="day-picker">
+  <view class="custom-modal" wx:if="{{showDayPicker}}">
+    <view class="modal-mask" bindtap="onCancel"></view>
+    <view class="modal-content">
       <view class="day-picker-header">
         <text>选择训练日期</text>
-        <van-icon name="cross" bind:click="onDayClose" />
       </view>
-      <view class="day-list">
+      <view class="day-picker-content">
         <view 
-          class="day-item {{selectedDaysMap[item] ? 'active' : ''}}"
-          wx:for="{{weekDays}}"
+          class="day-option {{selectedDaysMap[index + 1] ? 'selected' : ''}}"
+          wx:for="{{7}}"
           wx:key="*this"
+          data-day="{{index + 1}}"
           bindtap="toggleDay"
-          data-day="{{item}}"
         >
-          {{item}}
+          {{daysMap[index + 1]}}
         </view>
       </view>
       <view class="day-picker-footer">
-        <van-button type="primary" block bind:click="confirmDays">确认</van-button>
+        <button class="cancel-btn" bindtap="onCancel">取消</button>
+        <button class="orange-btn" bindtap="confirmDays">确定</button>
       </view>
     </view>
-  </van-popup>
+  </view>
 
   <!-- 热量设置弹窗 -->
-  <van-popup show="{{ showCaloriesDialog }}" position="bottom" bind:close="onCaloriesClose">
-    <view class="calories-dialog">
-      <view class="calories-header">
+  <view class="custom-modal" wx:if="{{ showCaloriesDialog }}">
+    <view class="modal-mask" bindtap="closeCaloriesDialog"></view>
+    <view class="modal-content">
+      <view class="day-picker-header">
         <text>设置每日热量</text>
-        <van-icon name="cross" bind:click="onCaloriesClose" />
       </view>
-      <view class="calories-content">
-        <van-stepper value="{{ planInfo.calories }}" min="1000" max="5000" step="100" bind:change="onCaloriesChange" />
-        <text class="calories-tip">推荐范围：1500-3000千卡/天</text>
+      <view class="calories-dialog">
+        <view class="calories-display">
+          <text class="value">{{ dietInfo.calories }}</text>
+          <text class="unit">千卡</text>
+        </view>
+        <view class="calories-control">
+          <van-stepper
+            value="{{ dietInfo.calories }}"
+            min="1000"
+            max="5000"
+            step="100"
+            input-width="120px"
+            button-size="36px"
+            bind:change="onCaloriesChange"
+            custom-class="custom-stepper"
+          />
+        </view>
+        <view class="calories-tips">
+          <view class="tip-item">
+            <van-icon name="info-o" />
+            <text>推荐每日摄入热量：1800-2500千卡</text>
+          </view>
+          <view class="tip-item">
+            <van-icon name="info-o" />
+            <text>根据个人情况适当调整</text>
+          </view>
+        </view>
       </view>
-      <view class="calories-footer">
-        <van-button type="primary" block bind:click="confirmCalories">确认</van-button>
+      <view class="day-picker-footer">
+        <button class="cancel-btn" bindtap="closeCaloriesDialog">取消</button>
+        <button class="orange-btn" bindtap="confirmCalories">确定</button>
       </view>
     </view>
-  </van-popup>
-</view> 
+  </view>
+</view>
