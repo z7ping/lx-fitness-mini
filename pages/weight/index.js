@@ -1,6 +1,6 @@
 const { dataService } = require('../../services/dataService');
 const utils = require('../../utils/utils');
-import * as echarts from '../../ec-canvas/echarts';
+// import * as echarts from '../../ec-canvas/echarts';
 
 Page({
   data: {
@@ -29,7 +29,7 @@ Page({
 
   onLoad() {
     this.loadData();
-    this.initChart();
+    // this.initChart();
   },
 
   onShow() {

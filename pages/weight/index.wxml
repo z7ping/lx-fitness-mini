@@ -39,9 +39,9 @@
         <text class="view-item {{currentView === 'month' ? 'active' : ''}}" bindtap="switchView" data-view="month">月</text>
         <text class="view-item {{currentView === 'year' ? 'active' : ''}}" bindtap="switchView" data-view="year">年</text>
       </view>
-      <view class="chart-container">
+      <!-- <view class="chart-container">
         <ec-canvas id="weightChart" canvas-id="weightChart" ec="{{ ec }}"></ec-canvas>
-      </view>
+      </view> -->
     </view>
 
     <!-- 记录列表 -->

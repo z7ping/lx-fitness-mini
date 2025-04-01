@@ -19,20 +19,6 @@ Page({
     calendarDays: [],
     todayInfo: {},
     todayPlans: [],
-    todayDiet: {
-      breakfast: {
-        content: '全麦面包 2片、鸡蛋 1个、牛奶 250ml',
-        calories: 300
-      },
-      lunch: {
-        content: '糙米饭、清炒西兰花、煎鸡胸肉',
-        calories: 450
-      },
-      dinner: {
-        content: '燕麦片、酸奶、混合坚果',
-        calories: 350
-      }
-    },
     completedCount: 0,
     totalCount: 0,
     weeklyPlan: null,
@@ -272,7 +258,7 @@ Page({
   // 初始化今日信息
   initTodayInfo() {
     const now = new Date();
-    const weekday = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    const weekday = ['日', '一', '二', '三', '四', '五', '六'];
     
     this.setData({
       todayInfo: {
