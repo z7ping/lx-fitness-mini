@@ -121,3 +121,4 @@ page {
 }
 
 @import "./styles/markdown-deepseek.wxss";
+@import "./styles/loading.wxss";

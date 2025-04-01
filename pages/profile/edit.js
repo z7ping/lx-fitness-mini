@@ -1,6 +1,7 @@
 // pages/profile/edit.js
 const app = getApp()
 const { dataService } = require('../../services/dataService')
+const { GOAL_MAPPING, FREQUENCY_MAPPING, DURATION_MAPPING, DictionaryConverter } = require('../../utils/dictionary')
 
 Page({
   data: {
@@ -19,13 +20,13 @@ Page({
     maxDate: '',
     minDate: '', // 添加最小日期
     // 训练目标选项
-    goalOptions: ['减脂', '增肌', '塑形', '提高体能', '保持健康'],
+    goalOptions: Object.values(GOAL_MAPPING.DISPLAY_TEXT),
     goalIndex: 0,
     // 训练频率选项
-    frequencyOptions: ['每周3次', '每周4次', '每周5次', '每周6次', '每天'],
+    frequencyOptions: Object.values(FREQUENCY_MAPPING.DISPLAY_TEXT),
     frequencyIndex: 0,
     // 训练时长选项
-    durationOptions: ['30分钟', '45分钟', '60分钟', '90分钟', '120分钟'],
+    durationOptions: Object.values(DURATION_MAPPING.DISPLAY_TEXT),
     durationIndex: 0
   },
 
@@ -53,25 +54,32 @@ Page({
       const userInfo = dataService.getUserInfo() || {}
       
       // 设置表单数据
+      const formData = {
+        avatarUrl: userInfo.avatarUrl || '',
+        nickName: userInfo.nickName || '',
+        gender: userInfo.gender || 1,
+        birthday: userInfo.birthday || '',
+        height: userInfo.height || '',
+        weight: userInfo.weight || '',
+        targetWeight: userInfo.targetWeight || '',
+        goal: userInfo.goal || '',
+        frequency: userInfo.frequency || '',
+        duration: userInfo.duration || ''
+      }
+
+      // 根据storage值找到对应的display值索引
+      const goalIndex = userInfo.goal ? 
+        Object.values(GOAL_MAPPING.STORAGE_KEYS).indexOf(userInfo.goal) : 0
+      const frequencyIndex = userInfo.frequency ? 
+        Object.values(FREQUENCY_MAPPING.STORAGE_KEYS).indexOf(userInfo.frequency) : 0
+      const durationIndex = userInfo.duration ? 
+        Object.values(DURATION_MAPPING.STORAGE_KEYS).indexOf(userInfo.duration) : 0
+
       this.setData({
-        formData: {
-          avatarUrl: userInfo.avatarUrl || '',
-          nickName: userInfo.nickName || '',
-          gender: userInfo.gender || 1,
-          birthday: userInfo.birthday || '',
-          height: userInfo.height || '',
-          weight: userInfo.weight || '',
-          targetWeight: userInfo.targetWeight || '',
-          goal: userInfo.goal || '',
-          frequency: userInfo.frequency || '',
-          duration: userInfo.duration || ''
-        },
-        goalIndex: this.data.goalOptions.indexOf(userInfo.goal) > -1 ? 
-          this.data.goalOptions.indexOf(userInfo.goal) : 0,
-        frequencyIndex: this.data.frequencyOptions.indexOf(userInfo.frequency) > -1 ? 
-          this.data.frequencyOptions.indexOf(userInfo.frequency) : 0,
-        durationIndex: this.data.durationOptions.indexOf(userInfo.duration) > -1 ? 
-          this.data.durationOptions.indexOf(userInfo.duration) : 0
+        formData,
+        goalIndex: goalIndex > -1 ? goalIndex : 0,
+        frequencyIndex: frequencyIndex > -1 ? frequencyIndex : 0,
+        durationIndex: durationIndex > -1 ? durationIndex : 0
       })
     } catch (error) {
       console.error('加载用户信息失败:', error)
@@ -130,25 +138,31 @@ Page({
 
   // 训练目标变更
   onGoalChange(e) {
+    const displayValue = this.data.goalOptions[e.detail.value];
+    const storageValue = DictionaryConverter.convertGoal(displayValue, 'display', 'storage');
     this.setData({
       goalIndex: e.detail.value,
-      'formData.goal': this.data.goalOptions[e.detail.value]
+      'formData.goal': storageValue
     })
   },
 
   // 训练频率变更
   onFrequencyChange(e) {
+    const displayValue = this.data.frequencyOptions[e.detail.value];
+    const storageValue = DictionaryConverter.convertFrequency(displayValue, 'display', 'storage');
     this.setData({
       frequencyIndex: e.detail.value,
-      'formData.frequency': this.data.frequencyOptions[e.detail.value]
+      'formData.frequency': storageValue
     })
   },
 
   // 训练时长变更
   onDurationChange(e) {
+    const displayValue = this.data.durationOptions[e.detail.value];
+    const storageValue = DictionaryConverter.convertDuration(displayValue, 'display', 'storage');
     this.setData({
       durationIndex: e.detail.value,
-      'formData.duration': this.data.durationOptions[e.detail.value]
+      'formData.duration': storageValue
     })
   },
 

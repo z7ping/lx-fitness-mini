@@ -2,16 +2,23 @@
  * 训练相关的 prompt 模板
  */
 
+const { dataService } = require('../../services/dataService');
+
 // 分析用户需求的 prompt 模板
-export const analyzeUserNeedsPrompt = (userInfo) => `作为一位专业的健身教练，请分析以下用户的训练需求：
+export const analyzeUserNeedsPrompt = (userInfo) => {
+  // 获取提示词格式的用户信息
+  const promptUserInfo = dataService.getUserInfoForPrompt();
+  if (!promptUserInfo) return '';
+  
+  return `作为一位专业的健身教练，请分析以下用户的训练需求：
 
 用户信息：
 - 性别：${userInfo.gender === 1 ? '男' : '女'}
 - 年龄：${userInfo.age}岁
 - 身高：${userInfo.height}cm
 - 体重：${userInfo.weight}kg
-- 目标：${userInfo.goal === 'lose' ? '减重' : userInfo.goal === 'gain' ? '增肌' : '保持体型'}
-- 训练水平：${userInfo.level === 'beginner' ? '初级' : userInfo.level === 'intermediate' ? '中级' : '高级'}
+- 目标：${promptUserInfo.goal}
+- 训练水平：${promptUserInfo.level}
 
 请从以下几个方面进行分析：
 1. 用户当前的身体状况评估
@@ -20,17 +27,23 @@ export const analyzeUserNeedsPrompt = (userInfo) => `作为一位专业的健身
 4. 建议的训练重点
 
 请用专业但易懂的语言回答。`;
+}
 
 // 生成训练计划的 prompt 模板
-export const generateTrainingPlanPrompt = (userInfo) => `基于之前的分析，请为这位用户制定一个周训练计划：
+export const generateTrainingPlanPrompt = (userInfo) => {
+  // 获取提示词格式的用户信息
+  const promptUserInfo = dataService.getUserInfoForPrompt();
+  if (!promptUserInfo) return '';
+  
+  return `基于之前的分析，请为这位用户制定一个周训练计划：
 
 用户信息：
 - 性别：${userInfo.gender === 1 ? '男' : '女'}
 - 年龄：${userInfo.age}岁
 - 身高：${userInfo.height}cm
 - 体重：${userInfo.weight}kg
-- 目标：${userInfo.goal === 'lose' ? '减重' : userInfo.goal === 'gain' ? '增肌' : '保持体型'}
-- 训练水平：${userInfo.level === 'beginner' ? '初级' : userInfo.level === 'intermediate' ? '中级' : '高级'}
+- 目标：${promptUserInfo.goal}
+- 训练水平：${promptUserInfo.level}
 
 请按照以下JSON格式输出周训练计划，这个格式将直接用于应用程序的渲染：
 
@@ -57,12 +70,7 @@ export const generateTrainingPlanPrompt = (userInfo) => `基于之前的分析�
           ]
         }
       ]
-    },
-    {
-      "day": "周二",
-      "plans": []
-    },
-    // 其他日期...
+    }
   ]
 }
 \`\`\`
@@ -75,17 +83,23 @@ export const generateTrainingPlanPrompt = (userInfo) => `基于之前的分析�
 5. 所有日期（周一至周日）都必须包含在计划中，即使是休息日
 
 请只返回JSON格式的训练计划，不要包含其他解释性文字。`;
+}
 
 // 生成饮食建议的 prompt 模板
-export const generateDietPlanPrompt = (userInfo) => `请为这位用户制定一周的饮食计划：
+export const generateDietPlanPrompt = (userInfo) => {
+  // 获取提示词格式的用户信息
+  const promptUserInfo = dataService.getUserInfoForPrompt();
+  if (!promptUserInfo) return '';
+  
+  return `请为这位用户制定一周的饮食计划：
 
 用户信息：
 - 性别：${userInfo.gender === 1 ? '男' : '女'}
 - 年龄：${userInfo.age}岁
 - 身高：${userInfo.height}cm
 - 体重：${userInfo.weight}kg
-- 目标：${userInfo.goal === 'lose' ? '减重' : userInfo.goal === 'gain' ? '增肌' : '保持体型'}
-- 训练水平：${userInfo.level === 'beginner' ? '初级' : userInfo.level === 'intermediate' ? '中级' : '高级'}
+- 目标：${promptUserInfo.goal}
+- 训练水平：${promptUserInfo.level}
 
 请按照以下JSON格式输出周饮食计划，这个格式将直接用于应用程序的渲染：
 
@@ -126,17 +140,7 @@ export const generateDietPlanPrompt = (userInfo) => `请为这位用户制定一
           "fat": "15g"
         }
       }
-    },
-    {
-      "day": "周二",
-      "diet": {
-        "breakfast": { "content": "..." },
-        "lunch": { "content": "..." },
-        "dinner": { "content": "..." },
-        "snacks": { "content": "..." }
-      }
-    },
-    // 其他日期...
+    }
   ],
   "dailyNutrition": {
     "calories": "约1800-2200大卡",
@@ -156,17 +160,23 @@ export const generateDietPlanPrompt = (userInfo) => `请为这位用户制定一
 5. 提供每日总体营养摄入建议和注意事项
 
 请只返回JSON格式的饮食计划，不要包含其他解释性文字。`;
+}
 
 // 生成综合计划的prompt模板
-export const generateCombinedPlanPrompt = (userInfo) => `请为这位用户制定一个完整的周健身计划，包括训练计划和饮食计划：
+export const generateCombinedPlanPrompt = (userInfo) => {
+  // 获取提示词格式的用户信息
+  const promptUserInfo = dataService.getUserInfoForPrompt();
+  if (!promptUserInfo) return '';
+  
+  return `请为这位用户制定一个完整的周健身计划，包括训练计划和饮食计划：
 
 用户信息：
 - 性别：${userInfo.gender === 1 ? '男' : '女'}
 - 年龄：${userInfo.age}岁
 - 身高：${userInfo.height}cm
 - 体重：${userInfo.weight}kg
-- 目标：${userInfo.goal === 'lose' ? '减重' : userInfo.goal === 'gain' ? '增肌' : '保持体型'}
-- 训练水平：${userInfo.level === 'beginner' ? '初级' : userInfo.level === 'intermediate' ? '中级' : '高级'}
+- 目标：${promptUserInfo.goal}
+- 训练水平：${promptUserInfo.level}
 
 请按照以下JSON格式输出完整的周计划，这个格式将直接用于应用程序的渲染：
 
@@ -224,8 +234,7 @@ export const generateCombinedPlanPrompt = (userInfo) => `请为这位用户制�
             "fat": "15g"
           }
         }
-      },
-      // 其他日期...
+      }
     ]
   },
   "analysis": "用户分析和建议...",
@@ -246,4 +255,5 @@ export const generateCombinedPlanPrompt = (userInfo) => `请为这位用户制�
 4. 所有日期（周一至周日）都必须包含在计划中
 5. 提供简短的用户分析和综合建议
 
-请只返回JSON格式的完整计划，不要包含其他解释性文字。`; 
+请只返回JSON格式的完整计划，不要包含其他解释性文字。`;
+} 

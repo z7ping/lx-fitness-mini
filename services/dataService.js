@@ -40,6 +40,7 @@ const EVENT_TYPES = {
 };
 
 const TimeUtils = require('../utils/timeUtils');
+const { DictionaryConverter, GOAL_MAPPING, LEVEL_MAPPING } = require('../utils/dictionary');
 
 /**
  * 数据存储类
@@ -717,63 +718,55 @@ class DataService {
     }
   }
   
-  // 用户数据转换常量
-  static GOAL_MAP = {
-    '减脂': 'lose',
-    '增肌': 'gain',
-    '塑形': 'shape',
-    '提高体能': 'endurance',
-    '保持健康': 'maintain',
-    'lose': '减脂',
-    'gain': '增肌',
-    'shape': '塑形',
-    'endurance': '提高体能',
-    'maintain': '保持健康'
-  };
-
-  static LEVEL_MAP = {
-    '初级': 'beginner',
-    '中级': 'intermediate',
-    '高级': 'advanced',
-    'beginner': '初级',
-    'intermediate': '中级',
-    'advanced': '高级'
-  };
-
   /**
-   * 将用户目标转换为英文
-   * @param {string} goal 中文目标
-   * @returns {string} 英文目标
-   */
-  static goalToEn(goal) {
-    return this.GOAL_MAP[goal] || 'maintain';
-  }
-
-  /**
-   * 将英文目标转换为中文
-   * @param {string} goal 英文目标
+   * 将目标从英文转换为中文
+   * @param {string} goal - 英文目标
    * @returns {string} 中文目标
    */
   static goalToCn(goal) {
-    return this.GOAL_MAP[goal] || '保持健康';
+    return DictionaryConverter.convertGoal(goal, 'storage', 'display');
   }
 
   /**
-   * 将训练水平转换为英文
-   * @param {string} level 中文水平
-   * @returns {string} 英文水平
+   * 将目标从中文转换为英文
+   * @param {string} goal - 中文目标
+   * @returns {string} 英文目标
    */
-  static levelToEn(level) {
-    return this.LEVEL_MAP[level] || 'beginner';
+  static goalToEn(goal) {
+    return DictionaryConverter.convertGoal(goal, 'display', 'storage');
   }
 
   /**
-   * 将英文训练水平转换为中文
-   * @param {string} level 英文水平
-   * @returns {string} 中文水平
+   * 将训练水平从英文转换为中文
+   * @param {string} level - 英文训练水平
+   * @returns {string} 中文训练水平
    */
   static levelToCn(level) {
-    return this.LEVEL_MAP[level] || '初级';
+    return DictionaryConverter.convertLevel(level, 'storage', 'display');
+  }
+
+  /**
+   * 将训练水平从中文转换为英文
+   * @param {string} level - 中文训练水平
+   * @returns {string} 英文训练水平
+   */
+  static levelToEn(level) {
+    return DictionaryConverter.convertLevel(level, 'display', 'storage');
+  }
+
+  /**
+   * 获取用户信息（用于提示词）
+   * @returns {Object} 用户信息
+   */
+  getUserInfoForPrompt() {
+    const userInfo = this.getUserInfo();
+    if (!userInfo) return null;
+
+    return {
+      ...userInfo,
+      goal: DictionaryConverter.convertGoal(userInfo.goal, 'storage', 'prompt'),
+      level: DictionaryConverter.convertLevel(userInfo.level, 'storage', 'prompt')
+    };
   }
 
   /**
@@ -783,11 +776,11 @@ class DataService {
    */
   saveUserInfo(userInfo) {
     try {
-      // 转换目标为英文
+      // 转换目标和训练水平为存储格式
       const enUserInfo = {
         ...userInfo,
-        goal: DataService.goalToEn(userInfo.goal),
-        level: DataService.levelToEn(userInfo.level)
+        goal: DictionaryConverter.convertGoal(userInfo.goal, 'display', 'storage'),
+        level: DictionaryConverter.convertLevel(userInfo.level, 'display', 'storage')
       };
       
       this.cache.userInfo = enUserInfo;
@@ -810,18 +803,18 @@ class DataService {
       const userInfo = this.cache.userInfo || this.safeGetStorage(STORAGE_KEYS.USER_INFO);
       if (!userInfo) return null;
 
-      // 转换目标为中文
+      // 转换目标和训练水平为显示格式
       return {
         ...userInfo,
-        goal: DataService.goalToCn(userInfo.goal),
-        level: DataService.levelToCn(userInfo.level)
+        goal: DictionaryConverter.convertGoal(userInfo.goal, 'storage', 'display'),
+        level: DictionaryConverter.convertLevel(userInfo.level, 'storage', 'display')
       };
     } catch (error) {
       console.error('获取用户信息失败:', error);
       return null;
     }
   }
-  
+
   /**
    * 保存设备信息
    * @param {Object} deviceInfo 设备信息
@@ -1679,8 +1672,8 @@ module.exports = {
   STORAGE_KEYS,
   EXERCISE_TYPES,
   EVENT_TYPES,
-  GOAL_MAP: DataService.GOAL_MAP,
-  LEVEL_MAP: DataService.LEVEL_MAP,
+  GOAL_MAPPING,
+  LEVEL_MAPPING,
   goalToEn: DataService.goalToEn,
   goalToCn: DataService.goalToCn,
   levelToEn: DataService.levelToEn,

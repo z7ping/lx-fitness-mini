@@ -1,7 +1,7 @@
 <!-- AI生成计划页面 -->
 <view class="container">
   <!-- 顶部用户信息展示区 -->
-  <view class="user-info-section" wx:if="{{userData}}">
+  <view class="user-info-section sticky" wx:if="{{userData}}">
     <view class="section-header">
       <view class="section-title">您的健身目标</view>
       <view class="history-btn" bindtap="viewHistory">
@@ -37,8 +37,27 @@
     </view>
   </view>
 
+  <!-- 生成进度条 -->
+  <view class="progress-section" wx:if="{{isGenerating}}">
+    <view class="progress-bar">
+      <view class="progress-step {{generationProgress.analysis ? 'completed' : currentStep === 'analysis' ? 'active' : ''}}">
+        <view class="step-dot"></view>
+        <text class="step-text">分析需求</text>
+      </view>
+      <view class="progress-step {{generationProgress.trainingPlan ? 'completed' : currentStep === 'trainingPlan' ? 'active' : ''}}">
+        <view class="step-dot"></view>
+        <text class="step-text">生成训练计划</text>
+      </view>
+      <view class="progress-step {{generationProgress.dietPlan ? 'completed' : currentStep === 'dietPlan' ? 'active' : ''}}">
+        <view class="step-dot"></view>
+        <text class="step-text">生成饮食建议</text>
+      </view>
+      <view class="progress-line"></view>
+    </view>
+  </view>
+
   <!-- 中间对话展示区 -->
-  <scroll-view class="chat-section" scroll-y scroll-into-view="{{scrollToMessage}}">
+  <scroll-view class="chat-section" scroll-y scroll-into-view="{{scrollToMessage}}" enable-flex>
     <view class="message-list">
       <block wx:for="{{messages}}" wx:key="id">
         <!-- AI思考过程 -->
@@ -68,6 +87,10 @@
               <view class="action-item" bindtap="copyMessage" data-index="{{index}}">
                 <van-icon name="description" size="24rpx" />
               </view>
+              <view class="action-item" bindtap="previewMessage" data-index="{{index}}" 
+                    wx:if="{{item.step === 'trainingPlan' || item.step === 'dietPlan' || (item.content && (item.content.includes('训练计划') || item.content.includes('饮食建议')))}}">
+                <van-icon name="eye-o" size="24rpx" />
+              </view>
               <view class="action-item" bindtap="retryStep" data-step="{{item.step}}" data-index="{{index}}" wx:if="{{item.retryable}}">
                 <van-icon name="replay" size="24rpx" />
               </view>
@@ -86,17 +109,18 @@
         </view>
       </block>
       
-      <!-- 加载动画 -->
-      <view class="loading-container" wx:if="{{isGenerating && messages.length === 0}}">
-        <view class="loading-animation">
-          <view class="loading-circle"></view>
-          <view class="loading-circle"></view>
-          <view class="loading-circle"></view>
-        </view>
-        <text class="loading-text">AI正在为您生成个性化计划...</text>
-      </view>
     </view>
   </scroll-view>
+  
+  <!-- 加载动画 - 右下角浮动样式 -->
+  <view class="loading-container" wx:if="{{isGenerating}}">
+    <view class="loading-animation">
+      <view class="loading-circle"></view>
+      <view class="loading-circle"></view>
+      <view class="loading-circle"></view>
+    </view>
+    <text class="loading-text">AI思考中...</text>
+  </view>
 
   <!-- AI模型选择器弹窗 -->
   <van-popup

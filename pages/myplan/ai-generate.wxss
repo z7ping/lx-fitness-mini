@@ -16,6 +16,14 @@
   margin: 20rpx;
   border-radius: 16rpx;
   box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.15);
+  z-index: 10;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  margin-top: 0;
+  border-radius: 0 0 16rpx 16rpx;
 }
 
 .section-header {
@@ -95,14 +103,83 @@
 }
 
 /* 对话区域 - 核心内容区 */
+.progress-section {
+  padding: 30rpx 40rpx;
+  background: #fff;
+  margin: 0 16rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.progress-bar {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20rpx;
+}
+
+.progress-line {
+  position: absolute;
+  top: 16rpx;
+  left: 40rpx;
+  right: 40rpx;
+  height: 4rpx;
+  background: #eee;
+  z-index: 1;
+}
+
+.progress-step {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120rpx;
+}
+
+.step-dot {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  background: #eee;
+  margin-bottom: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.step-text {
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.progress-step.active .step-dot {
+  background: #ff6b35;
+  box-shadow: 0 0 0 6rpx rgba(255, 107, 53, 0.2);
+}
+
+.progress-step.active .step-text {
+  color: #ff6b35;
+  font-weight: 500;
+}
+
+.progress-step.completed .step-dot {
+  background: #ff9800;
+}
+
+.progress-step.completed .step-text {
+  color: #ff9800;
+}
+
 .chat-section {
   flex: 1;
   background: #fff;
-  margin: 0 16rpx 100rpx;
+  margin: 16rpx 16rpx 100rpx;
   border-radius: 16rpx;
   padding: 16rpx;
   box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
   overflow-y: auto;
+  height: calc(100vh - 400rpx);
 }
 
 .message-list {
@@ -133,33 +210,32 @@
 }
 
 .message .content {
-  margin-top: 4rpx;
+  margin: 4rpx 32rpx 16rpx 16rpx;
   flex: 1;
-  max-width: 85%;
-  background: #fff;
+  max-width: 80%;
   border-radius: 16rpx;
   padding: 20rpx 20rpx 60rpx;
   position: relative;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
   user-select: text;
-  margin-bottom: 16rpx;
+  word-wrap: break-word;
 }
 
 .ai-message .content {
-  background: #fff5e6;
-  border: 1rpx solid rgba(255, 152, 0, 0.1);
+  background: #f0f9ff;
+  border: 1rpx solid rgba(18, 150, 219, 0.1);
 }
 
 .user-message .content {
-  background: #fff5e6;
-  border: 1rpx solid rgba(255, 152, 0, 0.1);
+  background: #fff5eb;
+  border: 1rpx solid rgba(255, 107, 0, 0.1);
 }
 
 .message .text {
   font-size: 26rpx;
   color: #333;
   line-height: 1.6;
-  user-select: text; /* 支持复制 */
+  user-select: text;
 }
 
 /* 底部按钮区域样式 */
@@ -168,10 +244,11 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20rpx 30rpx;
+  padding: 20rpx 32rpx;
   background: #fff;
   box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
   z-index: 100;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
 }
 
 .action-row {
@@ -213,7 +290,8 @@
 .action-buttons {
   display: flex;
   justify-content: space-between;
-  gap: 20rpx;
+  gap: 16rpx;
+  padding: 0 16rpx;
 }
 
 .action-buttons button {
@@ -253,7 +331,7 @@
 }
 
 .btn-continue {
-  background: #07c160;
+  background: linear-gradient(135deg, #FF9800, #FF6B00);
   color: #fff;
 }
 
@@ -263,7 +341,7 @@
 }
 
 .btn-save {
-  background: #07c160;
+  background: linear-gradient(135deg, #FF9800, #FF6B00);
   color: #fff;
 }
 
@@ -415,6 +493,11 @@
   background: #FFF5E6;
   color: #FF6B00;
   border: 1rpx solid rgba(255, 107, 0, 0.2);
+  display: none;
+}
+
+.preview-btn.show {
+  display: flex;
 }
 
 .preview-btn:active {
@@ -540,29 +623,35 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: #f8f8f8;
 }
 
 .preview-header {
-  padding: 20rpx;
+  padding: 24rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, #ff9800, #ff6d00);
-  color: #fff;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+}
+
+.preview-header .title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
 }
 
 .preview-content {
   flex: 1;
-  padding: 20rpx;
-  user-select: text; /* 支持复制 */
+  padding: 24rpx;
+  user-select: text;
 }
 
 .preview-section {
   background: #fff;
-  border-radius: 16rpx;
-  padding: 20rpx;
-  margin-bottom: 16rpx;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
 
@@ -570,7 +659,7 @@
   font-size: 26rpx;
   color: #333;
   line-height: 1.6;
-  user-select: text; /* 支持复制 */
+  user-select: text;
   white-space: pre-wrap;
   word-break: break-all;
 }
@@ -582,21 +671,31 @@
 
 /* 思考中的消息样式 */
 .ai-thinking {
-  opacity: 0.8;
+  position: fixed;
+  bottom: 120rpx;
+  right: 32rpx;
+  z-index: 100;
+  background: linear-gradient(135deg, #FF9800, #FF6B00);
+  padding: 16rpx 24rpx;
+  border-radius: 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 0, 0.2);
+  display: flex;
+  align-items: center;
+  max-width: 60%;
 }
 
 .thinking-dots {
   display: flex;
   align-items: center;
-  margin-bottom: 8rpx;
+  margin-right: 12rpx;
 }
 
 .thinking-dots .dot {
-  width: 12rpx;
-  height: 12rpx;
+  width: 8rpx;
+  height: 8rpx;
   border-radius: 50%;
-  background-color: #1296db;
-  margin-right: 8rpx;
+  background-color: rgba(255, 255, 255, 0.9);
+  margin-right: 6rpx;
   animation: thinking 1.4s infinite ease-in-out;
 }
 
@@ -774,20 +873,7 @@
 }
 
 /* 优化消息气泡样式 */
-.message .content {
-  max-width: 80%;
-  word-wrap: break-word;
-}
-
-.ai-message .content {
-  background: #f0f9ff;
-  border: 1rpx solid rgba(18, 150, 219, 0.1);
-}
-
-.user-message .content {
-  background: #fff5eb;
-  border: 1rpx solid rgba(255, 107, 0, 0.1);
-}
+/* 已合并到上面的.message .content样式中 */
 
 /* rich-text 样式 */
 .message .content rich-text {
@@ -945,20 +1031,18 @@
   font-size: 28rpx !important;
 }
 
-.message .content {
-  max-width: 80%;
-  word-wrap: break-word;
+.model-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 16rpx;
+  vertical-align: middle;
 }
 
-.ai-message .content {
-  background: #f0f9ff;
-  border: 1rpx solid rgba(18, 150, 219, 0.1);
+.model-value {
+  color: #ff6b35 !important;
 }
 
-.user-message .content {
-  background: #fff5eb;
-  border: 1rpx solid rgba(255, 107, 0, 0.1);
-}
+/* 已合并到上面的.message .content样式中 */
 
 /* 模型选择区域 */
 .model-section {
@@ -1307,30 +1391,49 @@
   background: #333;
 }
 
-/* 加载动画样式 */
+/* 加载动画样式 - 右下角浮动样式 */
 .loading-container {
+  position: fixed;
+  bottom: 180rpx;
+  right: 32rpx;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 60rpx 0;
-  margin: 40rpx 0;
+  padding: 12rpx 20rpx;
+  background: rgba(255, 107, 0, 0.85);
+  border-radius: 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 0, 0.2);
+  z-index: 9999;
+  max-width: 180rpx;
+  animation: fadeIn 0.3s ease;
+  opacity: 0.95;
+  pointer-events: none; /* 确保不会阻挡点击事件 */
+  transform: translateZ(0); /* 强制GPU加速 */
+  will-change: transform; /* 提示浏览器该元素会变化 */
 }
 
+.loading-text {
+  font-size: 24rpx;
+  color: #ffffff;
+  font-weight: 500;
+  margin-left: 8rpx;
+}
+
+/* 加载动画圆圈样式 */
 .loading-animation {
   display: flex;
-  align-items: center;
   justify-content: center;
-  margin-bottom: 30rpx;
+  align-items: center;
+  gap: 6rpx;
 }
 
 .loading-circle {
-  width: 20rpx;
-  height: 20rpx;
-  margin: 0 10rpx;
-  background: linear-gradient(135deg, #ff9800, #ff6d00);
+  width: 8rpx;
+  height: 8rpx;
   border-radius: 50%;
-  animation: loadingBounce 1.4s infinite ease-in-out both;
+  background-color: rgba(255, 255, 255, 0.9);
+  animation: bounce 1.4s infinite ease-in-out both;
 }
 
 .loading-circle:nth-child(1) {
@@ -1341,19 +1444,31 @@
   animation-delay: -0.16s;
 }
 
-@keyframes loadingBounce {
-  0%, 80%, 100% {
-    transform: scale(0);
-  }
-  40% {
-    transform: scale(1);
-  }
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1.0); }
 }
 
-.loading-text {
-  font-size: 28rpx;
-  color: #666;
-  text-align: center;
+.loading-spinner {
+  display: none; /* 隐藏spinner，只使用圆点动画 */
+  width: 40rpx;
+  height: 40rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.9);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loading-time {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-left: 8rpx;
+  display: none; /* 暂时隐藏，使界面更简洁 */
 }
 
 .message-actions {
@@ -1386,9 +1501,9 @@
 }
 
 .message-actions .copy-btn {
-  color: #1890ff;
-  border-color: rgba(24, 144, 255, 0.3);
-  background: rgba(230, 247, 255, 0.9);
+  color: #ff6b35;
+  border-color: rgba(255, 107, 0, 0.3);
+  background: rgba(255, 107, 0, 0.1);
 }
 
 .message-actions .retry-btn {
@@ -1414,7 +1529,7 @@
   
   .message-actions .copy-btn {
     color: #40a9ff;
-    border-color: rgba(64, 169, 255, 0.3);
+    border-color: rgba(255, 107, 0, 0.3);
     background: rgba(16, 42, 66, 0.8);
   }
   
@@ -1435,14 +1550,14 @@
   align-items: center;
   justify-content: center;
   gap: 8rpx;
-  background: linear-gradient(135deg, #36A3FF, #1e88e5);
+  background: linear-gradient(135deg, #FF9800, #FF6B00);
   color: #fff;
   border: none;
-  box-shadow: 0 4rpx 12rpx rgba(30, 136, 229, 0.25);
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 0, 0.2);
   transition: all 0.3s ease;
 }
 
 .continue-btn:active {
   transform: scale(0.98);
-  background: linear-gradient(135deg, #2196f3, #1976d2);
+  background: linear-gradient(135deg, #FF8800, #FF6000);
 }

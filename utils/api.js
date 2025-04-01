@@ -75,8 +75,10 @@ const makeApiRequest = (modelKey, params, requestBuilder, responseHandler) => {
       return;
     }
     
-    // 显示加载动画
-    loading.show();
+    // 显示加载动画，支持浮动样式
+    loading.show({
+      floating: params.floatingLoading || true
+    });
 
     // 记录请求开始
     logApiCall(modelKey, 'request', {

@@ -1,0 +1,51 @@
+.floating-loading {
+  position: fixed;
+  bottom: 32rpx;
+  right: 32rpx;
+  display: flex;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  background: rgba(255, 152, 0, 0.1);
+  border-radius: 40rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.15);
+  z-index: 999;
+}
+
+.floating-loading__dots {
+  display: flex;
+  align-items: center;
+  margin-right: 12rpx;
+}
+
+.floating-loading__dot {
+  width: 12rpx;
+  height: 12rpx;
+  margin: 0 4rpx;
+  background-color: #FF9800;
+  border-radius: 50%;
+  animation: floating-loading-dot 1.4s infinite ease-in-out;
+}
+
+.floating-loading__dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.floating-loading__dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.floating-loading__text {
+  font-size: 24rpx;
+  color: #FF9800;
+}
+
+@keyframes floating-loading-dot {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.6;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

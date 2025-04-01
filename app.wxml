@@ -1,0 +1,8 @@
+<view class="floating-loading" wx:if="{{floatingLoading.show}}">
+  <view class="floating-loading__dots">
+    <view class="floating-loading__dot"></view>
+    <view class="floating-loading__dot"></view>
+    <view class="floating-loading__dot"></view>
+  </view>
+  <text class="floating-loading__text">加载中...</text>
+</view>

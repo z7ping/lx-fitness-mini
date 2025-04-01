@@ -1,6 +1,6 @@
 // pages/plan/ai-generate.js
 const app = getApp();
-const { dataService, GOAL_MAP, LEVEL_MAP } = require('../../services/dataService');
+const { dataService, GOAL_MAPPING, LEVEL_MAPPING } = require('../../services/dataService');
 const { deepseek, gemini, volcengine } = require('../../utils/api');
 const { getAIModels, getModelConfig, getDefaultModel, saveSelectedModel } = require('../../utils/config');
 const {
@@ -59,7 +59,11 @@ Page({
       trainingPlan: '生成训练计划',
       dietPlan: '生成饮食建议'
     },
-    showContinueButton: false
+    showContinueButton: false,
+    // 新增生成状态提示
+    generatingStatus: '',
+    // 新增取消生成按钮状态
+    showCancelButton: false
   },
 
   onLoad(options) {
@@ -182,7 +186,7 @@ Page({
     return {
       ...userData,
       genderText: userData.gender === 1 ? '男' : '女',
-      goalText: GOAL_MAP[userData.goal] || userData.goal,
+      goalText: GOAL_MAPPING[userData.goal] || userData.goal,
       levelText: userData.level
     };
   },
@@ -319,10 +323,11 @@ Page({
       const stepName = this.data.stepNameMap[step] || step;
       
       wx.showModal({
-        title: '确认执行',
-        content: `是否开始${stepName}？`,
-        confirmText: '开始生成',
-        cancelText: '暂停',
+        title: stepName,
+        content: `AI将为您${stepName.toLowerCase()}，是否继续？`,
+        confirmText: '继续',
+        cancelText: '取消',
+        confirmColor: '#ff6b35',
         success: async (res) => {
           if (res.confirm) {
             try {
@@ -434,12 +439,16 @@ Page({
     this.addThinkingMessage('正在分析您的训练需求...');
     
     try {
+      // 记录开始时间
+      const startTime = Date.now();
+      
       // 构建提示词
       const userInfo = this.data.userData;
       const prompt = analyzeUserNeedsPrompt(userInfo);
       
-      // 添加提示词到消息列表
-      this.addMessage('user', prompt);
+      // 添加简化的提示词概述到消息列表
+      const promptSummary = `根据您的个人信息和训练目标，开始${this.data.stepNameMap[this.data.currentStep].toLowerCase()}...`;
+      this.addMessage('user', promptSummary);
       
       // 调用AI获取分析结果
       const analysis = await this.callAI(prompt);
@@ -448,13 +457,18 @@ Page({
         throw new Error('分析用户需求失败');
       }
       
+      // 计算请求耗时
+      const endTime = Date.now();
+      const requestTime = ((endTime - startTime) / 1000).toFixed(2);
+      
       // 添加分析结果到消息列表
       this.addMessage('ai', analysis);
       
-      // 更新生成进度
+      // 更新生成进度和请求耗时
       this.setData({
         'generationProgress.analysis': true,
-        'generationProgress.lastAnalysis': analysis
+        'generationProgress.lastAnalysis': analysis,
+        requestTime
       });
       
       return analysis;
@@ -470,13 +484,17 @@ Page({
     this.addThinkingMessage('正在生成个性化训练计划...');
     
     try {
+      // 记录开始时间
+      const startTime = Date.now();
+      
       // 构建提示词
       const userInfo = this.data.userData;
       const analysis = this.data.generationProgress.lastAnalysis;
       const prompt = generateTrainingPlanPrompt(userInfo, analysis);
       
-      // 添加提示词到消息列表
-      this.addMessage('user', prompt);
+      // 添加简化的提示词概述到消息列表
+      const promptSummary = `根据您的个人信息和训练目标，开始${this.data.stepNameMap[this.data.currentStep].toLowerCase()}...`;
+      this.addMessage('user', promptSummary);
       
       // 调用AI获取训练计划
       const trainingPlanResponse = await this.callAI(prompt);
@@ -484,6 +502,10 @@ Page({
       if (!trainingPlanResponse) {
         throw new Error('生成训练计划失败');
       }
+      
+      // 计算请求耗时
+      const endTime = Date.now();
+      const requestTime = ((endTime - startTime) / 1000).toFixed(2);
       
       // 使用新的解析方法
       try {
@@ -610,14 +632,18 @@ Page({
     this.addThinkingMessage('正在制定营养饮食建议...');
     
     try {
+      // 记录开始时间
+      const startTime = Date.now();
+      
       // 构建提示词
       const userInfo = this.data.userData;
       const analysis = this.data.generationProgress.lastAnalysis;
       const trainingPlan = this.data.generationProgress.lastTrainingPlan;
       const prompt = generateDietPlanPrompt(userInfo, analysis, trainingPlan);
       
-      // 添加提示词到消息列表
-      this.addMessage('user', prompt);
+      // 添加简化的提示词概述到消息列表
+      const promptSummary = `根据您的个人信息和训练目标，开始${this.data.stepNameMap[this.data.currentStep].toLowerCase()}...`;
+      this.addMessage('user', promptSummary);
       
       // 调用AI获取饮食计划
       const dietPlanResponse = await this.callAI(prompt);
@@ -625,6 +651,10 @@ Page({
       if (!dietPlanResponse) {
         throw new Error('生成饮食建议失败');
       }
+      
+      // 计算请求耗时
+      const endTime = Date.now();
+      const requestTime = ((endTime - startTime) / 1000).toFixed(2);
       
       // 尝试解析JSON格式的饮食计划
       let dietPlan;
