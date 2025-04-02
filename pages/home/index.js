@@ -16,6 +16,7 @@ Page({
     todayPlan: null,
     greeting: '',
     bannerList: [],
+    showRefresh: false,
     quickActions: [
       { icon: 'clock', text: '快速训练', path: '/pages/plan/quick' },
       { icon: 'records', text: '训练记录', path: '/pages/checkin/records' },
@@ -78,16 +79,30 @@ Page({
   },
 
   onPullDownRefresh() {
-    Promise.all([
-      this.loadUserInfo(),
-      this.loadHealthStats(),
-      this.loadTodayPlans()
-    ]).then(() => {
-      wx.stopPullDownRefresh();
-    }).catch(error => {
-      console.error('刷新数据失败:', error);
-      wx.stopPullDownRefresh();
-    });
+    // 显示下拉刷新动画
+    this.setData({ showRefresh: true });
+    
+    // 延迟执行数据刷新，让动画有足够时间显示
+    setTimeout(() => {
+      Promise.all([
+        this.loadUserInfo(),
+        this.loadHealthStats(),
+        this.loadTodayPlans()
+      ]).then(() => {
+        // 延迟隐藏动画，确保用户能看到刷新效果
+        setTimeout(() => {
+          this.setData({ showRefresh: false });
+          wx.stopPullDownRefresh();
+        }, 500);
+      }).catch(error => {
+        console.error('刷新数据失败:', error);
+        // 出错时也延迟隐藏动画
+        setTimeout(() => {
+          this.setData({ showRefresh: false });
+          wx.stopPullDownRefresh();
+        }, 500);
+      });
+    }, 300);
   },
 
   onUnload() {
@@ -219,6 +234,10 @@ Page({
     }
   },
 
+  navigateToMyPlan() {
+    wx.navigateTo({ url: '/pages/myplan/index' });
+  },
+
   navigateToCheckin() {
     wx.navigateTo({ url: '/pages/checkin/records' });
   },
@@ -229,10 +248,6 @@ Page({
 
   navigateToAI() {
     wx.navigateTo({ url: '/pages/ai/index' });
-  },
-
-  navigateToData() {
-    wx.navigateTo({ url: '/pages/dashboard/index' });
   },
 
   // 手动创建计划
@@ -246,7 +261,7 @@ Page({
       };
       
       wx.navigateTo({ 
-        url: `/pages/myplan/create?planData=${JSON.stringify(planData)}`
+        url: `/pages/plan/create?planData=${JSON.stringify(planData)}`
       });
     });
   },
@@ -285,16 +300,6 @@ Page({
 
       wx.navigateTo({ 
         url: `/pages/plan/ai-generate?userData=${JSON.stringify(userData)}`
-      });
-    });
-  },
-
-  // 快速训练入口
-  quickTraining() {
-    app.checkLoginAndAuth(() => {
-      // 跳转到快速训练选择页面
-      wx.navigateTo({
-        url: '/pages/exercise/index'
       });
     });
   },

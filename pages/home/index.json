@@ -1,8 +1,9 @@
 {
-    "navigationBarTitleText": "首页",
-    "usingComponents": {
-      "van-icon": "@vant/weapp/icon/index",
-      "van-button": "@vant/weapp/button/index",
-      "auth-login": "/pages/auth/login"
-    }
+  "enablePullDownRefresh": true,
+  "navigationBarTitleText": "首页",
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index",
+    "van-button": "@vant/weapp/button/index",
+    "auth-login": "/pages/auth/login"
+  }
 }

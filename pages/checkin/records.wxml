@@ -2,7 +2,7 @@
 <view class="container">
   <!-- 页面标题 -->
   <view class="header">
-    <text class="title">运动记录打卡</text>
+    <text class="title">打卡记录</text>
   </view>
 
   <!-- 统计卡片 -->

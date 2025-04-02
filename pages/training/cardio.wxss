@@ -193,45 +193,45 @@
 
 /* 实时数据展示 */
 .real-time-data {
-  display: flex;
-  flex-direction: column;
-  gap: 24rpx;
-  padding: 0 24rpx;
-  margin-bottom: 24rpx;
+  padding: 20rpx;
 }
 
+/* 主要数据卡片 */
 .rt-card {
   background: #fff;
-  border-radius: 20rpx;
-  padding: 16rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.main-stats {
+  text-align: center;
 }
 
 .rt-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8rpx;
+  margin-bottom: 12rpx;
 }
 
 .rt-header text {
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #666;
 }
 
 .rt-unit {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #999;
 }
 
 .rt-value {
-  font-size: 40rpx;
+  font-size: 72rpx;
   font-weight: 600;
-  text-align: center;
-  margin: 8rpx 0;
-  font-family: 'DIN Condensed', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.2;
+  margin: 16rpx 0;
+  font-family: 'DIN Condensed', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .rt-value.excellent {
@@ -248,6 +248,7 @@
 
 .rt-value.attention {
   color: #ff9800;
+  animation: pulse 1s infinite;
 }
 
 .rt-value.warning {
@@ -255,42 +256,150 @@
   animation: warningPulse 1s infinite;
 }
 
-@keyframes warningPulse {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-  100% {
-    opacity: 1;
-  }
+/* 次要数据和第三级数据网格 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
 }
 
-.rt-chart {
-  height: 60rpx;
-  margin-top: 8rpx;
-  background: linear-gradient(to right, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.05));
-  border-radius: 8rpx;
-  overflow: hidden;
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+}
+
+.stat-value {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.2;
+  margin-bottom: 8rpx;
+  font-family: 'DIN Condensed', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 心率区间样式 */
+.heart-rate-zones {
+  margin-top: 16rpx;
+}
+
+.zone-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
   position: relative;
 }
 
-.rt-chart::after {
-  content: '';
+.zone-bar {
   position: absolute;
+  left: 0;
   top: 0;
-  left: -100%;
-  width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  animation: shimmer 2s infinite;
+  background: rgba(255, 152, 0, 0.1);
+  border-radius: 8rpx;
+  z-index: 1;
 }
 
-@keyframes shimmer {
-  to {
-    left: 100%;
-  }
+.zone-label {
+  font-size: 24rpx;
+  color: #666;
+  margin-right: 16rpx;
+  z-index: 2;
+}
+
+.zone-time {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: auto;
+  z-index: 2;
+}
+
+/* 配速详情样式 */
+.pace-list {
+  max-height: 300rpx;
+  overflow-y: auto;
+}
+
+.pace-item, .current-km {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx;
+  margin-bottom: 8rpx;
+  background: #f8f9fa;
+  border-radius: 8rpx;
+}
+
+.current-km {
+  background: rgba(255, 152, 0, 0.1);
+}
+
+.km-mark {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.km-pace {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.km-pace.excellent {
+  color: #4caf50;
+}
+
+/* 轨迹统计样式 */
+.track-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx;
+}
+
+.track-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+}
+
+.track-stat-value {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.track-stat-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+@keyframes warningPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
 /* 地图容器样式优化 */

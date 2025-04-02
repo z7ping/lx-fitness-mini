@@ -13,7 +13,7 @@ Page({
     quickStartList: [
       {
         id: 1,
-        name: '快速跑步',
+        name: '户外跑步',
         icon: 'upgrade',
         color: '#4caf50',
         duration: 30,

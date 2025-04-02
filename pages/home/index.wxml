@@ -1,5 +1,12 @@
 <!-- pages/home/index.wxml -->
 <view class="container">
+  <!-- 下拉刷新动画 -->
+  <view class="refresh-container {{showRefresh ? 'active' : ''}}">
+    <view class="dot"></view>
+    <view class="dot"></view>
+    <view class="dot"></view>
+  </view>
+  
   <!-- 用户信息概览 -->
   <!-- 用户信息概览 -->
   <view class="user-overview">
@@ -159,6 +166,12 @@
 
     <!-- 优化快捷功能入口 -->
     <view class="quick-actions">
+      <view class="action-item" bindtap="navigateToMyPlan">
+        <view class="action-icon action-stats">
+          <van-icon name="calendar-o" size="32px" color="#9c27b0" />
+        </view>
+        <text>我的计划</text>
+      </view>
       <view class="action-item" bindtap="navigateToCheckin">
         <view class="action-icon action-checkin">
           <van-icon name="medal-o" size="32px" color="#1296db" />
@@ -169,7 +182,7 @@
         <view class="action-icon action-weight">
           <van-icon name="balance-o" size="32px" color="#4caf50" />
         </view>
-        <text>体重记录</text>
+        <text>记录体重</text>
       </view>
       <view class="action-item" bindtap="navigateToAI">
         <view class="action-icon action-ai">
@@ -177,12 +190,7 @@
         </view>
         <text>AI教练</text>
       </view>
-      <!-- <view class="action-item" bindtap="navigateToData">
-        <view class="action-icon action-stats">
-          <van-icon name="chart-trending-o" size="32px" color="#9c27b0" />
-        </view>
-        <text>数据统计</text>
-      </view> -->
+
     </view>
   </view>
 

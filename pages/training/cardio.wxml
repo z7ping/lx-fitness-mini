@@ -91,7 +91,8 @@
 
   <!-- 实时数据展示 -->
   <view class="real-time-data">
-    <view class="rt-card">
+    <!-- 主要数据卡片 -->
+    <view class="rt-card main-stats">
       <view class="rt-header">
         <text>实时配速</text>
         <text class="rt-unit">分钟/公里</text>
@@ -99,12 +100,41 @@
       <view class="rt-value {{runningData.pace < 5 ? 'excellent' : runningData.pace < 6 ? 'good' : 'normal'}}">
         {{runningData.paceFormatted}}
       </view>
-      <view class="rt-chart">
-        <!-- 这里后续会添加实时配速曲线图 -->
+    </view>
+
+    <!-- 次要数据展示 -->
+    <view class="stats-grid secondary-stats">
+      <view class="stat-item">
+        <text class="stat-value">{{runningData.cadence || 0}}</text>
+        <text class="stat-label">实时步频</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{runningData.avgCadence || 0}}</text>
+        <text class="stat-label">平均步频</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{runningData.calories || 0}}</text>
+        <text class="stat-label">消耗(kcal)</text>
+      </view>
+    </view>
+
+    <!-- 第三级数据展示 -->
+    <view class="stats-grid tertiary-stats">
+      <view class="stat-item">
+        <text class="stat-value">{{runningData.strideData.avgLength || '0.00'}}</text>
+        <text class="stat-label">步幅(m)</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{sensorData.steps || 0}}</text>
+        <text class="stat-label">总步数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{runningData.avgPaceFormatted || '--\--'}}</text>
+        <text class="stat-label">平均配速</text>
       </view>
     </view>
     
-    <!-- 添加配速详情卡片 -->
+    <!-- 配速详情卡片 -->
     <view class="rt-card pace-details">
       <view class="rt-header">
         <text>配速详情</text>
@@ -123,42 +153,44 @@
         </view>
       </view>
     </view>
-    
-    <!-- 添加轨迹统计卡片 -->
+
+    <!-- 心率区间卡片 -->
+    <view class="rt-card heart-rate" wx:if="{{runningData.heartRate}}">
+      <view class="rt-header">
+        <text>心率区间</text>
+        <text class="rt-unit">BPM</text>
+      </view>
+      <view class="heart-rate-zones">
+        <view class="zone-item" wx:for="{{runningData.heartRateZones}}" wx:key="index">
+          <view class="zone-bar" style="width: {{item.percentage}}%"></view>
+          <text class="zone-label">区间{{index + 1}}</text>
+          <text class="zone-time">{{item.time}}分钟</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 轨迹统计卡片 -->
     <view class="rt-card track-stats">
       <view class="rt-header">
         <text>轨迹统计</text>
       </view>
       <view class="track-stats-grid">
         <view class="track-stat-item">
-          <text class="track-stat-value">{{runningData.totalLocationCount}}</text>
+          <text class="track-stat-value">{{runningData.totalLocationCount || 0}}</text>
           <text class="track-stat-label">总点数</text>
         </view>
         <view class="track-stat-item">
-          <text class="track-stat-value">{{runningData.accurateLocationCount}}</text>
+          <text class="track-stat-value">{{runningData.accurateLocationCount || 0}}</text>
           <text class="track-stat-label">有效点</text>
         </view>
         <view class="track-stat-item">
-          <text class="track-stat-value">{{runningData.filteredDistanceKm}}</text>
+          <text class="track-stat-value">{{runningData.filteredDistanceKm || '0.00'}}</text>
           <text class="track-stat-label">有效距离(km)</text>
         </view>
         <view class="track-stat-item">
-          <text class="track-stat-value">{{runningData.avgSpeedFormatted}}</text>
+          <text class="track-stat-value">{{runningData.avgSpeedFormatted || '0.0'}}</text>
           <text class="track-stat-label">平均速度(km/h)</text>
         </view>
-      </view>
-    </view>
-    
-    <view class="rt-card">
-      <view class="rt-header">
-        <text>实时心率</text>
-        <text class="rt-unit">次/分钟</text>
-      </view>
-      <view class="rt-value {{runningData.heartRate > 160 ? 'warning' : runningData.heartRate > 140 ? 'attention' : 'normal'}}">
-        {{runningData.heartRate || '--'}}
-      </view>
-      <view class="rt-chart">
-        <!-- 这里后续会添加实时心率曲线图 -->
       </view>
     </view>
   </view>
