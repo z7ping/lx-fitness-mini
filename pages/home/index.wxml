@@ -196,4 +196,22 @@
 
   <!-- 添加登录组件 -->
   <auth-login id="authLogin" bind:success="onLoginSuccess" bind:close="onLoginClose" />
+
+  <!-- 悬浮打卡按钮 -->
+  <movable-area class="movable-container">
+    <movable-view 
+      class="floating-checkin" 
+      direction="all" 
+      x="{{floatingBtnX}}" 
+      y="{{floatingBtnY}}"
+      bindtap="navigateToCheckin"
+      bindchange="onFloatingBtnMove"
+      out-of-bounds="{{false}}"
+      damping="50"
+      friction="5"
+    >
+      <van-icon name="edit" size="24px" color="#ffffff" />
+      <text>打卡</text>
+    </movable-view>
+  </movable-area>
 </view>

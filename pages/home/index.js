@@ -17,6 +17,9 @@ Page({
     greeting: '',
     bannerList: [],
     showRefresh: false,
+    // 添加悬浮按钮位置数据
+    floatingBtnX: wx.getSystemInfoSync().windowWidth - 80,
+    floatingBtnY: wx.getSystemInfoSync().windowHeight - 240,
     quickActions: [
       { icon: 'clock', text: '快速训练', path: '/pages/plan/quick' },
       { icon: 'records', text: '训练记录', path: '/pages/checkin/records' },
@@ -239,7 +242,7 @@ Page({
   },
 
   navigateToCheckin() {
-    wx.navigateTo({ url: '/pages/checkin/records' });
+    wx.navigateTo({ url: '/pages/checkin/create' });
   },
 
   navigateToWeight() {
@@ -356,5 +359,14 @@ createDietWithAI() {
       url: '/pages/diet/ai-generate'
     });
   });
-}
+},
+
+// 处理悬浮按钮移动
+onFloatingBtnMove(e) {
+  // 更新按钮位置
+  this.setData({
+    floatingBtnX: e.detail.x,
+    floatingBtnY: e.detail.y
+  });
+},
 });

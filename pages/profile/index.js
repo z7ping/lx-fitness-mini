@@ -13,7 +13,9 @@ Page({
     recordInfo: {},
     myPlans: [],
     hasPlans: false,
-    trainingStats: null
+    trainingStats: null,
+    exerciseCount: 0,
+    foodCount: 0
   },
 
   onLoad() {
@@ -114,6 +116,7 @@ Page({
     this.loadAchievements()
     this.loadStatistics()
     this.loadTrainingStats()
+    this.loadResourceCounts()
   },
 
   // 登录关闭回调
@@ -188,6 +191,17 @@ Page({
       getApp().utils.showToast('加载成就列表失败');
     } finally {
       this.setData({ loading: false });
+    }
+  },
+
+  // 加载资源库数量
+  async loadResourceCounts() {
+    try {
+      const exerciseCount = await dataService.getExerciseCount();
+      const foodCount = await dataService.getFoodCount();
+      this.setData({ exerciseCount, foodCount });
+    } catch (error) {
+      console.error('加载资源库数量失败:', error);
     }
   },
 
@@ -382,6 +396,20 @@ Page({
   goToSettings() {
     wx.navigateTo({
       url: '/pages/settings/index'
+    });
+  },
+
+  // 跳转动作库
+  goToExerciseLibrary() {
+    wx.navigateTo({
+      url: '/pages/exercise/select'
+    });
+  },
+
+  // 跳转食材库
+  goToFoodLibrary() {
+    wx.navigateTo({
+      url: '/pages/diet/food-select'
     });
   },
 

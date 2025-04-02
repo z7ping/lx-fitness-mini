@@ -57,11 +57,11 @@
                     <van-icon name="clock" />
                     <text>{{timeSlot === 'morning' ? '早晨' : timeSlot === 'noon' ? '中午' : '晚上'}}</text>
                   </view>
-                  <view class="time-slot-actions">
+                  <view class="time-slot-actions"  wx:if="{{!isPreviewMode}}">
                     <view class="completion-status {{exercises[0].completed ? 'completed' : ''}}">
                       {{exercises[0].completed ? '已完成' : '未完成'}}
                     </view>
-                    <block wx:if="{{!exercises[0].completed}}">
+                    <block wx:if="{{weekDays[activeTab].isToday && !exercises[0].completed}}">
                       <van-button 
                         type="primary" 
                         size="small" 

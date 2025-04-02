@@ -9,7 +9,7 @@ const AI_MODELS = {
     config: {
       model: 'deepseek-r1-250120',
       temperature: 0.8,
-      max_tokens: 2000
+      max_tokens: 5000
     }
   },
   deepseek: {
@@ -20,7 +20,7 @@ const AI_MODELS = {
     apiUrl: 'https://api.deepseek.com/v1/chat/completions',
     config: {
       temperature: 0.75,
-      max_tokens: 2000
+      max_tokens: 5000
     }
   },
   gemini: {
@@ -31,7 +31,7 @@ const AI_MODELS = {
     apiUrl: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
     config: {
       temperature: 0.7,
-      max_tokens: 2000
+      max_tokens: 5000
     }
   }
 };

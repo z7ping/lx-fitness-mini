@@ -127,7 +127,7 @@ Page({
                   dayExercises.push({
                     ...exercise,
                     timeSlot: this.formatTimeSlot(timePlan.timeSlot),
-                    completed: exercise.completed || false
+                    completed: this.data.isPreviewMode ? false : (exercise.completed || false)
                   });
                 });
               }
@@ -144,7 +144,8 @@ Page({
               breakfast: { content: '暂无安排' },
               lunch: { content: '暂无安排' },
               dinner: { content: '暂无安排' }
-            }
+            },
+            showActions: !this.data.isPreviewMode
           });
         }
 
@@ -174,12 +175,8 @@ Page({
   },
   // 格式化时间段显示
   formatTimeSlot(timeSlot) {
-    const timeSlotMap = {
-      'morning': '早晨',
-      'noon': '中午',
-      'evening': '晚上'
-    };
-    return timeSlotMap[timeSlot] || timeSlot;
+    const { TIME_SLOTS } = require('../../utils/dictionary');
+    return TIME_SLOTS.DISPLAY_TEXT[timeSlot] || timeSlot;
   },
   // 切换计划类型标签
   onTabChange(e) {
@@ -192,6 +189,7 @@ Page({
   },
   // 完成训练并跳转到打卡页面
   completeTraining(e) {
+    if (this.data.isPreviewMode) return;
     const { day, timeSlot } = e.currentTarget.dataset;
     
     try {
@@ -393,7 +391,7 @@ Page({
                   dayExercises.push({
                     ...exercise,
                     timeSlot: this.formatTimeSlot(timePlan.timeSlot),
-                    completed: exercise.completed || false
+                    completed: this.data.isPreviewMode ? false : (exercise.completed || false)
                   });
                 });
               }
@@ -410,7 +408,8 @@ Page({
               breakfast: { content: '暂无安排' },
               lunch: { content: '暂无安排' },
               dinner: { content: '暂无安排' }
-            }
+            },
+            showActions: !this.data.isPreviewMode
           });
         }
 

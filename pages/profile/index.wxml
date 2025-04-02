@@ -69,7 +69,22 @@
     </view>
   </view>
 
-  <!-- 辅助功能区域 -->
+  <!-- 资源库区域 - 紧凑列表形式 -->
+  <view class="section-title">资源库</view>
+  <view class="compact-list">
+    <view class="list-item" bindtap="goToExerciseLibrary">
+      <van-icon name="friends-o" size="18px" color="#70a1ff" />
+      <text class="item-text">动作库</text>
+      <text class="item-count">{{exerciseCount || 0}}个</text>
+    </view>
+    <view class="list-item" bindtap="goToFoodLibrary">
+      <van-icon name="smile-comment-o" size="18px" color="#7bed9f" />
+      <text class="item-text">食材库</text>
+      <text class="item-count">{{foodCount || 0}}种</text>
+    </view>
+  </view>
+
+  <!-- 快捷功能区域 -->
   <view class="section-title">快捷功能</view>
   <view class="quick-grid">
     <!-- 数据分析 -->
