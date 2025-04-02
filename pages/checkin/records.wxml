@@ -1,52 +1,137 @@
 <!-- pages/checkin/records.wxml -->
 <view class="container">
-  <!-- 页面标题 -->
-  <view class="header">
-    <text class="title">打卡记录</text>
+  <!-- 顶部统计区域 -->
+  <view class="stats-section">
+    <view class="stats-header">
+      <text class="stats-title">运动统计</text>
+      <view class="stats-tabs">
+        <view class="tab {{timeRange === 'week' ? 'active' : ''}}" bindtap="switchTimeRange" data-range="week">本周</view>
+        <view class="tab {{timeRange === 'month' ? 'active' : ''}}" bindtap="switchTimeRange" data-range="month">本月</view>
+      </view>
+    </view>
+    
+    <view class="stats-grid">
+      <view class="stats-item">
+        <text class="stats-value">{{stats.count || 0}}</text>
+        <text class="stats-label">运动次数</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-value">{{stats.duration || 0}}</text>
+        <text class="stats-label">总时长(分钟)</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-value">{{stats.calories || 0}}</text>
+        <text class="stats-label">消耗(千卡)</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-value">{{stats.avgDuration || 0}}</text>
+        <text class="stats-label">平均时长</text>
+      </view>
+    </view>
   </view>
 
-  <!-- 统计卡片 -->
-  <view class="stats-card">
-    <view class="stats-item">
-      <text class="stats-value">{{weeklyCount || 0}}</text>
-      <text class="stats-label">本周运动次数</text>
+  <!-- 筛选区域 -->
+  <view class="filter-section">
+    <view class="search-box">
+      <van-search
+        value="{{searchValue}}"
+        placeholder="搜索打卡记录"
+        bind:change="onSearchChange"
+        bind:search="onSearch"
+        shape="round"
+        background="transparent"
+      />
     </view>
-    <view class="stats-item">
-      <text class="stats-value">{{weeklyDuration || 0}}</text>
-      <text class="stats-label">本周运动时长(分钟)</text>
-    </view>
-    <view class="stats-item">
-      <text class="stats-value">{{monthlyCount || 0}}</text>
-      <text class="stats-label">本月运动次数</text>
+    <view class="filter-tags">
+      <view class="tag {{currentType === 'all' ? 'active' : ''}}" bindtap="filterByType" data-type="all">全部</view>
+      <view class="tag {{currentType === 'training' ? 'active' : ''}}" bindtap="filterByType" data-type="training">训练</view>
+      <view class="tag {{currentType === 'diet' ? 'active' : ''}}" bindtap="filterByType" data-type="diet">饮食</view>
     </view>
   </view>
 
   <!-- 记录列表 -->
-  <view class="records-list">
+  <scroll-view 
+    scroll-y 
+    class="records-list {{loading ? 'loading' : ''}}"
+    bindscrolltolower="loadMore"
+    refresher-enabled="{{true}}"
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onRefresh"
+  >
     <block wx:if="{{records.length > 0}}">
-      <view class="record-item" 
-            wx:for="{{records}}" 
-            wx:key="id"
+      <view wx:for="{{records}}" 
+            wx:key="id" 
+            class="record-card"
             bindtap="viewRecordDetail"
             data-id="{{item.id}}">
-        <view class="record-header">
-          <text class="record-date">{{item.date}}</text>
-          <text class="record-duration">{{item.durationText}}</text>
+        <view class="record-card-header">
+          <view class="record-type-tag {{item.type}}">{{item.typeText}}</view>
+          <text class="record-time">{{item.checkinTime}}</text>
         </view>
-        <view class="record-content">
-          <text class="record-type">{{item.type}}</text>
-          <text class="record-calories">消耗{{item.calories}}千卡</text>
-        </view>
-        <view class="record-footer">
-          <text class="record-status {{item.status === 'completed' ? 'completed' : ''}}">{{item.statusText}}</text>
+        
+        <view class="record-card-content">
+          <view class="record-info">
+            <block wx:if="{{item.type === 'training'}}">
+              <view class="info-item">
+                <van-icon name="clock-o" />
+                <text>{{item.duration}}分钟</text>
+              </view>
+              <view class="info-item">
+                <van-icon name="fire-o" />
+                <text>{{item.calories}}千卡</text>
+              </view>
+            </block>
+            <block wx:else>
+              <view class="info-item">
+                <van-icon name="shop-o" />
+                <text>{{item.mealType}}</text>
+              </view>
+              <view class="info-item">
+                <van-icon name="balance-o" />
+                <text>{{item.calories}}千卡</text>
+              </view>
+            </block>
+          </view>
+          
+          <view class="record-location" wx:if="{{item.location}}">
+            <van-icon name="location-o" />
+            <text>{{item.location.name}}</text>
+          </view>
+          
+          <view class="record-thoughts" wx:if="{{item.thoughts}}">
+            {{item.thoughts}}
+          </view>
+          
+          <view class="record-images" wx:if="{{item.images.length > 0}}">
+            <image 
+              wx:for="{{item.images}}" 
+              wx:key="*this" 
+              wx:for-item="image"
+              src="{{image}}"
+              mode="aspectFill"
+              catchtap="previewImage"
+              data-urls="{{item.images}}"
+              data-current="{{image}}"
+            />
+          </view>
         </view>
       </view>
     </block>
-    <view class="empty-state" wx:else>
-      <van-empty description="暂无运动记录" />
+    
+    <view class="empty-state" wx:elif="{{!loading}}">
+      <van-empty 
+        description="暂无打卡记录" 
+        image="https://img.yzcdn.cn/vant/empty-image-default.png"
+      />
     </view>
-  </view>
+    
+    <view class="loading-more" wx:if="{{loadingMore}}">
+      <van-loading size="24rpx">加载更多...</van-loading>
+    </view>
+  </scroll-view>
 
-  <!-- 加载状态 -->
-  <van-loading class="loading" size="24px" vertical wx:if="{{loading}}">加载中...</van-loading>
+  <!-- 新建打卡按钮 -->
+  <view class="fab-button" bindtap="navigateToCreate">
+    <van-icon name="plus" />
+  </view>
 </view>

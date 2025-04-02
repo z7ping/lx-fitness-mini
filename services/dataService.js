@@ -1730,6 +1730,122 @@ class DataService {
       return false;
     }
   }
+
+  // 获取打卡记录
+  async getCheckinRecords(params = {}) {
+    try {
+      // 从本地存储获取打卡记录
+      let records = wx.getStorageSync('checkin_records') || [];
+      
+      // 应用筛选条件
+      if (params.type && params.type !== 'all') {
+        records = records.filter(record => record.type === params.type);
+      }
+      
+      // 应用时间范围筛选
+      if (params.timeRange) {
+        const now = new Date();
+        let startDate;
+        
+        if (params.timeRange === 'week') {
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+        } else if (params.timeRange === 'month') {
+          startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        }
+        
+        records = records.filter(record => {
+          const recordDate = new Date(record.checkinTime);
+          return recordDate >= startDate && recordDate <= now;
+        });
+      }
+      
+      // 应用关键词搜索
+      if (params.keyword) {
+        const keyword = params.keyword.toLowerCase();
+        records = records.filter(record => {
+          return record.thoughts?.toLowerCase().includes(keyword) ||
+                 record.location?.name.toLowerCase().includes(keyword);
+        });
+      }
+      
+      // 分页处理
+      const page = params.page || 1;
+      const pageSize = params.pageSize || 10;
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize;
+      const paginatedRecords = records.slice(start, end);
+      
+      return {
+        records: paginatedRecords,
+        total: records.length
+      };
+    } catch (error) {
+      console.error('获取打卡记录失败:', error);
+      throw error;
+    }
+  }
+
+  // 获取打卡统计数据
+  async getCheckinStats(params = {}) {
+    try {
+      let records = wx.getStorageSync('checkin_records') || [];
+      
+      // 应用时间范围筛选
+      if (params.timeRange) {
+        const now = new Date();
+        let startDate;
+        
+        if (params.timeRange === 'week') {
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+        } else if (params.timeRange === 'month') {
+          startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        }
+        
+        records = records.filter(record => {
+          const recordDate = new Date(record.checkinTime);
+          return recordDate >= startDate && recordDate <= now;
+        });
+      }
+      
+      // 计算统计数据
+      const stats = records.reduce((acc, record) => {
+        acc.count++;
+        if (record.type === 'training') {
+          acc.duration += record.duration || 0;
+          acc.calories += record.calories || 0;
+        }
+        return acc;
+      }, {
+        count: 0,
+        duration: 0,
+        calories: 0
+      });
+      
+      return stats;
+    } catch (error) {
+      console.error('获取统计数据失败:', error);
+      throw error;
+    }
+  }
+
+  // 保存打卡记录
+  async saveCheckinRecord(record) {
+    try {
+      const records = wx.getStorageSync('checkin_records') || [];
+      const newRecord = {
+        ...record,
+        id: Date.now().toString(),
+        createTime: new Date().toISOString()
+      };
+      
+      records.unshift(newRecord);
+      wx.setStorageSync('checkin_records', records);
+      return newRecord;
+    } catch (error) {
+      console.error('保存打卡记录失败:', error);
+      throw error;
+    }
+  }
 }
 
 // 创建单例实例

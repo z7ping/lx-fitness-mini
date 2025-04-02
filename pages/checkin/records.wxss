@@ -1,108 +1,230 @@
 .container {
-  padding: 20rpx;
+  min-height: 100vh;
+  background: #f7f8fa;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.header {
-  margin-bottom: 30rpx;
+/* 统计区域样式 */
+.stats-section {
+  background: linear-gradient(135deg, #ff9800, #ff6d00);
+  padding: 30rpx 20rpx;
+  color: #fff;
+  border-radius: 0 0 30rpx 30rpx;
+  margin-bottom: 20rpx;
 }
 
-.title {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
-}
-
-.stats-card {
+.stats-header {
   display: flex;
   justify-content: space-between;
-  background-color: #fff;
-  padding: 30rpx;
-  border-radius: 12rpx;
+  align-items: center;
   margin-bottom: 30rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  padding: 0 10rpx;
+}
+
+.stats-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.stats-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 32rpx;
+  padding: 4rpx;
+}
+
+.tab {
+  padding: 8rpx 24rpx;
+  font-size: 24rpx;
+  border-radius: 28rpx;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  background: #fff;
+  color: #ff6d00;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+  padding: 0 10rpx;
 }
 
 .stats-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20rpx;
+  border-radius: 16rpx;
 }
 
 .stats-value {
-  font-size: 32rpx;
+  font-size: 36rpx;
   font-weight: bold;
-  color: #1296db;
-  margin-bottom: 10rpx;
+  margin-bottom: 8rpx;
 }
 
 .stats-label {
-  font-size: 24rpx;
-  color: #666;
+  font-size: 22rpx;
+  opacity: 0.9;
 }
 
-.records-list {
-  margin-top: 20rpx;
-}
-
-.record-item {
-  background-color: #fff;
-  border-radius: 12rpx;
+/* 筛选区域样式 */
+.filter-section {
   padding: 20rpx;
+  background: #fff;
   margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
 }
 
-.record-header {
+.search-box {
+  margin-bottom: 20rpx;
+}
+
+.filter-tags {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 15rpx;
+  gap: 20rpx;
+  padding: 0 10rpx;
 }
 
-.record-date {
-  font-size: 28rpx;
-  color: #333;
-}
-
-.record-duration {
-  font-size: 28rpx;
-  color: #1296db;
-}
-
-.record-content {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15rpx;
-}
-
-.record-type {
+.tag {
+  padding: 8rpx 24rpx;
+  background: #f5f5f5;
+  border-radius: 24rpx;
   font-size: 26rpx;
   color: #666;
+  transition: all 0.3s ease;
 }
 
-.record-calories {
-  font-size: 26rpx;
-  color: #ff6b81;
+.tag.active {
+  background: #ff6d00;
+  color: #fff;
 }
 
-.record-footer {
+/* 记录列表样式 */
+.records-list {
+  flex: 1;
+  padding: 20rpx;
+}
+
+.records-list.loading {
+  opacity: 0.6;
+}
+
+.record-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.record-card-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
 }
 
-.record-status {
+.record-type-tag {
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+}
+
+.record-type-tag.training {
+  background: rgba(255, 107, 53, 0.1);
+  color: #ff6b35;
+}
+
+.record-type-tag.diet {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+}
+
+.record-time {
   font-size: 24rpx;
   color: #999;
 }
 
-.record-status.completed {
-  color: #7bed9f;
+.record-info {
+  display: flex;
+  gap: 30rpx;
+  margin-bottom: 20rpx;
 }
 
-.empty-state {
-  margin-top: 100rpx;
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  color: #666;
+  font-size: 26rpx;
 }
 
-.loading {
-  margin-top: 40rpx;
+.record-location {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  color: #666;
+  font-size: 26rpx;
+  margin-bottom: 16rpx;
+}
+
+.record-thoughts {
+  color: #333;
+  font-size: 28rpx;
+  line-height: 1.6;
+  margin: 16rpx 0;
+}
+
+.record-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.record-images image {
+  width: 100%;
+  height: 200rpx;
+  border-radius: 8rpx;
+  object-fit: cover;
+}
+
+/* 加载更多样式 */
+.loading-more {
+  text-align: center;
+  padding: 20rpx 0;
   color: #999;
+}
+
+/* 悬浮按钮样式 */
+.fab-button {
+  position: fixed;
+  right: 40rpx;
+  bottom: calc(40rpx + env(safe-area-inset-bottom));
+  width: 100rpx;
+  height: 100rpx;
+  background: linear-gradient(135deg, #ff9800, #ff6d00);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(255, 152, 0, 0.3);
+  transition: all 0.3s ease;
+  z-index: 99;
+}
+
+.fab-button:active {
+  transform: scale(0.92);
+  box-shadow: 0 2rpx 8rpx rgba(255, 152, 0, 0.2);
+}
+
+.fab-button van-icon {
+  font-size: 48rpx;
+  color: #fff;
 }

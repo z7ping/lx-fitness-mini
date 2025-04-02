@@ -84,7 +84,8 @@
   "requiredPrivateInfos": [
     "getLocation",
     "onLocationChange",
-    "startLocationUpdate"
+    "startLocationUpdate",
+    "chooseLocation"
   ],
   "lazyCodeLoading": "requiredComponents",
   "sitemapLocation": "sitemap.json"

@@ -17,9 +17,10 @@ Page({
     greeting: '',
     bannerList: [],
     showRefresh: false,
-    // 添加悬浮按钮位置数据
-    floatingBtnX: wx.getSystemInfoSync().windowWidth - 80,
-    floatingBtnY: wx.getSystemInfoSync().windowHeight - 240,
+    // 修改悬浮按钮位置数据
+    floatingBtnX: wx.getStorageSync('floatingBtnX') || 320,
+    floatingBtnY: wx.getStorageSync('floatingBtnY') || 600,
+    isFloatingBtnMoving: false,
     quickActions: [
       { icon: 'clock', text: '快速训练', path: '/pages/plan/quick' },
       { icon: 'records', text: '训练记录', path: '/pages/checkin/records' },
@@ -363,10 +364,38 @@ createDietWithAI() {
 
 // 处理悬浮按钮移动
 onFloatingBtnMove(e) {
-  // 更新按钮位置
+  if (!this.data.isFloatingBtnMoving) {
+    this.setData({ isFloatingBtnMoving: true });
+  }
+  
+  // 获取窗口信息
+  const { windowWidth, windowHeight } = wx.getWindowInfo();
+  
+  // 按钮尺寸（rpx 转 px，假设屏幕宽度为 750rpx）
+  const btnSize = (120 * windowWidth) / 750;
+  
+  // 限制移动范围
+  const x = Math.max(0, Math.min(e.detail.x, windowWidth - btnSize));
+  const y = Math.max(0, Math.min(e.detail.y, windowHeight - btnSize));
+  
   this.setData({
-    floatingBtnX: e.detail.x,
-    floatingBtnY: e.detail.y
+    floatingBtnX: x,
+    floatingBtnY: y
   });
+},
+
+// 处理悬浮按钮移动结束
+onFloatingBtnMoveEnd() {
+  // 使用防抖处理保存位置
+  if (this.savePositionTimer) {
+    clearTimeout(this.savePositionTimer);
+  }
+  
+  this.savePositionTimer = setTimeout(() => {
+    const { floatingBtnX, floatingBtnY } = this.data;
+    wx.setStorageSync('floatingBtnX', floatingBtnX);
+    wx.setStorageSync('floatingBtnY', floatingBtnY);
+    this.setData({ isFloatingBtnMoving: false });
+  }, 300);
 },
 });

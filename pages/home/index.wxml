@@ -21,7 +21,7 @@
           </view>
         </view>
       </view>
-      <view class="health-data">
+      <!-- <view class="health-data">
         <view class="health-item">
           <view class="health-icon">
             <van-icon name="fire" color="#ff9800" size="24px" />
@@ -52,7 +52,7 @@
             <text class="health-unit">分钟</text>
           </view>
         </view>
-      </view>
+      </view> -->
     </view>
   </view>
 
@@ -200,13 +200,13 @@
   <!-- 悬浮打卡按钮 -->
   <movable-area class="movable-container">
     <movable-view 
-      class="floating-checkin" 
-      direction="all" 
-      x="{{floatingBtnX}}" 
+      class="floating-checkin {{isFloatingBtnMoving ? 'moving' : ''}}"
+      direction="all"
+      x="{{floatingBtnX}}"
       y="{{floatingBtnY}}"
       bindtap="navigateToCheckin"
       bindchange="onFloatingBtnMove"
-      out-of-bounds="{{false}}"
+      bindtouchend="onFloatingBtnMoveEnd"
       damping="50"
       friction="5"
     >
