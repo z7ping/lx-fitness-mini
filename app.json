@@ -18,6 +18,7 @@
     "pages/plan/ai-history",
     "pages/exercise/select",
     "pages/exercise/record-detail",
+    "pages/exercise/records",
     "pages/diet/food-select",
     "pages/diet/create",
     "pages/training/cardio",

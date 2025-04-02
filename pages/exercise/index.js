@@ -220,7 +220,7 @@ Page({
   viewAllRecords() {
     app.checkLoginAndAuth(() => {
       wx.navigateTo({
-        url: '/pages/checkin/records'
+        url: '/pages/exercise/records'
       });
     });
   },
