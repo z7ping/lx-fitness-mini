@@ -15,7 +15,8 @@ Page({
     hasPlans: false,
     trainingStats: null,
     exerciseCount: 0,
-    foodCount: 0
+    foodCount: 0,
+    aiHistoryCount: 0
   },
 
   onLoad() {
@@ -199,7 +200,17 @@ Page({
     try {
       const exerciseCount = await dataService.getExerciseCount();
       const foodCount = await dataService.getFoodCount();
-      this.setData({ exerciseCount, foodCount });
+      
+      // 获取AI对话历史记录数量
+      let aiHistoryCount = 0;
+      try {
+        const aiRecords = dataService.getAIGenerationRecords() || [];
+        aiHistoryCount = aiRecords.length;
+      } catch (e) {
+        console.error('获取AI对话历史记录失败:', e);
+      }
+      
+      this.setData({ exerciseCount, foodCount, aiHistoryCount });
     } catch (error) {
       console.error('加载资源库数量失败:', error);
     }
@@ -424,6 +435,15 @@ Page({
   goToAcknowledgements() {
     wx.navigateTo({
       url: '/pages/about/acknowledgements'
+    });
+  },
+  
+  // 跳转到AI对话历史页面
+  goToAIHistory() {
+    app.checkLoginAndAuth(() => {
+      wx.navigateTo({
+        url: '/pages/plan/ai-history'
+      });
     });
   },
 

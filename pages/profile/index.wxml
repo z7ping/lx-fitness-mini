@@ -69,6 +69,16 @@
     </view>
   </view>
 
+  <!-- 训练助手区域 -->
+  <view class="section-title">训练助手</view>
+  <view class="compact-list">
+    <view class="list-item" bindtap="goToAIHistory">
+      <van-icon name="chat-o" size="18px" color="#1296db" />
+      <text class="item-text">AI对话历史</text>
+      <text class="item-count">{{aiHistoryCount || 0}}条</text>
+    </view>
+  </view>
+
   <!-- 资源库区域 - 紧凑列表形式 -->
   <view class="section-title">资源库</view>
   <view class="compact-list">
