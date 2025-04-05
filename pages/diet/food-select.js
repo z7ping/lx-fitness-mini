@@ -186,9 +186,11 @@ Page({
       amount: `${amount}份`,
       weight: parseFloat(totalWeight),
       calories: parseFloat(calculatedNutrition.calories),
-      protein: parseFloat(calculatedNutrition.protein),
-      carbs: parseFloat(calculatedNutrition.carbs),
-      fat: parseFloat(calculatedNutrition.fat),
+      nutrition: {
+        protein: parseFloat(calculatedNutrition.protein),
+        carbs: parseFloat(calculatedNutrition.carbs),
+        fat: parseFloat(calculatedNutrition.fat)
+      },
       unit: selectedFood.unit
     };
 
@@ -198,8 +200,15 @@ Page({
     const eventChannel = this.getOpenerEventChannel();
     
     // 通过事件通道传递数据
-    if (eventChannel) {
-      eventChannel.emit('acceptFood', food);
+    try {
+      if (eventChannel && eventChannel.emit) {
+        eventChannel.emit('acceptSelectedFood', { food });
+        console.log('已通过事件通道发送食物数据');
+      } else {
+        console.warn('事件通道不可用');
+      }
+    } catch (error) {
+      console.error('发送食物数据出错:', error);
     }
     
     // 关闭弹窗并返回上一页

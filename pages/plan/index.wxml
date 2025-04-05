@@ -1,5 +1,36 @@
 <!-- pages/plan/index.wxml -->
-<view class="container">
+<view class="container {{mode === 'edit' ? 'edit-mode' : mode === 'training' ? 'training-mode' : 'preview-mode'}}">
+  <!-- 计划名称区域 -->
+  <view class="plan-name-container" wx:if="{{!isPreviewMode}}">
+    <block wx:if="{{isEditingPlanName && mode === 'edit'}}">
+      <input class="plan-name-input" value="{{planName}}" focus="{{true}}" bindblur="savePlanName" />
+      <view class="plan-name-actions">
+        <van-icon name="close" bindtap="cancelEditPlanName" />
+      </view>
+    </block>
+    <block wx:else>
+      <view class="plan-name">{{planName}}</view>
+      <view class="plan-name-actions" wx:if="{{mode === 'edit'}}">
+        <van-icon name="edit" bindtap="editPlanName" />
+      </view>
+    </block>
+  </view>
+
+  <!-- 模式切换组件 -->
+  <view class="mode-switch" wx:if="{{!isPreviewMode}}">
+    <view class="mode-item {{mode === 'edit' ? 'active' : ''}}" bindtap="switchMode" data-mode="edit">
+      <van-icon name="edit" size="14px" />
+      <text>编辑模式</text>
+    </view>
+    <view class="mode-item {{mode === 'preview' ? 'active' : ''}}" bindtap="switchMode" data-mode="preview">
+      <van-icon name="eye-o" size="14px" />
+      <text>预览模式</text>
+    </view>
+    <view class="mode-item {{mode === 'training' ? 'active' : ''}}" bindtap="switchMode" data-mode="training">
+      <van-icon name="play-circle-o" size="14px" />
+      <text>跟练模式</text>
+    </view>
+  </view>
   <!-- 标签页导航 -->
   <view class="tabs-container">
     <scroll-view scroll-x class="tabs-nav" enable-flex>
@@ -37,13 +68,24 @@
             module.exports = {
               groupExercisesByTimeSlot: function(exercises) {
                 var groups = {};
+                var timeSlots = [];
+                
+                // 收集所有时间段
                 for (var i = 0; i < exercises.length; i++) {
                   var exercise = exercises[i];
-                  if (!groups[exercise.timeSlot]) {
-                    groups[exercise.timeSlot] = [];
+                  var timeSlot = exercise.timeSlot;
+                  if (!groups[timeSlot]) {
+                    groups[timeSlot] = [];
+                    timeSlots.push(timeSlot);
                   }
-                  groups[exercise.timeSlot].push(exercise);
+                  
+                  // 只添加非标记项
+                  if (!exercise.isTimeSlotMarker) {
+                    groups[timeSlot].push(exercise);
+                  }
                 }
+                
+                // 确保即使没有训练项也保留时间段
                 return groups;
               }
             }
@@ -55,13 +97,42 @@
                 <view class="time-slot-header">
                   <view class="time-slot-title">
                     <van-icon name="clock" />
-                    <text>{{timeSlot === 'morning' ? '早晨' : timeSlot === 'noon' ? '中午' : '晚上'}}</text>
+                    <text>{{timeSlot}}</text>
                   </view>
-                  <view class="time-slot-actions"  wx:if="{{!isPreviewMode}}">
-                    <view class="completion-status {{exercises[0].completed ? 'completed' : ''}}">
+                  <view class="time-slot-actions">
+                    <!-- 编辑模式下显示复制和删除按钮 -->
+                    <view class="copy-btn" wx:if="{{mode === 'edit'}}" bindtap="copyTimeSlot" data-time-slot="{{timeSlot}}" data-day="{{weekDays[activeTab].day}}">
+                      <van-icon name="copy-o" size="14px" />
+                      <text>复制</text>
+                    </view>
+                    
+                    <view class="delete-btn" wx:if="{{mode === 'edit'}}" bindtap="deleteTimeSlot" data-time-slot="{{timeSlot}}" data-day="{{weekDays[activeTab].day}}">
+                      <van-icon name="delete-o" size="14px" />
+                      <text>删除</text>
+                    </view>
+                    
+                    <!-- 跟练模式下显示完成状态 -->
+                    <view class="completion-status {{exercises[0].completed ? 'completed' : ''}}" wx:if="{{mode === 'training'}}">
                       {{exercises[0].completed ? '已完成' : '未完成'}}
                     </view>
-                    <block wx:if="{{weekDays[activeTab].isToday && !exercises[0].completed}}">
+                    
+                    <!-- 跟练模式下显示开始按钮 -->
+                    <block wx:if="{{mode === 'training' && weekDays[activeTab].isToday && !exercises[0].completed}}">
+                      <van-button 
+                        type="primary" 
+                        size="small" 
+                        round 
+                        bindtap="startTimeSlotTraining" 
+                        data-time-slot="{{timeSlot}}" 
+                        data-exercises="{{exercises}}"
+                        color="linear-gradient(135deg, #ff9800, #ff6d00)"
+                      >
+                        开始训练
+                      </van-button>
+                    </block>
+                    
+                    <!-- 跟练模式下显示完成按钮 -->
+                    <block wx:if="{{mode === 'training' && weekDays[activeTab].isToday && !exercises[0].completed}}">
                       <van-button 
                         type="primary" 
                         size="small" 
@@ -78,10 +149,20 @@
                 </view>
                 
                 <view class="exercise-list">
-                  <view class="exercise-item" 
+                  <view class="exercise-item {{index === draggingIndex ? 'dragging' : ''}}" 
                     wx:for="{{exercises}}" 
                     wx:key="id"
-                    wx:for-item="exercise">
+                    wx:for-item="exercise"
+                    wx:if="{{!exercise.isTimeSlotMarker}}"
+                    data-index="{{index}}"
+                    data-id="{{exercise.id}}"
+                    bindtouchstart="{{mode === 'edit' ? 'dragStart' : ''}}"
+                    bindtouchmove="{{mode === 'edit' ? 'dragMove' : ''}}"
+                    bindtouchend="{{mode === 'edit' ? 'dragEnd' : ''}}"
+                    bindtap="{{(mode === 'training') ? 'selectExercise' : ''}}"
+                    data-time-slot="{{exercise.timeSlot}}"
+                    data-day="{{weekDays[activeTab].day}}"
+                  >
                     <view class="exercise-info">
                       <view class="exercise-name">
                         <text>{{exercise.name}}</text>
@@ -98,16 +179,59 @@
                         </text>
                         <text wx:if="{{exercise.planName}}" class="plan-name">{{exercise.planName}}</text>
                       </view>
+                      
+                      <!-- 跟练模式下显示计时器和进度 -->
+                      <block wx:if="{{mode === 'training' && currentExerciseId === exercise.id}}">
+                        <view class="exercise-timer">
+                          <text>{{timerDisplay}}</text>
+                        </view>
+                        <view class="exercise-progress">
+                          <view class="progress-bar" style="width: {{progressPercent}}%"></view>
+                        </view>
+                      </block>
                     </view>
+                    
+                    <!-- 编辑模式下显示操作按钮组 -->
+                    <view class="exercise-actions" wx:if="{{mode === 'edit'}}">
+                      <!-- 删除按钮 -->
+                      <view class="delete-exercise-btn" catchtap="deleteExercise" data-exercise-id="{{exercise.id}}" data-time-slot="{{exercise.timeSlot}}" data-day="{{weekDays[activeTab].day}}">
+                        <van-icon name="delete-o" size="18px" color="#ff4d4f" />
+                      </view>
+                      
+                      <!-- 拖拽按钮 -->
+                      <view class="drag-handle">
+                        <van-icon name="bars" size="20px" />
+                      </view>
+                    </view>
+                  </view>
+                  
+                  <!-- 编辑模式下显示添加动作按钮（始终显示） -->
+                  <view class="add-exercise-btn" wx:if="{{mode === 'edit'}}" bindtap="addExerciseToTimeSlot" data-time-slot="{{timeSlot}}" data-day="{{weekDays[activeTab].day}}">
+                    <van-icon name="plus" size="16px" />
+                    <text>添加动作</text>
                   </view>
                 </view>
               </view>
             </block>
+            
+            <!-- 编辑模式下显示添加时间段按钮 -->
+            <view class="add-time-slot-btn" wx:if="{{mode === 'edit'}}" bindtap="showAddTimeSlotPopup">
+              <van-icon name="plus" size="18px" />
+              <text>添加时间段</text>
+            </view>
           </view>
         </block>
         <view wx:else class="empty-tip">
-          <van-icon name="todo-list-o" size="48px" color="#999"/>
-          <text>暂无训练安排</text>
+          <block wx:if="{{mode !== 'edit'}}">
+            <van-icon name="todo-list-o" size="48px" color="#999"/>
+            <text>暂无训练安排</text>
+          </block>
+          
+          <!-- 编辑模式下显示添加时间段按钮，样式与非空状态保持一致 -->
+          <view class="add-time-slot-btn {{mode === 'edit' ? 'edit-mode-btn' : ''}}" wx:if="{{mode === 'edit'}}" bindtap="showAddTimeSlotPopup">
+            <van-icon name="plus" size="18px" />
+            <text>添加时间段</text>
+          </view>
         </view>
       </block>
 
@@ -116,51 +240,284 @@
         <view class="diet-section">
           <view class="section-title">饮食安排</view>
           <view class="diet-list">
-            <view class="meal-row">
-              <view class="meal-time">
-                <van-icon name="sunrise" size="18px"/>
-                <text>早餐</text>
+            <!-- 早餐卡片 -->
+            <view class="meal-card">
+              <view class="meal-header">
+                <view class="meal-title">
+                  <van-icon name="sunrise" size="18px"/>
+                  <text>{{weekDays[activeTab].diet.breakfast.name || '早餐'}}</text>
+                </view>
+                <!-- 编辑模式下的操作按钮 -->
+                <view class="meal-actions" wx:if="{{mode === 'edit'}}">
+                  <view class="edit-meal-btn" catchtap="editMeal" data-meal-type="breakfast" data-day="{{weekDays[activeTab].day}}">
+                    <van-icon name="edit" size="18px" color="#1989fa" />
+                  </view>
+                </view>
               </view>
-              <view class="meal-info">
-                <text class="meal-content">{{weekDays[activeTab].diet.breakfast.content}}</text>
+              
+              <view class="meal-content-container">
+                <!-- 如果有已选食物，优先显示已选食物列表 -->
+                <view class="selected-foods" wx:if="{{weekDays[activeTab].diet.breakfast.selectedFoods && weekDays[activeTab].diet.breakfast.selectedFoods.length > 0}}">
+                  <view class="food-item" wx:for="{{weekDays[activeTab].diet.breakfast.selectedFoods}}" wx:key="id">
+                    <text class="food-name">{{item.name}}</text>
+                    <view class="food-metrics">
+                      <text class="food-amount">{{item.amount}}</text>
+                      <text class="food-weight" wx:if="{{item.weight}}">{{item.weight}}克</text>
+                    </view>
+                  </view>
+                </view>
+                <!-- 如果没有已选食物，显示餐食内容 -->
+                <text class="meal-content" wx:else>{{weekDays[activeTab].diet.breakfast.content || '暂无安排'}}</text>
+                
+                <!-- 备注信息 -->
+                <view class="meal-notes" wx:if="{{weekDays[activeTab].diet.breakfast.notes}}">
+                  <van-icon name="label-o" size="14px" color="#999"/>
+                  <text>{{weekDays[activeTab].diet.breakfast.notes}}</text>
+                </view>
+              </view>
+              
+              <view class="meal-footer">
                 <view class="meal-nutrition" wx:if="{{weekDays[activeTab].diet.breakfast.nutrition}}">
                   <text class="calories">{{weekDays[activeTab].diet.breakfast.calories || 0}}千卡</text>
-                  <text class="protein">蛋白质 {{weekDays[activeTab].diet.breakfast.nutrition.protein || 0}}g</text>
-                  <text class="carbs">碳水 {{weekDays[activeTab].diet.breakfast.nutrition.carbs || 0}}g</text>
-                  <text class="fat">脂肪 {{weekDays[activeTab].diet.breakfast.nutrition.fat || 0}}g</text>
+                  <view class="nutrition-detail">
+                    <text class="protein">蛋白质 {{weekDays[activeTab].diet.breakfast.nutrition.protein || 0}}g</text>
+                    <text class="carbs">碳水 {{weekDays[activeTab].diet.breakfast.nutrition.carbs || 0}}g</text>
+                    <text class="fat">脂肪 {{weekDays[activeTab].diet.breakfast.nutrition.fat || 0}}g</text>
+                  </view>
+                </view>
+                
+                <!-- 跟练模式下的状态显示 -->
+                <view class="meal-status" wx:if="{{mode === 'training'}}">
+                  <view class="completion-status {{weekDays[activeTab].diet.breakfast.completed ? 'completed' : ''}}">
+                    {{weekDays[activeTab].diet.breakfast.completed ? '已完成' : '未完成'}}
+                  </view>
+                  <van-button 
+                    wx:if="{{weekDays[activeTab].isToday && !weekDays[activeTab].diet.breakfast.completed}}"
+                    type="primary" 
+                    size="small" 
+                    round 
+                    bindtap="completeMeal" 
+                    data-meal-type="breakfast" 
+                    data-day="{{weekDays[activeTab].day}}"
+                    color="linear-gradient(135deg, #ff9800, #ff6d00)"
+                  >
+                    完成
+                  </van-button>
                 </view>
               </view>
             </view>
-            <view class="meal-row">
-              <view class="meal-time">
-                <van-icon name="sun" size="18px"/>
-                <text>午餐</text>
+            
+            <!-- 午餐卡片 -->
+            <view class="meal-card">
+              <view class="meal-header">
+                <view class="meal-title">
+                  <van-icon name="sun" size="18px"/>
+                  <text>{{weekDays[activeTab].diet.lunch.name || '午餐'}}</text>
+                </view>
+                <!-- 编辑模式下的操作按钮 -->
+                <view class="meal-actions" wx:if="{{mode === 'edit'}}">
+                  <view class="edit-meal-btn" catchtap="editMeal" data-meal-type="lunch" data-day="{{weekDays[activeTab].day}}">
+                    <van-icon name="edit" size="18px" color="#1989fa" />
+                  </view>
+                </view>
               </view>
-              <view class="meal-info">
-                <text class="meal-content">{{weekDays[activeTab].diet.lunch.content}}</text>
+              
+              <view class="meal-content-container">
+                <!-- 如果有已选食物，优先显示已选食物列表 -->
+                <view class="selected-foods" wx:if="{{weekDays[activeTab].diet.lunch.selectedFoods && weekDays[activeTab].diet.lunch.selectedFoods.length > 0}}">
+                  <view class="food-item" wx:for="{{weekDays[activeTab].diet.lunch.selectedFoods}}" wx:key="id">
+                    <text class="food-name">{{item.name}}</text>
+                    <view class="food-metrics">
+                      <text class="food-amount">{{item.amount}}</text>
+                      <text class="food-weight" wx:if="{{item.weight}}">{{item.weight}}克</text>
+                    </view>
+                  </view>
+                </view>
+                <!-- 如果没有已选食物，显示餐食内容 -->
+                <text class="meal-content" wx:else>{{weekDays[activeTab].diet.lunch.content || '暂无安排'}}</text>
+                
+                <!-- 备注信息 -->
+                <view class="meal-notes" wx:if="{{weekDays[activeTab].diet.lunch.notes}}">
+                  <van-icon name="label-o" size="14px" color="#999"/>
+                  <text>{{weekDays[activeTab].diet.lunch.notes}}</text>
+                </view>
+              </view>
+              
+              <view class="meal-footer">
                 <view class="meal-nutrition" wx:if="{{weekDays[activeTab].diet.lunch.nutrition}}">
                   <text class="calories">{{weekDays[activeTab].diet.lunch.calories || 0}}千卡</text>
-                  <text class="protein">蛋白质 {{weekDays[activeTab].diet.lunch.nutrition.protein || 0}}g</text>
-                  <text class="carbs">碳水 {{weekDays[activeTab].diet.lunch.nutrition.carbs || 0}}g</text>
-                  <text class="fat">脂肪 {{weekDays[activeTab].diet.lunch.nutrition.fat || 0}}g</text>
+                  <view class="nutrition-detail">
+                    <text class="protein">蛋白质 {{weekDays[activeTab].diet.lunch.nutrition.protein || 0}}g</text>
+                    <text class="carbs">碳水 {{weekDays[activeTab].diet.lunch.nutrition.carbs || 0}}g</text>
+                    <text class="fat">脂肪 {{weekDays[activeTab].diet.lunch.nutrition.fat || 0}}g</text>
+                  </view>
+                </view>
+                
+                <!-- 跟练模式下的状态显示 -->
+                <view class="meal-status" wx:if="{{mode === 'training'}}">
+                  <view class="completion-status {{weekDays[activeTab].diet.lunch.completed ? 'completed' : ''}}">
+                    {{weekDays[activeTab].diet.lunch.completed ? '已完成' : '未完成'}}
+                  </view>
+                  <van-button 
+                    wx:if="{{weekDays[activeTab].isToday && !weekDays[activeTab].diet.lunch.completed}}"
+                    type="primary" 
+                    size="small" 
+                    round 
+                    bindtap="completeMeal" 
+                    data-meal-type="lunch" 
+                    data-day="{{weekDays[activeTab].day}}"
+                    color="linear-gradient(135deg, #ff9800, #ff6d00)"
+                  >
+                    完成
+                  </van-button>
                 </view>
               </view>
             </view>
-            <view class="meal-row">
-              <view class="meal-time">
-                <van-icon name="moon" size="18px"/>
-                <text>晚餐</text>
+            
+            <!-- 晚餐卡片 -->
+            <view class="meal-card">
+              <view class="meal-header">
+                <view class="meal-title">
+                  <van-icon name="moon" size="18px"/>
+                  <text>{{weekDays[activeTab].diet.dinner.name || '晚餐'}}</text>
+                </view>
+                <!-- 编辑模式下的操作按钮 -->
+                <view class="meal-actions" wx:if="{{mode === 'edit'}}">
+                  <view class="edit-meal-btn" catchtap="editMeal" data-meal-type="dinner" data-day="{{weekDays[activeTab].day}}">
+                    <van-icon name="edit" size="18px" color="#1989fa" />
+                  </view>
+                </view>
               </view>
-              <view class="meal-info">
-                <text class="meal-content">{{weekDays[activeTab].diet.dinner.content}}</text>
+              
+              <view class="meal-content-container">
+                <!-- 如果有已选食物，优先显示已选食物列表 -->
+                <view class="selected-foods" wx:if="{{weekDays[activeTab].diet.dinner.selectedFoods && weekDays[activeTab].diet.dinner.selectedFoods.length > 0}}">
+                  <view class="food-item" wx:for="{{weekDays[activeTab].diet.dinner.selectedFoods}}" wx:key="id">
+                    <text class="food-name">{{item.name}}</text>
+                    <view class="food-metrics">
+                      <text class="food-amount">{{item.amount}}</text>
+                      <text class="food-weight" wx:if="{{item.weight}}">{{item.weight}}克</text>
+                    </view>
+                  </view>
+                </view>
+                <!-- 如果没有已选食物，显示餐食内容 -->
+                <text class="meal-content" wx:else>{{weekDays[activeTab].diet.dinner.content || '暂无安排'}}</text>
+                
+                <!-- 备注信息 -->
+                <view class="meal-notes" wx:if="{{weekDays[activeTab].diet.dinner.notes}}">
+                  <van-icon name="label-o" size="14px" color="#999"/>
+                  <text>{{weekDays[activeTab].diet.dinner.notes}}</text>
+                </view>
+              </view>
+              
+              <view class="meal-footer">
                 <view class="meal-nutrition" wx:if="{{weekDays[activeTab].diet.dinner.nutrition}}">
                   <text class="calories">{{weekDays[activeTab].diet.dinner.calories || 0}}千卡</text>
-                  <text class="protein">蛋白质 {{weekDays[activeTab].diet.dinner.nutrition.protein || 0}}g</text>
-                  <text class="carbs">碳水 {{weekDays[activeTab].diet.dinner.nutrition.carbs || 0}}g</text>
-                  <text class="fat">脂肪 {{weekDays[activeTab].diet.dinner.nutrition.fat || 0}}g</text>
+                  <view class="nutrition-detail">
+                    <text class="protein">蛋白质 {{weekDays[activeTab].diet.dinner.nutrition.protein || 0}}g</text>
+                    <text class="carbs">碳水 {{weekDays[activeTab].diet.dinner.nutrition.carbs || 0}}g</text>
+                    <text class="fat">脂肪 {{weekDays[activeTab].diet.dinner.nutrition.fat || 0}}g</text>
+                  </view>
+                </view>
+                
+                <!-- 跟练模式下的状态显示 -->
+                <view class="meal-status" wx:if="{{mode === 'training'}}">
+                  <view class="completion-status {{weekDays[activeTab].diet.dinner.completed ? 'completed' : ''}}">
+                    {{weekDays[activeTab].diet.dinner.completed ? '已完成' : '未完成'}}
+                  </view>
+                  <van-button 
+                    wx:if="{{weekDays[activeTab].isToday && !weekDays[activeTab].diet.dinner.completed}}"
+                    type="primary" 
+                    size="small" 
+                    round 
+                    bindtap="completeMeal" 
+                    data-meal-type="dinner" 
+                    data-day="{{weekDays[activeTab].day}}"
+                    color="linear-gradient(135deg, #ff9800, #ff6d00)"
+                  >
+                    完成
+                  </van-button>
                 </view>
               </view>
             </view>
+            
+            <!-- 添加编辑模式下的添加零食按钮 -->
+            <view class="add-snack-btn" wx:if="{{mode === 'edit'}}" bindtap="addSnack" data-day="{{weekDays[activeTab].day}}">
+              <van-icon name="plus" size="16px" />
+              <text>添加零食/加餐</text>
+            </view>
+            
+            <!-- 显示零食/加餐卡片 -->
+            <block wx:if="{{weekDays[activeTab].diet.snacks && weekDays[activeTab].diet.snacks.length > 0}}">
+              <view class="meal-card" wx:for="{{weekDays[activeTab].diet.snacks}}" wx:key="index">
+                <view class="meal-header">
+                  <view class="meal-title">
+                    <van-icon name="like" size="18px"/>
+                    <text>{{item.name || '加餐'}}</text>
+                  </view>
+                  <!-- 编辑模式下的操作按钮 -->
+                  <view class="meal-actions" wx:if="{{mode === 'edit'}}">
+                    <view class="edit-meal-btn" catchtap="editSnack" data-snack-index="{{index}}" data-day="{{weekDays[activeTab].day}}">
+                      <van-icon name="edit" size="18px" color="#1989fa" />
+                    </view>
+                    <view class="delete-meal-btn" catchtap="deleteSnack" data-snack-index="{{index}}" data-day="{{weekDays[activeTab].day}}">
+                      <van-icon name="delete-o" size="18px" color="#ff4d4f" />
+                    </view>
+                  </view>
+                </view>
+                
+                <view class="meal-content-container">
+                  <!-- 如果有已选食物，优先显示已选食物列表 -->
+                  <view class="selected-foods" wx:if="{{item.selectedFoods && item.selectedFoods.length > 0}}">
+                    <view class="food-item" wx:for="{{item.selectedFoods}}" wx:for-item="food" wx:key="id">
+                      <text class="food-name">{{food.name}}</text>
+                      <view class="food-metrics">
+                        <text class="food-amount">{{food.amount}}</text>
+                        <text class="food-weight" wx:if="{{food.weight}}">{{food.weight}}克</text>
+                      </view>
+                    </view>
+                  </view>
+                  <!-- 如果没有已选食物，显示餐食内容 -->
+                  <text class="meal-content" wx:else>{{item.content || '暂无安排'}}</text>
+                  
+                  <!-- 备注信息 -->
+                  <view class="meal-notes" wx:if="{{item.notes}}">
+                    <van-icon name="label-o" size="14px" color="#999"/>
+                    <text>{{item.notes}}</text>
+                  </view>
+                </view>
+                
+                <view class="meal-footer">
+                  <view class="meal-nutrition" wx:if="{{item.nutrition}}">
+                    <text class="calories">{{item.calories || 0}}千卡</text>
+                    <view class="nutrition-detail">
+                      <text class="protein">蛋白质 {{item.nutrition.protein || 0}}g</text>
+                      <text class="carbs">碳水 {{item.nutrition.carbs || 0}}g</text>
+                      <text class="fat">脂肪 {{item.nutrition.fat || 0}}g</text>
+                    </view>
+                  </view>
+                  
+                  <!-- 跟练模式下的状态显示 -->
+                  <view class="meal-status" wx:if="{{mode === 'training'}}">
+                    <view class="completion-status {{item.completed ? 'completed' : ''}}">
+                      {{item.completed ? '已完成' : '未完成'}}
+                    </view>
+                    <van-button 
+                      wx:if="{{weekDays[activeTab].isToday && !item.completed}}"
+                      type="primary" 
+                      size="small" 
+                      round 
+                      bindtap="completeSnack" 
+                      data-snack-index="{{index}}" 
+                      data-day="{{weekDays[activeTab].day}}"
+                      color="linear-gradient(135deg, #ff9800, #ff6d00)"
+                    >
+                      完成
+                    </van-button>
+                  </view>
+                </view>
+              </view>
+            </block>
           </view>
         </view>
       </block>
@@ -169,37 +526,228 @@
 
   <!-- 底部按钮 -->
   <view class="bottom-buttons" wx:if="{{!isPreviewMode}}">
-    <block wx:if="{{planType === 'training'}}">
-      <button class="custom-btn" bindtap="createCustomPlan">
-        <van-icon name="plus" size="18px" />
-        创建训练计划
+    <!-- 编辑模式下的底部按钮 -->
+    <block wx:if="{{mode === 'edit'}}">
+      <button class="custom-btn" bindtap="saveChanges" hover-class="btn-hover">
+        <van-icon name="success" size="18px" />
+        <text>保存修改</text>
       </button>
-      <button class="ai-btn" bindtap="generateAIPlan">
-        <van-icon name="cluster-o" size="18px" />
-        AI生成计划
+      <button class="ai-btn" bindtap="cancelEdit" hover-class="btn-hover">
+        <van-icon name="close" size="18px" />
+        <text>取消</text>
       </button>
     </block>
-    <block wx:else>
-      <button class="custom-btn" bindtap="createDietPlan">
-        <van-icon name="plus" size="18px" />
-        创建饮食计划
+    
+    <!-- 跟练模式下的底部按钮 -->
+    <block wx:elif="{{mode === 'training'}}">
+      <button class="custom-btn" bindtap="completeCurrentExercise" wx:if="{{currentExerciseId}}" hover-class="btn-hover">
+        <van-icon name="success" size="18px" />
+        <text>完成当前动作</text>
       </button>
-      <button class="ai-btn" bindtap="generateAIDietPlan">
+      <button class="ai-btn" bindtap="skipCurrentExercise" wx:if="{{currentExerciseId}}" hover-class="btn-hover">
+        <van-icon name="arrow" size="18px" />
+        <text>跳过</text>
+      </button>
+      <button class="custom-btn" bindtap="finishTraining" wx:if="{{!currentExerciseId}}" hover-class="btn-hover">
+        <van-icon name="success" size="18px" />
+        <text>完成训练</text>
+      </button>
+    </block>
+    
+    <!-- 预览模式下的底部按钮 -->
+    <block wx:elif="{{mode === 'preview' && planType === 'training'}}">
+      <button class="custom-btn" bindtap="createCustomPlan" hover-class="btn-hover">
+        <van-icon name="plus" size="18px" />
+        <text>创建训练计划</text>
+      </button>
+      <button class="ai-btn" bindtap="generateAIPlan" hover-class="btn-hover">
         <van-icon name="cluster-o" size="18px" />
-        AI生成饮食
+        <text>AI生成计划</text>
+      </button>
+    </block>
+    <block wx:elif="{{mode === 'preview' && planType === 'diet'}}">
+      <button class="custom-btn" bindtap="createDietPlan" hover-class="btn-hover">
+        <van-icon name="plus" size="18px" />
+        <text>创建饮食计划</text>
+      </button>
+      <button class="ai-btn" bindtap="generateAIDietPlan" hover-class="btn-hover">
+        <van-icon name="cluster-o" size="18px" />
+        <text>AI生成饮食</text>
       </button>
     </block>
   </view>
   
   <!-- 预览模式下的底部按钮 -->
   <view class="bottom-buttons" wx:if="{{isPreviewMode}}">
-    <button class="back-btn" bindtap="navigateBack">
+    <button class="back-btn" bindtap="navigateBack" hover-class="btn-hover">
       <van-icon name="arrow-left" size="18px" />
-      返回
+      <text>返回</text>
     </button>
-    <button class="apply-btn" bindtap="applyCurrentPlan">
+    <button class="apply-btn" bindtap="applyCurrentPlan" hover-class="btn-hover">
       <van-icon name="success" size="18px" />
-      应用当前计划
+      <text>应用当前计划</text>
     </button>
   </view>
+  
+  <!-- 添加时间段弹窗 -->
+  <van-popup 
+    show="{{showAddTimeSlotPopup}}" 
+    position="bottom" 
+    round 
+    custom-class="time-slot-popup" 
+    bind:close="closeAddTimeSlotPopup"
+  >
+    <view class="popup-header">
+      <view class="popup-title">选择时间段</view>
+      <van-icon name="cross" bindtap="closeAddTimeSlotPopup" />
+    </view>
+    
+    <view class="time-slot-options">
+      <view 
+        wx:for="{{availableTimeSlots}}" 
+        wx:key="index" 
+        class="time-slot-option {{newTimeSlot === item ? 'active' : ''}}" 
+        bindtap="selectTimeSlot" 
+        data-slot="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+    
+    <view class="popup-footer">
+      <button class="popup-btn cancel-btn" bindtap="closeAddTimeSlotPopup">取消</button>
+      <button class="popup-btn confirm-btn" bindtap="addTimeSlot">确认</button>
+    </view>
+  </van-popup>
+
+  <!-- 添加餐食编辑弹窗 -->
+  <van-popup 
+    show="{{showMealEditPopup}}" 
+    position="bottom" 
+    round 
+    custom-class="meal-edit-popup" 
+    bind:close="closeMealEditPopup"
+  >
+    <view class="popup-header">
+      <view class="popup-title">{{isEditingSnack ? (isNewSnack ? '添加零食/加餐' : (editingMealType === 'snack' ? '编辑零食/加餐' : '编辑' + mealTypeNames[editingMealType])) : '编辑' + mealTypeNames[editingMealType]}}</view>
+      <van-icon name="cross" bindtap="closeMealEditPopup" />
+    </view>
+    
+    <view class="meal-edit-content">
+      <!-- 餐食名称输入 (适用于所有餐食) -->
+      <view class="form-item">
+        <view class="form-label">{{editingMealType === 'snack' ? '零食名称' : '餐食名称'}}</view>
+        <input class="form-input" type="text" value="{{editingMeal.name}}" placeholder="{{editingMealType === 'snack' ? '请输入零食名称' : '请输入餐食名称'}}" bindinput="onMealNameInput" />
+      </view>
+      
+      <!-- 选择食物按钮 -->
+      <view class="select-food-btn" bindtap="goToFoodSelect">
+        <van-icon name="add-o" size="18px" color="#ff9800" />
+        <text>从食物库选择</text>
+      </view>
+      
+      <!-- 已选食物列表 -->
+      <view class="selected-foods-section" wx:if="{{editingMeal.selectedFoods && editingMeal.selectedFoods.length > 0}}">
+        <view class="section-header">
+          <view class="section-title">已选食物</view>
+          <view class="clear-all-btn" bindtap="clearAllSelectedFoods">
+            <van-icon name="delete" size="14px" color="#ff4d4f" />
+            <text>清空</text>
+          </view>
+        </view>
+        <view class="selected-foods-list">
+          <view class="selected-food-card" wx:for="{{editingMeal.selectedFoods}}" wx:key="id">
+            <view class="food-card-header">
+              <view class="food-name-container">
+                <text class="food-name">{{item.name}}</text>
+                <view class="food-metrics">
+                  <text class="food-amount">{{item.amount}}</text>
+                  <text class="food-weight" wx:if="{{item.weight}}">{{item.weight}}克</text>
+                </view>
+              </view>
+              <view class="delete-food-btn" catchtap="removeSelectedFood" data-food-id="{{item.id}}">
+                <van-icon name="cross" size="16px" color="#ff4d4f" />
+              </view>
+            </view>
+            <view class="food-nutrition-details">
+              <view class="food-nutrition-item">
+                <text class="nutrition-value">{{item.calories || 0}}</text>
+                <text class="nutrition-label">千卡</text>
+              </view>
+              <view class="food-nutrition-item">
+                <text class="nutrition-value">{{item.nutrition.protein || 0}}</text>
+                <text class="nutrition-label">蛋白质(g)</text>
+              </view>
+              <view class="food-nutrition-item">
+                <text class="nutrition-value">{{item.nutrition.carbs || 0}}</text>
+                <text class="nutrition-label">碳水(g)</text>
+              </view>
+              <view class="food-nutrition-item">
+                <text class="nutrition-value">{{item.nutrition.fat || 0}}</text>
+                <text class="nutrition-label">脂肪(g)</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <!-- 备注信息（新增） -->
+      <view class="form-item">
+        <view class="form-label">备注信息</view>
+        <textarea class="form-textarea" value="{{editingMeal.notes}}" placeholder="添加烹饪方法、食用时间等备注" bindinput="onMealNotesInput"></textarea>
+      </view>
+      
+      <!-- 总营养信息 -->
+      <view class="total-nutrition-section" wx:if="{{editingMeal.calories > 0}}">
+        <view class="section-title">总营养信息</view>
+        <view class="total-nutrition-container">
+          <view class="calories-circle">
+            <text class="calories-value">{{editingMeal.calories || 0}}</text>
+            <text class="calories-label">千卡</text>
+          </view>
+          <view class="macros-bars">
+            <view class="macro-bar-item">
+              <view class="macro-label-container">
+                <text class="macro-label">蛋白质</text>
+                <text class="macro-value">{{editingMeal.nutrition.protein || 0}}g</text>
+              </view>
+              <view class="macro-bar-container">
+                <view class="macro-bar protein-bar" style="width: {{(editingMeal.nutrition.protein / (editingMeal.nutrition.protein + editingMeal.nutrition.carbs + editingMeal.nutrition.fat) * 100) || 0}}%"></view>
+              </view>
+            </view>
+            <view class="macro-bar-item">
+              <view class="macro-label-container">
+                <text class="macro-label">碳水</text>
+                <text class="macro-value">{{editingMeal.nutrition.carbs || 0}}g</text>
+              </view>
+              <view class="macro-bar-container">
+                <view class="macro-bar carbs-bar" style="width: {{(editingMeal.nutrition.carbs / (editingMeal.nutrition.protein + editingMeal.nutrition.carbs + editingMeal.nutrition.fat) * 100) || 0}}%"></view>
+              </view>
+            </view>
+            <view class="macro-bar-item">
+              <view class="macro-label-container">
+                <text class="macro-label">脂肪</text>
+                <text class="macro-value">{{editingMeal.nutrition.fat || 0}}g</text>
+              </view>
+              <view class="macro-bar-container">
+                <view class="macro-bar fat-bar" style="width: {{(editingMeal.nutrition.fat / (editingMeal.nutrition.protein + editingMeal.nutrition.carbs + editingMeal.nutrition.fat) * 100) || 0}}%"></view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 隐藏表单输入区 -->
+      <view class="hidden-inputs">
+        <input type="hidden" value="{{editingMeal.calories}}" bindinput="onCaloriesInput" />
+        <input type="hidden" value="{{editingMeal.nutrition.protein}}" bindinput="onProteinInput" />
+        <input type="hidden" value="{{editingMeal.nutrition.carbs}}" bindinput="onCarbsInput" />
+        <input type="hidden" value="{{editingMeal.nutrition.fat}}" bindinput="onFatInput" />
+      </view>
+    </view>
+    
+    <view class="popup-footer">
+      <button class="popup-btn cancel-btn" bindtap="closeMealEditPopup">取消</button>
+      <button class="popup-btn confirm-btn" bindtap="saveMealEdit">保存</button>
+    </view>
+  </van-popup>
 </view>

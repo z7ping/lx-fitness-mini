@@ -67,34 +67,113 @@ Page({
       ...exercise,
       sets: 3,
       reps: 12,
-      weight: 0
+      weight: 0,
+      type: this.data.exerciseGroups[this.data.activeTab].type,
+      duration: exercise.id >= 7 && exercise.id <= 10 ? 15 : 0 // 有氧训练默认设置15分钟
     };
     
-    // 使用eventChannel发送数据
-    const eventChannel = this.getOpenerEventChannel();
-    console.log('准备通过eventChannel发送数据');
+    console.log('选择的训练数据:', exerciseData);
     
-    // 确保eventChannel存在
-    if (eventChannel && eventChannel.emit) {
-      console.log('eventChannel存在，发送数据:', exerciseData);
-      eventChannel.emit('acceptExercise', exerciseData);
-    } else {
-      console.log('eventChannel不存在或没有emit方法');
-      // 降级处理：直接修改上一页数据
+    // 首先保存到Storage，作为最后的保障
+    let selectedExercises = [];
+    selectedExercises.push(exerciseData);
+    wx.setStorageSync('tempSelectedExercises', selectedExercises);
+    
+    try {
+      // 1. 先尝试使用页面栈直接调用回调函数
       const pages = getCurrentPages();
       const prevPage = pages[pages.length - 2];
       
-      if (prevPage && prevPage.data.planInfo) {
-        const exercises = prevPage.data.planInfo.exercises;
-        exercises.push(exerciseData);
+      if (prevPage) {
+        // 尝试直接调用回调函数
+        if (typeof prevPage.exerciseSelectedCallback === 'function') {
+          console.log('找到上一页的exerciseSelectedCallback方法');
+          prevPage.exerciseSelectedCallback(exerciseData);
+          console.log('通过回调函数成功传递数据');
+          
+          wx.showToast({
+            title: '已选择训练',
+            icon: 'success'
+          });
+          
+          setTimeout(() => {
+            wx.navigateBack();
+          }, 500);
+          return;
+        }
         
-        prevPage.setData({
-          'planInfo.exercises': exercises
-        });
-        console.log('已通过直接修改上一页数据添加运动');
+        // 尝试直接调用onExerciseSelected方法
+        if (typeof prevPage.onExerciseSelected === 'function') {
+          console.log('找到上一页的onExerciseSelected方法');
+          prevPage.onExerciseSelected(exerciseData);
+          console.log('通过onExerciseSelected成功传递数据');
+          
+          wx.showToast({
+            title: '已选择训练',
+            icon: 'success'
+          });
+          
+          setTimeout(() => {
+            wx.navigateBack();
+          }, 500);
+          return;
+        }
+        
+        // 尝试直接修改上一页数据
+        if (prevPage.data && prevPage.data.planInfo) {
+          console.log('尝试直接修改上一页planInfo');
+          const exercises = prevPage.data.planInfo.exercises;
+          exercises.push(exerciseData);
+          
+          prevPage.setData({
+            'planInfo.exercises': exercises
+          });
+          console.log('已通过直接修改上一页数据添加运动');
+          
+          wx.showToast({
+            title: '已选择训练',
+            icon: 'success'
+          });
+          
+          setTimeout(() => {
+            wx.navigateBack();
+          }, 500);
+          return;
+        }
       }
+      
+      // 2. 尝试使用eventChannel
+      console.log('尝试使用eventChannel');
+      const eventChannel = this.getOpenerEventChannel();
+      
+      if (eventChannel && eventChannel.emit) {
+        console.log('eventChannel存在，发送数据:', exerciseData);
+        eventChannel.emit('acceptExercise', exerciseData);
+        console.log('通过eventChannel发送数据成功');
+        
+        wx.showToast({
+          title: '已选择训练',
+          icon: 'success'
+        });
+        
+        setTimeout(() => {
+          wx.navigateBack();
+        }, 500);
+        return;
+      }
+    } catch (error) {
+      console.error('数据传递异常:', error);
     }
-
-    wx.navigateBack();
+    
+    // 如果前面的方法都失败了，就显示提示并依赖Storage方案
+    console.log('所有数据传递方案失败，使用Storage方案');
+    wx.showToast({
+      title: '已选择训练',
+      icon: 'success'
+    });
+    
+    setTimeout(() => {
+      wx.navigateBack();
+    }, 500);
   }
 });

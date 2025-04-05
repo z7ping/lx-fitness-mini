@@ -18,29 +18,62 @@ Page({
   },
 
   onLoad(options) {
+    console.log('力量训练页面加载，参数：', options);
     // 检查登录状态
     if (!app.checkLoginAndAuth()) {
       return;
     }
 
-    const exercise = {
-      id: options.exerciseId,
-      planId: options.planId,
-      name: options.name || '力量训练',
-      type: options.type || 'strength',
-      sets: parseInt(options.sets) || 3,
-      reps: parseInt(options.reps) || 12,
-      weight: parseFloat(options.weight) || 0,
-      description: options.description
-    };
-    
-    this.setData({ 
-      exercise,
-      startTime: new Date()
-    });
+    // 从Storage中获取训练数据，而不是从URL参数中获取
+    try {
+      const trainingData = wx.getStorageSync('currentTrainingExercise');
+      console.log('从Storage获取的训练数据：', trainingData);
+      
+      if (!trainingData) {
+        console.error('未找到训练数据');
+        wx.showToast({
+          title: '未找到训练数据',
+          icon: 'error'
+        });
+        setTimeout(() => {
+          wx.navigateBack();
+        }, 1500);
+        return;
+      }
 
-    // 初始化训练记录
-    this.initExerciseRecord();
+      // 构建exercise对象
+      const exercise = {
+        id: trainingData.exerciseId,
+        planId: trainingData.planId || '',
+        name: trainingData.name || '力量训练',
+        type: trainingData.type || 'strength',
+        sets: parseInt(trainingData.sets) || 3,
+        reps: parseInt(trainingData.reps) || 12,
+        weight: parseFloat(trainingData.weight) || 0,
+        description: trainingData.description || '',
+        timeSlot: trainingData.timeSlot || null
+      };
+      
+      console.log('构建的训练对象：', exercise);
+      
+      this.setData({ 
+        exercise,
+        startTime: new Date()
+      });
+
+      // 初始化训练记录
+      this.initExerciseRecord();
+    } catch (error) {
+      console.error('获取训练数据出错：', error);
+      wx.showToast({
+        title: '获取训练数据失败',
+        icon: 'error'
+      });
+      setTimeout(() => {
+        wx.navigateBack();
+      }, 1500);
+      return;
+    }
 
     // 绑定事件处理函数
     this.handleExerciseRecordAdded = this.handleExerciseRecordAdded.bind(this);
@@ -59,6 +92,14 @@ Page({
 
     // 移除事件监听器
     dataService.removeEventListener(EVENT_TYPES.EXERCISE_RECORD_ADDED, this.handleExerciseRecordAdded);
+    
+    // 清除存储的训练数据
+    try {
+      wx.removeStorageSync('currentTrainingExercise');
+      console.log('已清除存储的训练数据');
+    } catch (error) {
+      console.error('清除训练数据时出错：', error);
+    }
   },
 
   // 处理运动记录添加事件

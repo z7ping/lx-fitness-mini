@@ -455,40 +455,70 @@ Page({
   },
 
   onLoad(options) {
-    // 获取页面参数
-    const { type, name, duration, planId } = options;
+    console.log('心肺训练页面加载，参数：', options);
     
-    // 初始化运动类型和名称
-    const exercise = {
-      id: options.exerciseId,
-      planId: options.planId,
-      name: options.name || '跑步训练',
-      type: options.type || 'running',
-      duration: parseInt(options.duration) || 30,
-      distance: parseFloat(options.distance) || 0,
-      description: options.description
-    };
-    
-    // 初始化地图数据
-    const mapData = {
-      latitude: 39.908823,
-      longitude: 116.397470,
-      scale: 16,
-      polyline: [{
-        points: [],
-        color: '#FF9800',
-        width: 8,
-        dottedLine: false,
-        arrowLine: false,
-        borderColor: '#FF9800',
-        borderWidth: 1
-      }]
-    };
-    
-    this.setData({
-      exercise,
-      mapData
-    });
+    try {
+      // 从Storage中获取训练数据，而不是从URL参数中获取
+      const trainingData = wx.getStorageSync('currentTrainingExercise');
+      console.log('从Storage获取的训练数据：', trainingData);
+      
+      if (!trainingData) {
+        console.error('未找到训练数据');
+        wx.showToast({
+          title: '未找到训练数据',
+          icon: 'error'
+        });
+        setTimeout(() => {
+          wx.navigateBack();
+        }, 1500);
+        return;
+      }
+      
+      // 初始化运动类型和名称
+      const exercise = {
+        id: trainingData.exerciseId,
+        planId: trainingData.planId || '',
+        name: trainingData.name || '跑步训练',
+        type: trainingData.type || 'running',
+        duration: parseInt(trainingData.duration) || 30,
+        distance: parseFloat(trainingData.distance) || 0,
+        description: trainingData.description || '',
+        timeSlot: trainingData.timeSlot || null
+      };
+      
+      console.log('构建的训练对象：', exercise);
+      
+      // 初始化地图数据
+      const mapData = {
+        latitude: 39.908823,
+        longitude: 116.397470,
+        scale: 16,
+        polyline: [{
+          points: [],
+          color: '#FF9800',
+          width: 8,
+          dottedLine: false,
+          arrowLine: false,
+          borderColor: '#FF9800',
+          borderWidth: 1
+        }]
+      };
+      
+      this.setData({
+        exercise,
+        mapData
+      });
+    } catch (error) {
+      console.error('获取训练数据出错：', error);
+      wx.showToast({
+        title: '获取训练数据失败',
+        icon: 'error'
+      });
+      setTimeout(() => {
+        wx.navigateBack();
+      }, 1500);
+      return;
+    }
     
     // 初始化卡尔曼滤波器 - 使用优化后的参数
     this.setData({
@@ -1701,6 +1731,14 @@ Page({
     
     // 关闭离开页面前确认
     wx.disableAlertBeforeUnload();
+    
+    // 清除存储的训练数据
+    try {
+      wx.removeStorageSync('currentTrainingExercise');
+      console.log('已清除存储的训练数据');
+    } catch (error) {
+      console.error('清除训练数据时出错：', error);
+    }
   },
 
   // 添加语音提示方法
